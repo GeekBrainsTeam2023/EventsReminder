@@ -1,4 +1,4 @@
-package ru.geekbrains.eventsreminder.ui.notifications
+package ru.geekbrains.eventsreminder.presentation.ui.notifications
 
 import android.os.Bundle
 import android.view.LayoutInflater
