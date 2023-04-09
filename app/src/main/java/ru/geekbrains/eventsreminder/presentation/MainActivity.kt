@@ -4,29 +4,23 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.get
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
 import ru.geekbrains.eventsreminder.R
-import com.google.android.material.navigation.NavigationView
 import ru.geekbrains.eventsreminder.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     var doubleBackToExitPressedOnce = false
-    private lateinit var navController : NavController
-
+    private lateinit var navController: NavController
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -34,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         setContentView(binding.root)
-       navController =  findNavController(R.id.nav_host_fragment_activity_main)
+        navController = findNavController(R.id.nav_host_fragment_activity_main)
 
         val appBarConfiguration = AppBarConfiguration(
             setOf(
@@ -45,14 +39,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.overflow_menu,menu)
+         val inflater = menuInflater
+        inflater.inflate(R.menu.overflow_menu, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        NavigationUI.onNavDestinationSelected(item, navController )
-        return super.onOptionsItemSelected(item)
+        try {
+
+            NavigationUI.onNavDestinationSelected(item, navController)
+
+            return super.onOptionsItemSelected(item)
+        } catch (t: Throwable) {
+            Toast.makeText(applicationContext, t.toString(), Toast.LENGTH_SHORT).show()
+            return false
+        }
     }
 
     /**
@@ -61,7 +62,7 @@ class MainActivity : AppCompatActivity() {
      * @param key ключ с названием конкретной настройки
      * (в случае [null] - будут применены все настройки)
      * */
-    fun setPreferences(preferences: SharedPreferences, key: String? = null){
+    fun setPreferences(preferences: SharedPreferences, key: String? = null) {
         try {
             if (key.isNullOrBlank() || key == getString(R.string.key_notification_start_time_preference)) {
                 // TODO: установить время начала уведомления в соотвествтвующей вьюмодели
@@ -104,6 +105,7 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(applicationContext, t.toString(), Toast.LENGTH_SHORT).show()
         }
     }
+
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         try {
@@ -119,9 +121,8 @@ class MainActivity : AppCompatActivity() {
                 { doubleBackToExitPressedOnce = false },
                 2000
             )
-
         } catch (t: Throwable) {
-            Toast.makeText(applicationContext,t.toString(), Toast.LENGTH_SHORT).show()
+            Toast.makeText(applicationContext, t.toString(), Toast.LENGTH_SHORT).show()
         }
     }
 
