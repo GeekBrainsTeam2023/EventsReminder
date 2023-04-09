@@ -23,6 +23,7 @@
         android:id="@+id/settings"
         android:name="ru.geekbrains.eventsreminder.presentation.ui.settings.SettingsFragment"
         android:label="@string/settings_fragment_title"
+
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment

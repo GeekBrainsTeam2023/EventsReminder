@@ -3,13 +3,8 @@ package ru.geekbrains.eventsreminder.presentation.ui.settings
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import androidx.core.view.MenuHost
-import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
@@ -43,17 +38,7 @@ class SettingsFragment : PreferenceFragmentCompat(){//, HasAndroidInjector { //Ñ
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val menuHost : MenuHost = requireActivity()
-        menuHost.addMenuProvider(object : MenuProvider{
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menu.removeItem(R.id.settings)
-            }
-
-            override fun onMenuItemSelected(menuItem: MenuItem) = false
-
-        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
-
-    initPreferenceButtons()
+        initPreferenceButtons()
     }
 
     override fun onDetach() {
