@@ -1,96 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory app:title="@string/title_base_settings_preference_category"
-        app:iconSpaceReserved="false">
-
-<!--        <MultiSelectListPreference-->
-<!--            app:defaultValue="phonebook"-->
-<!--            app:iconSpaceReserved="false"-->
-<!--            app:entries="@array/datasource_entries"-->
-<!--            app:entryValues="@array/datasource_values"-->
-<!--            app:key="key_datasources_list"-->
-<!--            app:title="@string/title_data_sources_multiselect_list_preference"-->
-<!--            app:useSimpleSummaryProvider="true" />
-источники данных-->
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/title_datasource_preference_category">
+        <CheckBoxPreference
+            app:defaultValue="false"
+            app:iconSpaceReserved="false"
+            app:key="@string/key_phonebook_datasource_checkbox_preference"
+            app:title="@string/title_phonebook_datasource_checkbox_preference"
+            app:useSimpleSummaryProvider="true" />
+        <CheckBoxPreference
+            app:defaultValue="false"
+            app:iconSpaceReserved="false"
+            app:key="@string/key_calendar_datasource_checkbox_preference"
+            app:title="@string/title_calendar_datasource_checkbox_preference"
+            app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="@string/title_notification_settings_preference_category"
-        app:iconSpaceReserved="false">
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/title_notification_settings_preference_category">
         <Preference
+            app:defaultValue="12"
+            app:iconSpaceReserved="false"
             app:key="@string/key_notification_start_time_preference"
             app:title="@string/title_notification_start_time_preference"
+            app:useSimpleSummaryProvider="true" />
+        <Preference
             app:iconSpaceReserved="false"
-            app:defaultValue="12"
-            app:useSimpleSummaryProvider="true"/>
-        <!--
-        мелодия
-        за сколько минут предупредить
-             -->
+            app:key="@string/key_notification_melody_preference"
+            app:title="@string/title_notification_melody_preference"
+            app:useSimpleSummaryProvider="true" />
 
-
-            </PreferenceCategory>
-
-            <PreferenceCategory app:title="@string/title_widget_data_settings_preference_category"
-                app:iconSpaceReserved="false">
-        <CheckBoxPreference
-            app:key="@string/key_event_date_checkbox_preference"
+        <Preference
             app:iconSpaceReserved="false"
-            app:title="@string/title_event_date_checkbox_preference"
-            app:defaultValue="true"
-            app:useSimpleSummaryProvider="true"/>
-                <CheckBoxPreference
-                    app:key="@string/key_event_time_checkbox_preference"
-                    app:iconSpaceReserved="false"
-                    app:title="@string/title_event_time_checkbox_preference"
-                    app:defaultValue="true"
-                    app:useSimpleSummaryProvider="true"/>
+            app:key="@string/key_minutes_before_notification_preference"
+            app:title="@string/title_minutes_before_notification_preference"
+            app:useSimpleSummaryProvider="true" />
 
-
-                <!--за сколько дней до события начать его отображать-->
-
-                <CheckBoxPreference
-                    app:key="@string/key_age_checkbox_preference"
-                    app:iconSpaceReserved="false"
-                    app:title="@string/title_age_checkbox_preference"
-                    app:defaultValue="true"
-                    app:useSimpleSummaryProvider="true"/>
-                <CheckBoxPreference
-                    app:key="@string/key_birthdate_checkbox_preference"
-                    app:iconSpaceReserved="false"
-                    app:title="@string/title_birthdate_checkbox_preference"
-                    app:defaultValue="true"
-                    app:useSimpleSummaryProvider="true"/>
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="@string/widget_appearance_settings_preference_category"
-        app:iconSpaceReserved="false">
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/title_widget_data_settings_preference_category">
+        <CheckBoxPreference
+            app:defaultValue="true"
+            app:iconSpaceReserved="false"
+            app:key="@string/key_event_date_checkbox_preference"
+            app:title="@string/title_event_date_checkbox_preference"
+            app:useSimpleSummaryProvider="true" />
+        <CheckBoxPreference
+            app:defaultValue="true"
+            app:iconSpaceReserved="false"
+            app:key="@string/key_event_time_checkbox_preference"
+            app:title="@string/title_event_time_checkbox_preference"
+            app:useSimpleSummaryProvider="true" />
+
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="@string/key_days_before_notification_preference"
+            app:title="@string/title_days_before_notification_preference"
+            app:useSimpleSummaryProvider="true" />
+
+        <CheckBoxPreference
+            app:defaultValue="true"
+            app:iconSpaceReserved="false"
+            app:key="@string/key_age_checkbox_preference"
+            app:title="@string/title_age_checkbox_preference"
+            app:useSimpleSummaryProvider="true" />
+        <CheckBoxPreference
+            app:defaultValue="true"
+            app:iconSpaceReserved="false"
+            app:key="@string/key_birthdate_checkbox_preference"
+            app:title="@string/title_birthdate_checkbox_preference"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/widget_appearance_settings_preference_category">
 
         <ListPreference
-            app:key="@string/key_widget_size_list_preference"
-            app:iconSpaceReserved="false"
             app:defaultValue="44"
+            app:dialogTitle="@string/dialog_title_choose_widget_size_listpreference"
             app:entries="@array/widget_size_entries"
-                   app:entryValues="@array/widget_size_values"
-                    app:title="@string/title_widget_size_list_preference"
-                    app:useSimpleSummaryProvider="true"/>
-
-        <!--размер шрифта
-        цвет фона
-        прозрачность фона
-        толщина рамки виджета
-        цвет рамки виджета
-        закругление углов рамки виджета-->
-            </PreferenceCategory>
+            app:entryValues="@array/widget_size_values"
+            app:iconSpaceReserved="false"
+            app:key="@string/key_widget_size_list_preference"
+            app:title="@string/title_widget_size_list_preference"
+            app:useSimpleSummaryProvider="true" />
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="@string/key_widget_font_size_preference"
+            app:title="@string/title_widget_font_size_preference"
+            app:useSimpleSummaryProvider="true" />
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="@string/key_background_color_preference"
+            app:title="@string/title_background_color_preference"
+            app:useSimpleSummaryProvider="true" />
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="@string/key_background_transparency_preference"
+            app:title="@string/title_background_transparency_preference"
+            app:useSimpleSummaryProvider="true" />
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="@string/key_widget_border_thickness_preference"
+            app:title="@string/title_widget_border_thickness_preference"
+            app:useSimpleSummaryProvider="true" />
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="@string/key_widget_border_color_preference"
+            app:title="@string/title_widget_border_color_preference"
+            app:useSimpleSummaryProvider="true" />
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="@string/key_widget_border_rounded_corners_preference"
+            app:title="@string/title_widget_border_rounded_corners_preference"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
 
     <Preference
+        app:iconSpaceReserved="false"
         app:key="@string/key_export_settings_preference"
-        app:iconSpaceReserved="false"
-        app:title="@string/title_export_settings_preference"
-        />
+        app:title="@string/title_export_settings_preference" />
     <Preference
-        app:key="@string/key_import_settings_preference"
         app:iconSpaceReserved="false"
-        app:title="@string/title_import_settings_preference"
-        />
-        </PreferenceScreen>
+        app:key="@string/key_import_settings_preference"
+        app:title="@string/title_import_settings_preference" />
+
+</PreferenceScreen>

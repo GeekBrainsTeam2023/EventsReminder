@@ -3,17 +3,15 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
-    <!-- Preference Titles -->
-
-    <!-- Sync Preferences -->
-
-    <string name="settings_fragment_title">Настройки</string>
-    <string name="menu_item_settings_title">настройки</string>
-    <string name="menu_item_home_to_dashboard_title">список событий</string>
-    <string name="menu_item_notifications_title">уведомления</string>
-    <string name="notifications_fragment_title">Уведомления</string>
     <string name="dashboard_fragment_title">Список событий</string>
-    <string name="title_base_settings_preference_category">Базовые настройки</string>
+    <string name="menu_item_home_to_dashboard_title">список событий</string>
+    <string name="menu_item_settings_title">настройки</string>
+    <string name="menu_item_notifications_title">уведомления</string>
+    <string name="settings_fragment_title">Настройки</string>
+    <string name="notifications_fragment_title">Уведомления</string>
+
+    <!-- Preference Titles,Keys-->
+    <string name="title_datasource_preference_category">Источники данных</string>
     <string name="title_data_sources_multiselect_list_preference">источники данных</string>
     <string name="title_notification_settings_preference_category">Настройки уведомлений</string>
     <string name="title_widget_data_settings_preference_category">Настройки виджета: отображение данных</string>
@@ -34,4 +32,27 @@
     <string name="key_notification_start_time_preference">time_to_start_notification</string>
     <string name="title_notification_start_time_preference">время срабатывания уведомления</string>
     <string name="key_export_settings_preference">export_settings</string>
+    <string name="key_notification_melody_preference">notification_melody</string>
+    <string name="title_notification_melody_preference">мелодия</string>
+    <string name="key_minutes_before_notification_preference">minutes_before_notification</string>
+    <string name="title_minutes_before_notification_preference">за сколько минут до события выводить уведомление</string>
+    <string name="key_days_before_notification_preference">days_before_notification</string>
+    <string name="title_days_before_notification_preference">за сколько дней до события начать его отображать</string>
+    <string name="key_widget_font_size_preference">widget_font_size</string>
+    <string name="title_widget_font_size_preference">размер шрифта</string>
+    <string name="key_background_color_preference">background_color</string>
+    <string name="title_background_color_preference">цвет фона</string>
+    <string name="key_background_transparency_preference">background_transparency</string>
+    <string name="title_background_transparency_preference">прозрачность фона</string>
+    <string name="key_widget_border_thickness_preference">widget_border_thickness</string>
+    <string name="title_widget_border_thickness_preference">толщина рамки виджета</string>
+    <string name="key_widget_border_color_preference">widget_border_color</string>
+    <string name="title_widget_border_color_preference">цвет рамки виджета</string>
+    <string name="key_widget_border_rounded_corners_preference">widget_border_rounded_corners</string>
+    <string name="title_widget_border_rounded_corners_preference">закругление углов рамки виджета</string>
+    <string name="dialog_title_choose_widget_size_listpreference">выберите размер виджета</string>
+    <string name="key_phonebook_datasource_checkbox_preference">phonebook_datasource</string>
+    <string name="title_phonebook_datasource_checkbox_preference">телефонная книга</string>
+    <string name="key_calendar_datasource_checkbox_preference">calendar_datasource</string>
+    <string name="title_calendar_datasource_checkbox_preference">календарь</string>
 </resources>

@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-         val inflater = menuInflater
+        val inflater = menuInflater
         inflater.inflate(R.menu.overflow_menu, menu)
         return true
     }
@@ -95,9 +95,17 @@ class MainActivity : AppCompatActivity() {
                 if (!key.isNullOrBlank()) return
             }
 
-            if (key.isNullOrBlank() || key == getString(R.string.key_widget_size_list_preference)) {
-                // TODO: установить размер виджета в соотвествтвующей вьюмодели
+            if (key.isNullOrBlank() || key == getString(R.string.key_widget_font_size_preference)) {
+                // TODO: установить размер шрифта виджета в соотвествтвующей вьюмодели
                 if (!key.isNullOrBlank()) return
+            }
+            if (key.isNullOrBlank() || key == getString(R.string.key_export_settings_preference)) {
+                //TODO: записать текущие настройки в файл
+                if (key.isNullOrBlank()) return
+            }
+            if (key.isNullOrBlank() || key == getString(R.string.key_import_settings_preference)) {
+                //TODO: загрузить настройки из файла
+                if (key.isNullOrBlank()) return
             }
 
 
