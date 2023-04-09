@@ -1,4 +1,4 @@
-package ru.geekbrains.eventsreminder.ui.settings
+package ru.geekbrains.eventsreminder.presentation.ui.settings
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -10,18 +10,12 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.preference.Preference
-import androidx.preference.Preference.OnPreferenceClickListener
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasAndroidInjector
-import dagger.android.support.AndroidSupportInjection
-import ru.geekbrains.eventsreminder.MainActivity
 import ru.geekbrains.eventsreminder.R
+import ru.geekbrains.eventsreminder.presentation.MainActivity
 
 class SettingsFragment : PreferenceFragmentCompat(){//, HasAndroidInjector { //это заготовка для даггера
 
