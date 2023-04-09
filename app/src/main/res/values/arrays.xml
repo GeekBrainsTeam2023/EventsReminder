@@ -1,0 +1,24 @@
+<resources>
+    <string-array name="datasource_entries">
+        <item>телефонная книга</item>
+        <item>календарь</item>
+    </string-array>
+
+    <string-array name="datasource_values">
+        <item>phonebook</item>
+        <item>calendar</item>
+    </string-array>
+
+    <string-array name="widget_size_entries">
+        <item>4*4</item>
+        <item>4*4</item>
+        <item>4*4</item>
+        <item>4*4</item>
+    </string-array>
+    <string-array name="widget_size_values">
+        <item>44</item>
+        <item>44</item>
+        <item>44</item>
+        <item>44</item>
+    </string-array>
+</resources>

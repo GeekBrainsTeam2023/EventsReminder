@@ -2,7 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
 }
-
+apply plugin: 'kotlin-kapt'
 android {
     namespace 'ru.geekbrains.eventsreminder'
     compileSdk 33
@@ -31,7 +31,7 @@ android {
         jvmTarget = '1.8'
     }
     buildFeatures {
-        viewBinding true
+        viewBinding = true
     }
 }
 
@@ -45,6 +45,19 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
     implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+
+    //viewbinding
+    implementation 'com.github.kirich1409:viewbindingpropertydelegate:1.5.9'
+
+    //dagger2
+    implementation "com.google.dagger:dagger-android:2.41"
+    implementation 'androidx.preference:preference:1.2.0'
+    kapt "com.google.dagger:dagger-compiler:2.41"
+    kapt "com.google.dagger:dagger-android-processor:2.41"
+    implementation "com.google.dagger:dagger-android-support:2.41"
+
+
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
