@@ -4,8 +4,8 @@
     <string name="menu_item_settings_title">настройки</string>
     <string name="menu_item_home_to_dashboard_title">список событий</string>
     <string name="menu_item_notifications_title">уведомления</string>
-    <string name="notifications_fragment_title">уведомления</string>
-    <string name="dashboard_fragment_title">список событий</string>
+    <string name="notifications_fragment_title">Уведомления</string>
+    <string name="dashboard_fragment_title">Список событий</string>
     <string name="title_base_settings_preference_category">Базовые настройки</string>
     <string name="title_data_sources_multiselect_list_preference">источники данных</string>
     <string name="title_notification_settings_preference_category">Настройки уведомлений</string>
