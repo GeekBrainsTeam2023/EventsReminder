@@ -55,4 +55,6 @@
     <string name="title_phonebook_datasource_checkbox_preference">телефонная книга</string>
     <string name="key_calendar_datasource_checkbox_preference">calendar_datasource</string>
     <string name="title_calendar_datasource_checkbox_preference">календарь</string>
+    <string name="dashboard_recyclerview_content_description">Список карточек событий</string>
+    <string name="dashboard_fab_content_description">кнопка для добавления события</string>
 </resources>
