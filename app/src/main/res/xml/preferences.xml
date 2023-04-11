@@ -82,15 +82,6 @@
         app:iconSpaceReserved="false"
         app:title="@string/widget_appearance_settings_preference_category">
 
-        <ListPreference
-            app:defaultValue="44"
-            app:dialogTitle="@string/dialog_title_choose_widget_size_listpreference"
-            app:entries="@array/widget_size_entries"
-            app:entryValues="@array/widget_size_values"
-            app:iconSpaceReserved="false"
-            app:key="@string/key_widget_size_list_preference"
-            app:title="@string/title_widget_size_list_preference"
-            app:useSimpleSummaryProvider="true" />
         <Preference
             app:iconSpaceReserved="false"
             app:key="@string/key_widget_font_size_preference"
