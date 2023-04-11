@@ -1,8 +1,10 @@
 package ru.geekbrains.eventsreminder.presentation.ui.dashboard
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
+import android.content.res.Resources
 import android.view.View
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -17,10 +19,12 @@ class DashboardViewHolder(view: View) : RecyclerView.ViewHolder(view), Lifecycle
     private val lifecycleRegistry = LifecycleRegistry(this)
     private val activity = view.context.findActivity()
     private var paused: Boolean = false
+
     init {
         lifecycleRegistry.currentState = Lifecycle.State.INITIALIZED
     }
-    fun createLifecycle(){
+
+    fun createLifecycle() {
         lifecycleRegistry.currentState = Lifecycle.State.CREATED
     }
 //    override fun getLifecycle(): Lifecycle{
@@ -29,28 +33,58 @@ class DashboardViewHolder(view: View) : RecyclerView.ViewHolder(view), Lifecycle
 
     override val lifecycle: Lifecycle
         get() = lifecycleRegistry
-    fun attachToWindow(){
-        if(paused){
+
+    fun attachToWindow() {
+        if (paused) {
             lifecycleRegistry.currentState = Lifecycle.State.RESUMED
             paused = false
         } else {
             lifecycleRegistry.currentState = Lifecycle.State.STARTED
         }
     }
-    fun detachFromWindow(){
-        if(!paused){
+
+    fun detachFromWindow() {
+        if (!paused) {
             lifecycleRegistry.currentState = Lifecycle.State.CREATED
             paused = true
         }
     }
 
-    fun bind(event: Event){
-        with(binding){
-               dashboardRecyclerViewItemImage.setImageResource(R.drawable.ic_dashboard_black_24dp)
+
+    fun bind(event: Event) {
+        with(binding) {
+            with(dashboardRecyclerViewCardview) {
+                with(dashboardRecyclerViewItemImage) {
+                    with(activity) {
+                        when (event.type) {
+                            "Birthday" -> setCardBackgroundColor(
+                                resources.getColor(
+                                    R.color.color_primary_container,
+                                    theme
+                                )
+                            )
+                                .also { setImageResource(R.drawable.ic_home_24dp) }
+                            "Holiday" -> setCardBackgroundColor(
+                                resources.getColor(
+                                    R.color.light_violet,
+                                    theme
+                                )
+                            )
+                                .also { setImageResource(R.drawable.ic_add_24) }
+                            "SimpleEvent" -> setCardBackgroundColor(
+                                resources.getColor(
+                                    R.color.color_tertiary_container,
+                                    theme
+                                )
+                            ).also { setImageResource(R.drawable.ic_dashboard_black_24dp) }
+                        }
+                    }
+                }
+            }
             dashboardRecyclerViewItemTitleTextview.text = event.title
             dashboardRecyclerViewItemDaysBeforeEventTextview.text = event.daysBeforeEvent
             dashboardRecyclerViewItemEventDateTextview.text = event.eventDate
-    }
+        }
 
     }
 

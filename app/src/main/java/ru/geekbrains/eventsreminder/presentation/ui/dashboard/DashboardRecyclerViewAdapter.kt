@@ -33,6 +33,7 @@ class DashboardRecyclerViewAdapter(val eventsList: List<Event>) :
 
 data class Event(
     var id: Int,
+    var type: String,
     var title: String,
     var image: String,
     var eventDate: String,

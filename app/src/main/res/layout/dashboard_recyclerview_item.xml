@@ -11,9 +11,9 @@
         android:layout_marginStart="2dp"
         android:layout_marginTop="3dp"
         android:layout_marginBottom="2dp"
-        android:backgroundTint="#594EBAE4"
-        android:padding="5dp"
         app:cardCornerRadius="10dp"
+        app:cardElevation="0dp"
+android:padding="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -26,16 +26,17 @@
 
             <ImageView
                 android:id="@+id/dashboardRecyclerViewItemImage"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_margin="6dp"/>
+                android:layout_margin="6dp"
+                android:layout_weight="0.4"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/dashboardRecyclerViewInternalConstraintLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1.4">
+                android:layout_weight="1.5">
 
                 <TextView
                     android:id="@+id/dashboardRecyclerViewItemTitleTextview"
@@ -52,22 +53,21 @@
                     android:id="@+id/dashboardRecyclerViewItemEventDateTextview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
+                    android:gravity="start"
                     android:text="21.12.1999"
                     android:textSize="15sp"
-                    app:layout_constraintEnd_toStartOf="@id/dashboardRecyclerViewItemDaysBeforeEventTextview"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/dashboardRecyclerViewItemTitleTextview" />
+                    app:layout_constraintBottom_toBottomOf="parent" />
 
                 <TextView
                     android:id="@+id/dashboardRecyclerViewItemDaysBeforeEventTextview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
+                    android:gravity="end"
+                    android:paddingEnd="5dp"
                     android:text="21.12.1999"
                     android:textSize="15sp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/dashboardRecyclerViewItemEventDateTextview"
                     app:layout_constraintTop_toBottomOf="@id/dashboardRecyclerViewItemTitleTextview" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

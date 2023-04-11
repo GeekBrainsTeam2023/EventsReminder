@@ -90,8 +90,8 @@ class MainActivity : AppCompatActivity() {
                 if (!key.isNullOrBlank()) return
             }
 
-            if (key.isNullOrBlank() || key == getString(R.string.key_widget_size_list_preference)) {
-                // TODO: установить размер виджета в соотвествтвующей вьюмодели
+            if (key.isNullOrBlank() || key == getString(R.string.key_widget_border_rounded_corners_preference)) {
+                // TODO: установить скругление углов рамки виджета в соотвествтвующей вьюмодели
                 if (!key.isNullOrBlank()) return
             }
 
