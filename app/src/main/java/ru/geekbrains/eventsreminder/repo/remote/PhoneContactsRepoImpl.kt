@@ -10,11 +10,11 @@ import androidx.annotation.RequiresApi
 import ru.geekbrains.eventsreminder.domain.EventData
 import ru.geekbrains.eventsreminder.usecases.addBirthDayEventFromContactPhone
 
-class PhoneContactsRepoImpl(val context: Context) {
+class PhoneContactsRepoImpl(val context: Context):IPhoneContactsRepo {
 
     @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("Range")
-    fun loadBirthDayEvents(): List<EventData> {
+    override fun loadBirthDayEvents(): List<EventData> {
         val listBirthDayEvents = arrayListOf<EventData>()
         val contentResolver: ContentResolver? =
             context.contentResolver
