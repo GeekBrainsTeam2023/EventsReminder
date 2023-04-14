@@ -59,7 +59,7 @@ class DashboardViewHolder(view: View) : RecyclerView.ViewHolder(view), Lifecycle
                         when (event.type) {
                             "Birthday" -> setCardBackgroundColor(
                                 resources.getColor(
-                                    R.color.color_primary_container,
+                                    R.color.light_green,
                                     theme
                                 )
                             )
@@ -73,7 +73,7 @@ class DashboardViewHolder(view: View) : RecyclerView.ViewHolder(view), Lifecycle
                                 .also { setImageResource(R.drawable.ic_add_24) }
                             "SimpleEvent" -> setCardBackgroundColor(
                                 resources.getColor(
-                                    R.color.color_tertiary_container,
+                                    R.color.light_blue,
                                     theme
                                 )
                             ).also { setImageResource(R.drawable.ic_dashboard_black_24dp) }
