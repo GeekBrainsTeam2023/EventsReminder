@@ -9,11 +9,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="2dp"
-        android:layout_marginTop="3dp"
-        android:layout_marginBottom="2dp"
-        android:padding="5dp"
-        app:cardCornerRadius="10dp"
+        android:layout_marginTop="2dp"
+        app:cardCornerRadius="0dp"
         app:cardElevation="0dp"
+android:padding="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -28,10 +27,9 @@
                 android:id="@+id/dashboardRecyclerViewItemImage"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_margin="6dp"
-                android:layout_weight="0.4"
-                />
-
+                android:layout_weight="0.4"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/dashboardRecyclerViewInternalConstraintLayout"
@@ -57,8 +55,8 @@
                     android:gravity="start"
                     android:text="21.12.1999"
                     android:textSize="15sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent" />
 
                 <TextView
                     android:id="@+id/dashboardRecyclerViewItemDaysBeforeEventTextview"
@@ -68,7 +66,6 @@
                     android:paddingEnd="5dp"
                     android:text="21.12.1999"
                     android:textSize="15sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/dashboardRecyclerViewItemTitleTextview" />
 
