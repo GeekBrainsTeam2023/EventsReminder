@@ -6,7 +6,10 @@
     android:minHeight="40dp"
     android:minResizeWidth="80dp"
     android:minResizeHeight="40dp"
+    android:targetCellWidth="4"
+    android:targetCellHeight="1"
     android:previewImage="@drawable/ic_launcher_foreground"
+    android:previewLayout="@layout/app_widget"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="864000"
     android:widgetCategory="home_screen" />
