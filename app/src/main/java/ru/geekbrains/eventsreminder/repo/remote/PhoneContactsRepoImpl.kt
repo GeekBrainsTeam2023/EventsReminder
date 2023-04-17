@@ -9,12 +9,14 @@ import android.provider.ContactsContract
 import androidx.annotation.RequiresApi
 import ru.geekbrains.eventsreminder.domain.EventData
 import ru.geekbrains.eventsreminder.usecases.addBirthDayEventFromContactPhone
+import ru.geekbrains.eventsreminder.usecases.getLocalDateFromBirthDay
+import java.time.LocalDate
 
 class PhoneContactsRepoImpl(val context: Context):IPhoneContactsRepo {
 
     @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("Range")
-    override fun loadBirthDayEvents(): List<EventData> {
+    override fun loadBirthDayEvents(endDay: Int): List<EventData> {
         val listBirthDayEvents = arrayListOf<EventData>()
         val contentResolver: ContentResolver? =
             context.contentResolver
@@ -44,7 +46,14 @@ class PhoneContactsRepoImpl(val context: Context):IPhoneContactsRepo {
                         while (cursorBD.moveToNext()) {
                             val birthDay =
                                 cursorBD.getString(cursorBD.getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE))
-                            listBirthDayEvents.add(addBirthDayEventFromContactPhone(name, birthDay))
+                            if (getLocalDateFromBirthDay(birthDay)<= LocalDate.now().plusDays(endDay.toLong())) {
+                                listBirthDayEvents.add(
+                                    addBirthDayEventFromContactPhone(
+                                        name,
+                                        birthDay
+                                    )
+                                )
+                            }
                         }
                     }
                     cursorWithBD?.close()
