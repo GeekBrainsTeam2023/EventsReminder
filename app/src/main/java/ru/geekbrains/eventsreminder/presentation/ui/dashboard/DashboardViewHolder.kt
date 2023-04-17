@@ -1,10 +1,8 @@
 package ru.geekbrains.eventsreminder.presentation.ui.dashboard
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
-import android.content.res.Resources
 import android.view.View
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -27,9 +25,6 @@ class DashboardViewHolder(view: View) : RecyclerView.ViewHolder(view), Lifecycle
     fun createLifecycle() {
         lifecycleRegistry.currentState = Lifecycle.State.CREATED
     }
-//    override fun getLifecycle(): Lifecycle{
-//        return lifecycleRegistry
-//    }
 
     override val lifecycle: Lifecycle
         get() = lifecycleRegistry
