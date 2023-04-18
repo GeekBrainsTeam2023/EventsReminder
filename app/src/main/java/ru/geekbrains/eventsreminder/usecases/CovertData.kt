@@ -8,6 +8,7 @@ import ru.geekbrains.eventsreminder.domain.PeriodType
 import java.time.*
 
 
+
 @RequiresApi(Build.VERSION_CODES.O)
 fun getLocalDateFromBirthDay(birthDay: String): LocalDate = LocalDate.of(
     LocalDate.now().year,

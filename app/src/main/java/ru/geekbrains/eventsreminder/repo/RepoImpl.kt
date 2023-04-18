@@ -2,6 +2,7 @@ package ru.geekbrains.eventsreminder.repo
 
 import ru.geekbrains.eventsreminder.domain.AppState
 import ru.geekbrains.eventsreminder.domain.EventData
+import ru.geekbrains.eventsreminder.domain.ResourceState
 import ru.geekbrains.eventsreminder.domain.SettingsData
 import ru.geekbrains.eventsreminder.repo.local.LocalRepo
 import ru.geekbrains.eventsreminder.repo.remote.IPhoneCalendarRepo
@@ -13,16 +14,23 @@ class RepoImpl(
     val contactsRepo: PhoneContactsRepo,
     val calendarRepo: IPhoneCalendarRepo
 ):Repo {
-    override suspend fun loadData(): AppState {
+    override suspend fun loadData(): ResourceState<List<EventData>> {
         val listEvents = mutableListOf<EventData>()
         listEvents.addAll(localRepo.getList())
         if (settings.isDataContact) {
-            listEvents.addAll(contactsRepo.loadBirthDayEvents(settings.daysForShowEvents))
+            try {
+                listEvents.addAll(contactsRepo.loadBirthDayEvents(settings.daysForShowEvents))
+            } catch(exc:Throwable) {
+                return ResourceState.ErrorState(Throwable("Ошибка заргрузки ДР из телефонной книжки"))
+            }
         }
         if (settings.isDataCalendar) {
+            try {
             listEvents.addAll(calendarRepo.loadEventCalendar(settings.daysForShowEvents))
+            } catch(exc:Throwable) {
+                return ResourceState.ErrorState(Throwable("Ошибка заргрузки событий из календаря"))
+            }
         }
-        if (listEvents.size > 0) return AppState.SuccessState(listEvents.toList())
-         else return AppState.ErrorState(Throwable("Ошибка заргрузки данных"))
+        return ResourceState.SuccessState(listEvents.toList())
     }
 }
