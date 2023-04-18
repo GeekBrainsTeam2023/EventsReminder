@@ -4,9 +4,7 @@ import android.content.ContentUris
 import android.content.Context
 import android.icu.util.Calendar
 import android.icu.util.TimeZone
-import android.os.Build
 import android.provider.CalendarContract
-import androidx.annotation.RequiresApi
 import androidx.core.database.getLongOrNull
 import androidx.core.database.getStringOrNull
 import ru.geekbrains.eventsreminder.domain.EventData
@@ -15,7 +13,6 @@ import java.time.LocalDate
 
 class PhoneCalendarRepoImpl(val context: Context) :IPhoneCalendarRepo {
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun loadEventCalendar(endDay: Int): List<EventData> {
         val listBirthDayEvents = arrayListOf<EventData>()
         val startDay = LocalDate.now()

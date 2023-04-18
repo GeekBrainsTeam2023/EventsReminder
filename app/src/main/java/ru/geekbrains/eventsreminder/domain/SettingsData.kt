@@ -5,6 +5,7 @@ import android.graphics.Color
 data class SettingsData(
     val isDataContact: Boolean = true,
     val isDataCalendar: Boolean = true,
+    val daysForShowEvents: Int = 3,
     val minutesForStartNotification: Int = 15,
     val showDateEvent: Boolean = true,
     val showTimeEvent: Boolean = true,
