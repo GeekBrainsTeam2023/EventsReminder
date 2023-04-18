@@ -4,9 +4,7 @@ import android.annotation.SuppressLint
 import android.content.ContentResolver
 import android.content.Context
 import android.database.Cursor
-import android.os.Build
 import android.provider.ContactsContract
-import androidx.annotation.RequiresApi
 import ru.geekbrains.eventsreminder.domain.EventData
 import ru.geekbrains.eventsreminder.usecases.addBirthDayEventFromContactPhone
 import ru.geekbrains.eventsreminder.usecases.getLocalDateFromBirthDay
@@ -14,7 +12,6 @@ import java.time.LocalDate
 
 class PhoneContactsRepoImpl(val context: Context):PhoneContactsRepo {
 
-    @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("Range")
     override fun loadBirthDayEvents(endDay: Int): List<EventData> {
         val listBirthDayEvents = arrayListOf<EventData>()
