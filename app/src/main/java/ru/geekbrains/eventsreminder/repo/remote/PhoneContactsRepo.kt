@@ -2,6 +2,6 @@ package ru.geekbrains.eventsreminder.repo.remote
 
 import ru.geekbrains.eventsreminder.domain.EventData
 
-interface IPhoneContactsRepo {
+interface PhoneContactsRepo {
     fun loadBirthDayEvents(endDay: Int): List<EventData>
 }

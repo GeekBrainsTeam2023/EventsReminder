@@ -3,16 +3,16 @@ package ru.geekbrains.eventsreminder.repo
 import ru.geekbrains.eventsreminder.domain.AppState
 import ru.geekbrains.eventsreminder.domain.EventData
 import ru.geekbrains.eventsreminder.domain.SettingsData
-import ru.geekbrains.eventsreminder.repo.local.ILocalRepo
+import ru.geekbrains.eventsreminder.repo.local.LocalRepo
 import ru.geekbrains.eventsreminder.repo.remote.IPhoneCalendarRepo
-import ru.geekbrains.eventsreminder.repo.remote.IPhoneContactsRepo
+import ru.geekbrains.eventsreminder.repo.remote.PhoneContactsRepo
 
-class UnionRepoImpl(
+class RepoImpl(
     val settings: SettingsData,
-    val localRepo: ILocalRepo,
-    val contactsRepo: IPhoneContactsRepo,
+    val localRepo: LocalRepo,
+    val contactsRepo: PhoneContactsRepo,
     val calendarRepo: IPhoneCalendarRepo
-):IUnionRepo {
+):Repo {
     override suspend fun loadData(): AppState {
         val listEvents = mutableListOf<EventData>()
         listEvents.addAll(localRepo.getList())

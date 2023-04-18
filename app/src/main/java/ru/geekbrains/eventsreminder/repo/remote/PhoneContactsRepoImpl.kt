@@ -12,7 +12,7 @@ import ru.geekbrains.eventsreminder.usecases.addBirthDayEventFromContactPhone
 import ru.geekbrains.eventsreminder.usecases.getLocalDateFromBirthDay
 import java.time.LocalDate
 
-class PhoneContactsRepoImpl(val context: Context):IPhoneContactsRepo {
+class PhoneContactsRepoImpl(val context: Context):PhoneContactsRepo {
 
     @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("Range")
