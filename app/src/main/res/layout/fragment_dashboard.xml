@@ -6,28 +6,17 @@
     android:layout_height="match_parent"
     tools:context=".presentation.ui.dashboard.DashboardFragment">
 
-    <TextView
-        android:id="@+id/textViewDashboardIntervalOfEvents"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:textAlignment="center"
-        android:textColor="@color/light_blue_900"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewListOfEvents"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="4dp"
         android:contentDescription="@string/dashboard_recyclerview_content_description"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:listitem="@layout/dashboard_recyclerview_item"
-        app:layout_constraintTop_toBottomOf="@id/textViewDashboardIntervalOfEvents" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/dashbordFabAddEvent"

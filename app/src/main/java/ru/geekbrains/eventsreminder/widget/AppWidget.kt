@@ -10,6 +10,7 @@ import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
 import ru.geekbrains.eventsreminder.R
+import ru.geekbrains.eventsreminder.presentation.MainActivity
 
 
 class AppWidget : AppWidgetProvider() {
@@ -22,29 +23,31 @@ class AppWidget : AppWidgetProvider() {
         appWidgetIds: IntArray
     ) {
         for (appWidgetId in appWidgetIds) {
-            val views = RemoteViews(
+                        val intentActivity =Intent(context, MainActivity::class.java)
+            //Intent("android.intent.action.MAIN")
+            //intentActivity.addCategory("android.intent.category.LAUNCHER")
+            //intentActivity.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+            //intentActivity.component = ComponentName(context, MainActivity::class.java)
+            val pendIntent = PendingIntent.getActivity(context,appWidgetId,intentActivity,PendingIntent.FLAG_IMMUTABLE)
+
+            val widgetView = RemoteViews(
                 context.packageName,
                 R.layout.app_widget
             )
 
-            // click event handler for the title, launches the app when the user clicks on title
-//
-//            val titleIntent = Intent(context, MainActivity::class.java)
-//            val titlePendingIntent = PendingIntent.getActivity(context, 0, titleIntent,
-//                PendingIntent.FLAG_UPDATE_CURRENT xor PendingIntent.FLAG_IMMUTABLE)
-//            views.setOnClickPendingIntent(R.id.itemAppWidget, titlePendingIntent)
             val intent = Intent(context, MyWidgetRemoteViewsService::class.java)
-            views.setRemoteAdapter(R.id.widgetList, intent)
-//            val intentActivity = Intent(context,MainActivity::class.java)
-//            val pendIntent = PendingIntent.getActivity(context,0,intentActivity,PendingIntent.FLAG_IMMUTABLE)
-//            views.setOnClickPendingIntent(R.id.itemAppWidget,pendIntent)
+
+            widgetView.setRemoteAdapter(R.id.widgetList, intent)
+
             // template to handle the click listener for each item
-//            val clickIntentTemplate = Intent(context, MainActivity::class.java)
-//            val clickPendingIntentTemplate: PendingIntent = TaskStackBuilder.create(context)
-//                .addNextIntentWithParentStack(clickIntentTemplate)
-//                .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT xor PendingIntent.FLAG_IMMUTABLE)
-//            views.setPendingIntentTemplate(R.id.itemAppWidget, clickPendingIntentTemplate)
-            appWidgetManager.updateAppWidget(appWidgetId, views)
+            val clickIntentTemplate = Intent(context, MainActivity::class.java)
+            val clickPendingIntentTemplate: PendingIntent = TaskStackBuilder.create(context)
+                .addNextIntentWithParentStack(clickIntentTemplate)
+                .getPendingIntent(appWidgetId, PendingIntent.FLAG_UPDATE_CURRENT xor PendingIntent.FLAG_IMMUTABLE)
+
+            widgetView.setPendingIntentTemplate(R.id.widgetList,clickPendingIntentTemplate)
+
+            appWidgetManager.updateAppWidget(appWidgetId, widgetView)
         }
     }
 
@@ -62,10 +65,13 @@ class AppWidget : AppWidgetProvider() {
     }
 
     companion object {
-        fun sendRefreshBroadcast(context: Context) {
+        fun sendRefreshBroadcast(activity: MainActivity) {
+            val ids: IntArray = AppWidgetManager.getInstance(activity.application)
+                .getAppWidgetIds(ComponentName(activity.application, AppWidget::class.java))
             val intent = Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE)
-            intent.component = ComponentName(context, AppWidget::class.java)
-            context.sendBroadcast(intent)
+            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
+            intent.component = ComponentName(activity, AppWidget::class.java)
+            activity.sendBroadcast(intent)
         }
     }
 }

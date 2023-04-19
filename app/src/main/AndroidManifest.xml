@@ -12,6 +12,7 @@
 <!--    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY"/>-->
 
     <application
+        android:name="ru.geekbrains.eventsreminder.di.App"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -35,7 +36,9 @@
             android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="ru.geekbrains.eventsreminder.app.ACTION_DATA_UPDATED" />
                 <action android:name="APPWIDGET_UPDATE" />
+
             </intent-filter>
 
             <meta-data
@@ -58,7 +61,8 @@
             android:permission="android.permission.BIND_REMOTEVIEWS" />
         <provider
             android:authorities="ru.geekbrains.eventsreminder.widget"
-            android:name=".widget.MyContentProvider" />
+            android:name=".widget.MyContentProvider"
+            android:exported="false" />
     </application>
 
 </manifest>
