@@ -5,7 +5,7 @@ import java.time.LocalTime
 
 data class EventData(
     val type: EventType,
-    val period: PeriodType?,
+    val period: Int?,
     val birthday:LocalDate?,
     val date: LocalDate,
     val time: LocalTime,
