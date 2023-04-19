@@ -33,4 +33,6 @@ class RepoImpl(
         }
         return ResourceState.SuccessState(listEvents.toList())
     }
+
+    override fun getSettings(): SettingsData = settings
 }
