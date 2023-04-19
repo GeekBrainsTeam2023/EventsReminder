@@ -6,6 +6,5 @@ import ru.geekbrains.eventsreminder.domain.ResourceState
 import ru.geekbrains.eventsreminder.domain.SettingsData
 
 interface Repo {
-    suspend fun loadData(): ResourceState<List<EventData>>
-    fun getSettings():SettingsData
+    suspend fun loadData(settings: SettingsData): ResourceState<List<EventData>>
 }

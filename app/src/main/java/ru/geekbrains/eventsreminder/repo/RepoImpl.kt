@@ -9,12 +9,11 @@ import ru.geekbrains.eventsreminder.repo.remote.IPhoneCalendarRepo
 import ru.geekbrains.eventsreminder.repo.remote.PhoneContactsRepo
 
 class RepoImpl(
-    val settings: SettingsData,
     val localRepo: LocalRepo,
     val contactsRepo: PhoneContactsRepo,
     val calendarRepo: IPhoneCalendarRepo
 ):Repo {
-    override suspend fun loadData(): ResourceState<List<EventData>> {
+    override suspend fun loadData(settings: SettingsData): ResourceState<List<EventData>> {
         val listEvents = mutableListOf<EventData>()
         listEvents.addAll(localRepo.getList())
         if (settings.isDataContact) {
@@ -34,5 +33,4 @@ class RepoImpl(
         return ResourceState.SuccessState(listEvents.toList())
     }
 
-    override fun getSettings(): SettingsData = settings
 }
