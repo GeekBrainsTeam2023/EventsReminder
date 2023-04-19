@@ -9,8 +9,8 @@ class LocalRepoImp:LocalRepo {
         listEvent.add(event)
     }
 
-    override fun addListEvents(list: List<EventData>) {
-        listEvent.addAll(list)
+    override fun addListEvents(listEvent: List<EventData>) {
+        this.listEvent.addAll(listEvent)
     }
 
     override fun getList(): List<EventData> = listEvent.toList()

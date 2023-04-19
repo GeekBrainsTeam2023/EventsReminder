@@ -79,6 +79,7 @@ class DashboardViewHolder(view: View) : RecyclerView.ViewHolder(view), Lifecycle
             dashboardRecyclerViewItemTitleTextview.text = event.title
             dashboardRecyclerViewItemDaysBeforeEventTextview.text = event.daysBeforeEvent
             dashboardRecyclerViewItemEventDateTextview.text = event.eventDate
+            textViewDashboardIntervalOfEvents.text = "Interval"
         }
 
     }

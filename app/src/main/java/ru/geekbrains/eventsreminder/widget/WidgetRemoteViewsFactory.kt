@@ -1,6 +1,7 @@
 package ru.geekbrains.eventsreminder.widget
 
 
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.database.Cursor
@@ -11,6 +12,7 @@ import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 import ru.geekbrains.eventsreminder.R
 import ru.geekbrains.eventsreminder.domain.EventType
+import ru.geekbrains.eventsreminder.presentation.MainActivity
 
 
 class WidgetRemoteViewsFactory(applicationContext: Context, intent: Intent?) :

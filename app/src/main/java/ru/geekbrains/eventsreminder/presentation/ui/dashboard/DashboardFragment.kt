@@ -1,12 +1,15 @@
 package ru.geekbrains.eventsreminder.presentation.ui.dashboard
 
 
+import android.appwidget.AppWidgetManager
+import android.appwidget.AppWidgetProvider
+import android.content.ComponentName
 import android.content.ContentValues
+import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.*
-import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
@@ -17,6 +20,7 @@ import ru.geekbrains.eventsreminder.databinding.FragmentDashboardBinding
 import ru.geekbrains.eventsreminder.domain.EventData
 import ru.geekbrains.eventsreminder.domain.EventType
 import ru.geekbrains.eventsreminder.domain.PeriodType
+import ru.geekbrains.eventsreminder.presentation.MainActivity
 import ru.geekbrains.eventsreminder.widget.AppWidget
 import ru.geekbrains.eventsreminder.widget.Contract
 import java.time.LocalDate
@@ -54,10 +58,10 @@ class DashboardFragment : Fragment() {
         binding.recyclerViewListOfEvents.adapter = dashboardAdapter
         val dashboardViewModel =
             ViewModelProvider(this).get(DashboardViewModel::class.java)
-        val textView: TextView = binding.textViewDashboardIntervalOfEvents
-        dashboardViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
+//        val textView: TextView = binding.textViewDashboardIntervalOfEvents
+//        dashboardViewModel.text.observe(viewLifecycleOwner) {
+//            textView.text = it
+//        }
         val addEventFab = binding.dashbordFabAddEvent
         addEventFab.setOnClickListener {
             Toast.makeText(context, "Добавить новое событие", Toast.LENGTH_SHORT).show()
@@ -98,7 +102,7 @@ class DashboardFragment : Fragment() {
 
         if (uri != null) {
             requireActivity().runOnUiThread {
-               AppWidget.sendRefreshBroadcast(requireActivity())
+               AppWidget.sendRefreshBroadcast(requireActivity() as MainActivity)
             }
         } else {
             requireActivity().runOnUiThread {
