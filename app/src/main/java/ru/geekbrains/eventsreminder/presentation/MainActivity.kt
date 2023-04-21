@@ -41,22 +41,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.overflow_menu, menu)
+        menuInflater.inflate(R.menu.overflow_menu, menu)
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
         try {
-
             NavigationUI.onNavDestinationSelected(item, navController)
-
-            return super.onOptionsItemSelected(item)
+            super.onOptionsItemSelected(item)
         } catch (t: Throwable) {
             Toast.makeText(applicationContext, t.toString(), Toast.LENGTH_SHORT).show()
-            return false
+            false
         }
-    }
 
     /**
      * Применить параметры из настроек

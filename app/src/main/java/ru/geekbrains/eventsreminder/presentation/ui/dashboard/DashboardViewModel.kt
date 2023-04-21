@@ -9,5 +9,5 @@ class DashboardViewModel : ViewModel() {
     private val _text = MutableLiveData<String>().apply {
         value = "Здесь показывается интервал для отображения списка событий"
     }
-    val text: LiveData<String> = _text
+    val text: LiveData<String> get()= _text
 }

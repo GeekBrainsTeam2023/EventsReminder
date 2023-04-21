@@ -31,8 +31,4 @@ class HomeFragment : Fragment() {
             textView.text = it
         }
     }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-    }
 }
