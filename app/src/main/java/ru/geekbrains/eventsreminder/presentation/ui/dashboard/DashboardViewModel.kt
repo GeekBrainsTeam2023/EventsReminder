@@ -57,7 +57,7 @@ class DashboardViewModel() : ViewModel(), LifecycleObserver {
         try{
         loadEventsListJob?.let{return}
         loadEventsListJob = viewmodelCoroutineScope.launch {
-           val result = repo.loadData()//settingsData.isDataCalendar,settingsData.isDataContact,settingsData.daysForShowEvents)
+           val result = repo.loadData(SettingsData(settingsData.isDataCalendar,settingsData.isDataContact,settingsData.daysForShowEvents))
             when(result){
                 is ResourceState.SuccessState -> {
                     allEvents = result.data

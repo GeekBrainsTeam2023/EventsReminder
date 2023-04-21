@@ -12,10 +12,9 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import ru.geekbrains.eventsreminder.R
 import ru.geekbrains.eventsreminder.databinding.DashboardRecyclerviewItemBinding
 
-class DashboardViewHolder(view: View) : RecyclerView.ViewHolder(view), LifecycleOwner {
+class DashboardViewHolder(private val view: View) : RecyclerView.ViewHolder(view), LifecycleOwner {
     private val binding: DashboardRecyclerviewItemBinding by viewBinding()
     private val lifecycleRegistry = LifecycleRegistry(this)
-    private val activity = view.context.findActivity()
     private var paused: Boolean = false
 
     init {
@@ -48,40 +47,34 @@ class DashboardViewHolder(view: View) : RecyclerView.ViewHolder(view), Lifecycle
 
     fun bind(event: Event) {
         with(binding) {
-            with(dashboardRecyclerViewCardview) {
-                with(dashboardRecyclerViewItemImage) {
-                    with(activity) {
-                        when (event.type) {
-                            "Birthday" -> setCardBackgroundColor(
-                                resources.getColor(
-                                    R.color.light_green,
-                                    theme
-                                )
-                            )
-                                .also { setImageResource(R.drawable.ic_home_24dp) }
-                            "Holiday" -> setCardBackgroundColor(
-                                resources.getColor(
-                                    R.color.light_violet,
-                                    theme
-                                )
-                            )
-                                .also { setImageResource(R.drawable.ic_add_24) }
-                            "SimpleEvent" -> setCardBackgroundColor(
-                                resources.getColor(
-                                    R.color.light_blue,
-                                    theme
-                                )
-                            ).also { setImageResource(R.drawable.ic_dashboard_black_24dp) }
-                        }
-                    }
-                }
+            when (event.type) {
+                "Birthday" -> dashboardItemPanel.setCardBackgroundColor(
+                    dashboardItemIcon.resources.getColor(
+                        R.color.light_green,
+                        view.context.theme
+                    )
+                )
+                    .also { dashboardItemIcon.setImageResource(R.drawable.ic_home_24dp) }
+                "Holiday" -> dashboardItemPanel.setCardBackgroundColor(
+                    dashboardItemIcon.resources.getColor(
+                        R.color.light_violet,
+                        view.context.theme
+                    )
+                )
+                    .also { dashboardItemIcon.setImageResource(R.drawable.ic_add_24) }
+                "SimpleEvent" -> dashboardItemPanel.setCardBackgroundColor(
+                    dashboardItemIcon.resources.getColor(
+                        R.color.light_blue,
+                        view.context.theme
+                    )
+                )
+                    .also { dashboardItemIcon.setImageResource(R.drawable.ic_dashboard_black_24dp) }
             }
-            dashboardRecyclerViewItemTitleTextview.text = event.title
-            dashboardRecyclerViewItemDaysBeforeEventTextview.text = event.daysBeforeEvent
-            dashboardRecyclerViewItemEventDateTextview.text = event.eventDate
+            dashboardItemTitlePanel.text = event.title
+            dashboardItemDaysBefore.text = event.daysBeforeEvent
+            dashboardItemDate.text = event.eventDate
             textViewDashboardIntervalOfEvents.text = "Interval"
         }
-
     }
 
     tailrec fun Context.findActivity(): Activity {

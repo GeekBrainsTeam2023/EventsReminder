@@ -57,8 +57,7 @@ class SettingsDataFactory{
 class RepoFactory{
     companion object{
         private var repo : Repo? = null
-        fun getRepo() = repo ?: RepoImpl(SettingsDataFactory.getSettingsData(),
-            LocalRepoFactory.getLocalRepo(),
+        fun getRepo() = repo ?: RepoImpl(LocalRepoFactory.getLocalRepo(),
         PhoneContactsRepoFactory.getPhoneContactsRepo(),
         IPhoneCalendarRepoFactory.getIPhoneCalendarRepo())
     }
