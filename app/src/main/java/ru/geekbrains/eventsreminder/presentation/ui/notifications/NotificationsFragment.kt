@@ -28,10 +28,5 @@ class NotificationsFragment : Fragment() {
         notificationsViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }
-
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
     }
 }
