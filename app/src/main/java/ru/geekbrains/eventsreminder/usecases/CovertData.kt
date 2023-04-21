@@ -14,7 +14,7 @@ fun getLocalDateFromBirthDay(birthDay: String): LocalDate = LocalDate.of(
 
 fun addBirthDayEventFromContactPhone(name: String, birthDay: String): EventData = EventData(
     EventType.BIRTHDAY,
-    PeriodType.YEAR,
+    null,
     LocalDate.parse(birthDay),
     getLocalDateFromBirthDay(birthDay),
     LocalTime.parse("00:00:00"),
