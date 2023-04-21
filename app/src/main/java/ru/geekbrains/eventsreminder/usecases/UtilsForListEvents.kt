@@ -12,7 +12,7 @@ fun getActualListEvents(listEvents: List<EventData>, settings: SettingsData): Li
             actualListEvents.add(event)
 
         if (event.date.plusDays(
-                event.period?.toLong() ?: 0
+                event.period?.getDays() ?: 0
             ) <= date.plusDays(settings.daysForShowEvents.toLong())
         )
             actualListEvents.add(event)
