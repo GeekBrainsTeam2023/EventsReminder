@@ -60,4 +60,6 @@
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
     <string name="app_widget_description">This is an app widget description</string>
+    <string name="title_show_event_interval_preference">выберите количество дней для показа событий</string>
+    <string name="key_show_events_interval_preference">interval for events</string>
 </resources>

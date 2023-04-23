@@ -54,4 +54,6 @@
     <string name="title_calendar_datasource_checkbox_preference">календарь</string>
     <string name="dashboard_recyclerview_content_description">Список карточек событий</string>
     <string name="dashboard_fab_content_description">кнопка для добавления события</string>
+    <string name="title_show_event_interval_preference">выберите количество дней для показа событий</string>
+    <string name="key_show_events_interval_preference">interval for events</string>
 </resources>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="appwidget_listview_divider_color">#eeeeee</color>
+    <color name="appwidget_relative_layout_background">#F2EDFA</color>
+</resources>

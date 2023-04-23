@@ -1,11 +1,8 @@
 package ru.geekbrains.eventsreminder.presentation.ui.dashboard
 
 
-import android.appwidget.AppWidgetManager
-import android.appwidget.AppWidgetProvider
-import android.content.ComponentName
 import android.content.ContentValues
-import android.content.Intent
+import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -14,12 +11,12 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import ru.geekbrains.eventsreminder.R
 import ru.geekbrains.eventsreminder.databinding.FragmentDashboardBinding
-import ru.geekbrains.eventsreminder.domain.EventData
-import ru.geekbrains.eventsreminder.domain.EventType
-import ru.geekbrains.eventsreminder.domain.PeriodType
+import ru.geekbrains.eventsreminder.domain.*
 import ru.geekbrains.eventsreminder.presentation.MainActivity
 import ru.geekbrains.eventsreminder.widget.AppWidget
 import ru.geekbrains.eventsreminder.widget.Contract
@@ -27,106 +24,153 @@ import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
-
+@RequiresApi(Build.VERSION_CODES.O)
 class DashboardFragment : Fragment() {
 
-	private val binding: FragmentDashboardBinding by viewBinding()
-	private var dashboardAdapter: DashboardRecyclerViewAdapter? = null
-	override fun onCreateView(
-		inflater: LayoutInflater,
-		container: ViewGroup?,
-		savedInstanceState: Bundle?
-	): View = inflater.inflate(R.layout.fragment_dashboard, container, false)
+    private val binding: FragmentDashboardBinding by viewBinding()
+    private var dashboardAdapter: DashboardRecyclerViewAdapter? = null
+    private lateinit var dashboardViewModel : DashboardViewModel
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View = inflater.inflate(R.layout.fragment_dashboard, container, false)
 
-        val event1 = Event(2, "Holiday","Holiday", "ic_notification_add_24.xml", "08.03", "3 days")
-        val event2 = Event(3, "Birthday","Svetlana", "ic_notification_add_24", "11.06.2003", "10 days")
-        val event3 =
-            Event(4, "SimpleEvent","Visit to my dantist", "ic_notification_add_24.xml", "27.01.2020", "today")
-        val eventsList: List<Event> = listOf(event1, event1, event2, event3)
-        dashboardAdapter = DashboardRecyclerViewAdapter(eventsList)
-        binding.recyclerViewListOfEvents.adapter = dashboardAdapter
-        val dashboardViewModel =
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        dashboardViewModel =
             ViewModelProvider(this).get(DashboardViewModel::class.java)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        //testDataShowing()
+        dashboardAdapter = DashboardRecyclerViewAdapter(dashboardViewModel.storedFilteredEvents)
+        binding.recyclerViewListOfEvents.adapter = dashboardAdapter
+        binding.recyclerViewListOfEvents.isSaveEnabled = true
+        dashboardAdapter!!.stateRestorationPolicy =
+            RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+
 //        val textView: TextView = binding.textViewDashboardIntervalOfEvents
 //        dashboardViewModel.text.observe(viewLifecycleOwner) {
 //            textView.text = it
 //        }
-        val addEventFab = binding.dashbordFabAddEvent
+        val addEventFab = binding.dashboardFabAddEvent
         addEventFab.setOnClickListener {
             Toast.makeText(context, "Добавить новое событие", Toast.LENGTH_SHORT).show()
         }
 
+        dashboardViewModel.statesLiveData.observe(this.viewLifecycleOwner) { appState ->
+            try {
+                when (appState) {
+                   is AppState.SuccessState<*> -> {
+                       val data = appState.data as  List<EventData>
 
-		val event1 = Event(2, "Holiday", "Holiday", "ic_notification_add_24.xml", "08.03", "3 days")
-		val event2 =
-			Event(3, "Birthday", "Svetlana", "ic_notification_add_24", "11.06.2003", "10 days")
-		val event3 =
-			Event(
-				4,
-				"SimpleEvent",
-				"Visit to my dantist",
-				"ic_notification_add_24.xml",
-				"27.01.2020",
-				"today"
-			)
-		val eventsList: List<Event> = listOf(event1, event1, event2, event3)
-		dashboardAdapter = DashboardRecyclerViewAdapter(eventsList)
-		binding.recyclerViewListOfEvents.adapter = dashboardAdapter
-		val dashboardViewModel =
-			ViewModelProvider(this).get(DashboardViewModel::class.java)
-		val textView: TextView = binding.textViewDashboardIntervalOfEvents
-		dashboardViewModel.text.observe(viewLifecycleOwner) {
-			textView.text = it
-		}
-		val addEventFab = binding.dashbordFabAddEvent
-		addEventFab.setOnClickListener {
-			Toast.makeText(context, "Добавить новое событие", Toast.LENGTH_SHORT).show()
-		}
+                       showEvents(data)
+                       updateWidget(data)
+                           //.apply { notifyDataSetChanged() }
+                       }
+                   is AppState.LoadingState-> {
+                   //TODO:Show some animation
+                        }
+                   is AppState.ErrorState -> dashboardViewModel.handleError(appState.error)
 
-		// TODO: REMOVE TEST HACK
-		clearWidgetDB()
-		eventsList.forEach { addToWidget(event) }
-		addToWidget(
-			EventData(
-				EventType.SIMPLE,
-				null,
-				null,
-				LocalDate.of(2023, 5, 31),
-				LocalTime.now(), LocalTime.now(), "Дедлайн по eventreminder"
-			)
-		)
-	}
+                }
+            }catch (t:Throwable){dashboardViewModel.handleError(t)}
+        }
+        dashboardViewModel.loadEvents()
+    }
 
-	private fun clearWidgetDB() =
-		requireActivity()
-			.applicationContext
-			.contentResolver
-			.delete(Contract.PATH_EVENTS_URI, null, null)
 
-	@RequiresApi(Build.VERSION_CODES.O)
-	fun addToWidget(eventData: EventData) {
-		val values = ContentValues()
-		values.put(Contract.COL_EVENT_TITLE, eventData.name)
-		values.put(Contract.COL_EVENT_TYPE, eventData.type.toString())
-		if (eventData.type != EventType.BIRTHDAY)
-			values.put(
-				Contract.COL_EVENT_DATE,
-				eventData.date.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-			)
-		else
-			values.put(
-				Contract.COL_EVENT_DATE,
-				eventData.birthday?.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-			)
-		values.put(
-			Contract.COL_EVENT_TIME,
-			eventData.time.format(DateTimeFormatter.ofPattern("HH:mm"))
-		)
+    fun showEvents(events: List<EventData>) {
+        try {
+            val diffResult = DiffUtil.calculateDiff(EventsDiffUtil(dashboardViewModel.storedFilteredEvents, events))
+            dashboardViewModel.storedFilteredEvents.clear()
+            dashboardViewModel.storedFilteredEvents.addAll(events)
+            dashboardAdapter?.let { diffResult.dispatchUpdatesTo(it) }
 
-		val uri: Uri? = requireActivity()
-			.applicationContext
-			.contentResolver
-			.insert(Contract.PATH_EVENTS_URI, values)
+        } catch (t: Throwable) {
+            dashboardViewModel.handleError(t)
+        }
+    }
+
+    fun updateWidget(eventsList: List<EventData>){
+        clearWidgetDB()
+        eventsList.forEach { addToWidget(it) }
+        // TODO: Finish project intime!
+        addToWidget(EventData(EventType.SIMPLE,
+            null,
+            null,
+            LocalDate.of(2023,5,31),
+            LocalTime.now(), LocalTime.now(),"Дедлайн по eventreminder"))
+
+    }
+
+
+    fun testDataShowing(){
+
+            // val eventItems: List<DashboardRecyclerviewItem>? = mapOfEvents?.let {  }
+            val event = EventData(
+                EventType.BIRTHDAY,
+                PeriodType.DAY,
+                LocalDate.of(2000, 3, 22),
+                LocalDate.of(2000, 3, 22),
+                LocalTime.of(18, 30, 22),
+                LocalTime.of(10, 20, 55),
+                "Vasiliy Ivanovich Zagorulko"
+            )
+            val event1 = EventData(
+                EventType.HOLIDAY,
+                PeriodType.DAY,
+                null,
+                LocalDate.of(0, 3, 8),
+                LocalTime.of(0, 0, 0),
+                LocalTime.of(10, 20, 55),
+                "Holiday of Holidays"
+            )
+            val event2 = EventData(
+                EventType.BIRTHDAY,
+                PeriodType.DAY,
+                LocalDate.of(2003, 11, 6),
+                LocalDate.of(2003, 11, 6),
+                LocalTime.of(0, 0, 0),
+                LocalTime.of(11, 10, 0),
+                "Svetlana"
+            )
+            val event3 = EventData(
+                EventType.SIMPLE,
+                PeriodType.MONTH,
+                null,
+                LocalDate.of(2023, 11, 27),
+                LocalTime.of(16, 30, 0),
+                LocalTime.of(15, 30, 0),
+                "Visit to my dantist"
+            )
+            val eventsList: List<EventData> = listOf(event, event1, event1, event2, event3)
+            dashboardAdapter = DashboardRecyclerViewAdapter(eventsList)
+     }
+
+    fun clearWidgetDB() =
+        requireActivity()
+            .applicationContext
+            .contentResolver
+            .delete(Contract.PATH_EVENTS_URI,null,null)
+
+
+     fun addToWidget(eventData: EventData){
+        val values = ContentValues()
+         values.put(Contract.COL_EVENT_TITLE, eventData.name)
+         values.put(Contract.COL_EVENT_TYPE, eventData.type.toString())
+         if (eventData.type != EventType.BIRTHDAY)
+            values.put(Contract.COL_EVENT_DATE, eventData.date.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")))
+         else
+             values.put(Contract.COL_EVENT_DATE, eventData.birthday?.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")))
+         values.put(Contract.COL_EVENT_TIME, eventData.time.format(DateTimeFormatter.ofPattern("HH:mm")))
+
+         val uri: Uri? = requireActivity()
+            .applicationContext
+            .contentResolver
+            .insert(Contract.PATH_EVENTS_URI, values)
 
         if (uri != null) {
             requireActivity().runOnUiThread {
@@ -144,13 +188,12 @@ class DashboardFragment : Fragment() {
     }
 
 
+    override fun onDestroy() {
+        dashboardAdapter = null
+        super.onDestroy()
+    }
 
-	override fun onDestroy() {
-		dashboardAdapter = null
-		super.onDestroy()
-	}
-
-	override fun onDestroyView() {
-		super.onDestroyView()
-	}
+    override fun onDestroyView() {
+        super.onDestroyView()
+    }
 }

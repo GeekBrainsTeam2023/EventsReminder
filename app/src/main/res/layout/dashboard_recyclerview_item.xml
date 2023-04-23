@@ -3,79 +3,62 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+
     <TextView
         android:id="@+id/textViewDashboardIntervalOfEvents"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:textAlignment="center"
-        android:textColor="@color/light_blue_900"
-        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        style="@style/textview_dashboard_interval_of_events" />
+
     <androidx.cardview.widget.CardView
-        android:id="@+id/dashboardItemPanel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="2dp"
-        android:layout_marginTop="2dp"
-        app:cardCornerRadius="0dp"
-        app:cardElevation="0dp"
-android:padding="5dp"
+        android:id="@+id/dashboardRecyclerViewCardview"
+        app:cardCornerRadius="@dimen/dashboard_recyclerview_cardview_corner_radius"
+        app:cardElevation="@dimen/dashboard_recyclerview_cardview_card_elevation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textViewDashboardIntervalOfEvents">
+        app:layout_constraintTop_toBottomOf="@id/textViewDashboardIntervalOfEvents"
+        style="@style/dashboard_recyclerview_cardview">
 
         <LinearLayout
+            android:id="@+id/dashboardRecyclerViewLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/dashboardItemIcon"
+                android:id="@+id/dashboardRecyclerViewItemImage"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_margin="6dp"
-                android:layout_weight="0.4"/>
+                android:layout_weight="0.4" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1.5">
+                android:id="@+id/dashboardRecyclerViewInternalConstraintLayout"
+                style="@style/dashboard_recyclerview_internal_constraint_layout">
 
                 <TextView
-                    android:id="@+id/dashboardItemTitlePanel"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:text="Mister X Ivanovich"
-                    android:textSize="17sp"
+                    android:id="@+id/dashboardRecyclerViewItemTitleTextview"
+                    android:text=""
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    style="@style/dashboard_recyclerview_item_title_textview" />
 
                 <TextView
-                    android:id="@+id/dashboardItemDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="start"
-                    android:text="21.12.1999"
-                    android:textSize="15sp"
+                    android:id="@+id/dashboardRecyclerViewItemEventDateTextview"
+                    android:text=""
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent" />
+                    style="@style/dashboard_recyclerview_item_event_date_textview" />
 
                 <TextView
-                    android:id="@+id/dashboardItemDaysBefore"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="end"
-                    android:paddingEnd="5dp"
-                    android:text="21.12.1999"
-                    android:textSize="15sp"
+                    android:id="@+id/dashboardRecyclerViewItemDaysBeforeEventTextview"
+                    android:text=""
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/dashboardItemTitlePanel" />
+                    app:layout_constraintTop_toBottomOf="@id/dashboardRecyclerViewItemTitleTextview"
+                    style="@style/dashboard_recyclerview_item_days_before_event_textview" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

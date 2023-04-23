@@ -9,24 +9,23 @@ import ru.geekbrains.eventsreminder.repo.remote.IPhoneCalendarRepo
 import ru.geekbrains.eventsreminder.repo.remote.PhoneContactsRepo
 
 class RepoImpl(
-    val settings: SettingsData,
     val localRepo: LocalRepo,
     val contactsRepo: PhoneContactsRepo,
     val calendarRepo: IPhoneCalendarRepo
 ):Repo {
-    override suspend fun loadData(): ResourceState<List<EventData>> {
+    override suspend fun loadData(daysForShowEvents:Int,isDataContact:Boolean,isDataCalendar:Boolean): ResourceState<List<EventData>> {
         val listEvents = mutableListOf<EventData>()
         listEvents.addAll(localRepo.getList())
-        if (settings.isDataContact) {
+        if (isDataContact) {
             try {
-                listEvents.addAll(contactsRepo.loadBirthDayEvents(settings.daysForShowEvents))
+                listEvents.addAll(contactsRepo.loadBirthDayEvents(daysForShowEvents))
             } catch(exc:Throwable) {
                 return ResourceState.ErrorState(Throwable("Ошибка заргрузки ДР из телефонной книжки"))
             }
         }
-        if (settings.isDataCalendar) {
+        if (isDataCalendar) {
             try {
-            listEvents.addAll(calendarRepo.loadEventCalendar(settings.daysForShowEvents))
+            listEvents.addAll(calendarRepo.loadEventCalendar(daysForShowEvents))
             } catch(exc:Throwable) {
                 return ResourceState.ErrorState(Throwable("Ошибка заргрузки событий из календаря"))
             }

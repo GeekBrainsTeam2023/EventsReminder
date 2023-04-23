@@ -8,23 +8,16 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewListOfEvents"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="4dp"
-        android:contentDescription="@string/dashboard_recyclerview_content_description"
+        style="@style/dashboard_recyclerview_list_of_events"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:listitem="@layout/dashboard_recyclerview_item"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:listitem="@layout/dashboard_recyclerview_item" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/dashbordFabAddEvent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:backgroundTint="@color/color_primary"
-        android:contentDescription="@string/dashboard_fab_content_description"
+        android:id="@+id/dashboardFabAddEvent"
+        style="@style/dashboard_fab"
         android:src="@drawable/ic_add_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

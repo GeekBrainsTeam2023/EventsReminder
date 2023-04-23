@@ -56,6 +56,7 @@ class SettingsFragment(
     }
 
     private fun initPreferenceButtons() {
+
         val chooseNotificationStartTimeButton: Preference? =
             findPreference(getString(R.string.key_notification_start_time_preference))
         chooseNotificationStartTimeButton?.setOnPreferenceClickListener {
@@ -151,7 +152,18 @@ class SettingsFragment(
      * */
     fun setPreferences(preferences: SharedPreferences, key: String? = null) {
         try {
+            if (key.isNullOrBlank() || key == getString(R.string.key_phonebook_datasource_checkbox_preference)) {
+                settingsData.isDataContact = preferences.getBoolean(
+                    getString(R.string.key_phonebook_datasource_checkbox_preference),
+                    settingsData.isDataContact
+                )}
 
+            if(key.isNullOrBlank() || key == (getString(R.string.key_show_events_interval_preference))){
+                settingsData.daysForShowEvents = preferences.getInt(getString(R.string.key_phonebook_datasource_checkbox_preference),
+                settingsData.daysForShowEvents)
+            }
+
+                if (key.isNullOrBlank()) return
             if (key.isNullOrBlank() || key == getString(R.string.key_notification_start_time_preference)) {
                 // TODO: установить время начала уведомления в соотвествтвующей вьюмодели
                 if (!key.isNullOrBlank()) return
@@ -193,6 +205,10 @@ class SettingsFragment(
             }
             if (key.isNullOrBlank() || key == getString(R.string.key_import_settings_preference)) {
                 //TODO: загрузить настройки из файла
+                settingsData.isDataCalendar = preferences.getBoolean(
+                    getString(R.string.key_import_settings_preference),
+                    settingsData.isDataContact
+                )
                 if (key.isNullOrBlank()) return
             }
 
