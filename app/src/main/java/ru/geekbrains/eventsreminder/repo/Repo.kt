@@ -6,5 +6,5 @@ import ru.geekbrains.eventsreminder.domain.ResourceState
 import ru.geekbrains.eventsreminder.domain.SettingsData
 
 interface Repo {
-    suspend fun loadData(daysForShowEvents:Int,isDataContact:Boolean,isDataCalendar:Boolean): ResourceState<List<EventData>>
+    suspend fun loadData(daysForShowEvents:Int,isDataContact:Boolean=true,isDataCalendar:Boolean=true): ResourceState<List<EventData>>
 }
