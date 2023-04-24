@@ -9,6 +9,8 @@
     <string name="menu_item_notifications_title">уведомления</string>
     <string name="settings_fragment_title">Настройки</string>
     <string name="notifications_fragment_title">Уведомления</string>
+    <string name="notifications_channel_name">EventsReminder Channel</string>
+    <string name="notifications_channel_description">EventsReminder Уведомления</string>
 
     <!-- Preference Titles,Keys-->
     <string name="title_datasource_preference_category">Источники данных</string>
