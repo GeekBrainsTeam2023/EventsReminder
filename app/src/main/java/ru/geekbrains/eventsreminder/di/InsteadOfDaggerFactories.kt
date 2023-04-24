@@ -59,6 +59,7 @@ class RepoFactory{
         private var repo : Repo? = null
         fun getRepo() = repo ?: RepoImpl(
             LocalRepoFactory.getLocalRepo(),
+
         PhoneContactsRepoFactory.getPhoneContactsRepo(),
         IPhoneCalendarRepoFactory.getIPhoneCalendarRepo())
     }

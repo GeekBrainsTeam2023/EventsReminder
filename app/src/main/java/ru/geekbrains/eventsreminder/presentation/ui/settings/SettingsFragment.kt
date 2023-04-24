@@ -164,6 +164,7 @@ class SettingsFragment(
             }
 
                 if (key.isNullOrBlank()) return
+
             if (key.isNullOrBlank() || key == getString(R.string.key_notification_start_time_preference)) {
                 // TODO: установить время начала уведомления в соотвествтвующей вьюмодели
                 if (!key.isNullOrBlank()) return
@@ -209,6 +210,7 @@ class SettingsFragment(
                     getString(R.string.key_import_settings_preference),
                     settingsData.isDataContact
                 )
+
                 if (key.isNullOrBlank()) return
             }
 

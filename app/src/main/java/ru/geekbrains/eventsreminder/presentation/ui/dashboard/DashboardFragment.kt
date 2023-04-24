@@ -1,6 +1,9 @@
 package ru.geekbrains.eventsreminder.presentation.ui.dashboard
 
 
+import android.appwidget.AppWidgetManager
+import android.appwidget.AppWidgetProvider
+import android.content.ComponentName
 import android.content.ContentValues
 import android.content.Context
 import android.net.Uri
@@ -155,7 +158,6 @@ class DashboardFragment : Fragment() {
             .applicationContext
             .contentResolver
             .delete(Contract.PATH_EVENTS_URI,null,null)
-
 
      fun addToWidget(eventData: EventData){
         val values = ContentValues()

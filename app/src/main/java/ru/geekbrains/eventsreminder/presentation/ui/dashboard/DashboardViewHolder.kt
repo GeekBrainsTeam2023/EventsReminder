@@ -145,6 +145,7 @@ class DashboardViewHolder(view: View) : RecyclerView.ViewHolder(view), Lifecycle
                 else if (num > 1 && num < 5) suffix = twoToFourEnding
             }
             return "$number $name$suffix"
+
         }
     }
 
