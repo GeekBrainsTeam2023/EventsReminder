@@ -1,11 +1,16 @@
 package ru.geekbrains.eventsreminder.presentation.ui.dashboard
 
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import ru.geekbrains.eventsreminder.R.layout.dashboard_recyclerview_item
+import ru.geekbrains.eventsreminder.domain.EventData
+import java.lang.reflect.Type
+import java.time.LocalDate
 
-class DashboardRecyclerViewAdapter(val eventsList: List<Event>) :
+class DashboardRecyclerViewAdapter(var events: List<EventData> ) :
     RecyclerView.Adapter<DashboardViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DashboardViewHolder =
         DashboardViewHolder(
@@ -14,10 +19,46 @@ class DashboardRecyclerViewAdapter(val eventsList: List<Event>) :
         )
             .also { it.createLifecycle() }
 
-    override fun getItemCount(): Int = eventsList.size
+    override fun getItemCount(): Int = events.size
+//    override fun getItemViewType(position: Int): Int {
+//        var index = 0
+//        var totalCount = 0
+//        var prevCount = 0
+//        do{
+//            prevCount = totalCount
+//            totalCount += events.values.toList()[index].size + 1
+//            index++
+//        }while (position > totalCount)
+//
+//            when (position - prevCount) {
+//                0 -> return 0
+//                else -> return 1
+//            }
+//    }
 
+//    fun getEventAt(position :Int) : EventData{
+//        var index = 0
+//        var totalCount = 0
+//        var prevCount = 0
+//        var curCount = 0
+//        do{
+//            curCount = events.values.toList()[index].size
+//            prevCount = totalCount
+//            totalCount += curCount
+//            index++
+//        }while (position > totalCount + index)
+//        if (position == 0) {
+//            prevCount = -1
+//        }
+//        return events.values.toList()[index - 1][position - prevCount - index]
+//
+//    }
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: DashboardViewHolder, position: Int) {
-        holder.bind(eventsList[position])
+        holder.bind(events[position],
+            position == 0 || events[position - 1].date != events[position].date)
     }
 
     override fun onViewAttachedToWindow(holder: DashboardViewHolder) {

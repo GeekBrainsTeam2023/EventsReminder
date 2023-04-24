@@ -34,4 +34,6 @@
     <color name="light_violet">#F5EDFF</color>
     <color name="light_blue">#E1F5FE</color>
     <color name="light_green">#F4FFEC</color>
+    <color name="appwidget_listview_divider_color">#eeeeee</color>
+    <color name="appwidget_relative_layout_background">#F2EDFA</color>
 </resources>

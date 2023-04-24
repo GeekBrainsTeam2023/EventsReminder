@@ -5,19 +5,27 @@
         app:iconSpaceReserved="false"
         app:title="@string/title_datasource_preference_category">
         <CheckBoxPreference
-            app:defaultValue="false"
+            app:defaultValue="true"
             app:iconSpaceReserved="false"
             app:key="@string/key_phonebook_datasource_checkbox_preference"
             app:title="@string/title_phonebook_datasource_checkbox_preference"
             app:useSimpleSummaryProvider="true" />
         <CheckBoxPreference
-            app:defaultValue="false"
+            app:defaultValue="true"
             app:iconSpaceReserved="false"
             app:key="@string/key_calendar_datasource_checkbox_preference"
             app:title="@string/title_calendar_datasource_checkbox_preference"
             app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
+
+    <EditTextPreference
+        app:iconSpaceReserved="false"
+        app:key="@string/key_show_events_interval_preference"
+        app:title="@string/title_show_event_interval_preference"
+        app:defaultValue="3"
+        app:useSimpleSummaryProvider="true"/>
+
 
     <PreferenceCategory
         app:iconSpaceReserved="false"
