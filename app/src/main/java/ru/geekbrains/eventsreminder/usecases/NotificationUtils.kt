@@ -12,7 +12,7 @@ import androidx.core.app.NotificationManagerCompat
 import ru.geekbrains.eventsreminder.R
 
 
-class NotificationUtils {
+object NotificationUtils {
     private val CHANNEL_ID = "EventsReminder"
 
     fun createNotificationChannel(context: Context) {
