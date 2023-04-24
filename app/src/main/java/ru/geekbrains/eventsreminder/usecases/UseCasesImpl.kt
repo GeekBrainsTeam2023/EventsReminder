@@ -7,7 +7,7 @@ import ru.geekbrains.eventsreminder.repo.Repo
 
 class UseCasesImpl (val repo:Repo):UseCases{
     override suspend fun loadListEvent(settings: SettingsData):ResourceState<List<EventData>>{
-        val loadResponse = repo.loadData(settings)
+        val loadResponse = repo.loadData(settings.daysForShowEvents)
         when(loadResponse){
             is ResourceState.SuccessState -> {
                 return ResourceState.SuccessState(getActualListEvents(loadResponse.data,settings))
