@@ -32,7 +32,7 @@
         <item name="android:layout_margin">
             @dimen/textview_dashboard_interval_of_events_layout_margin
         </item>
-        <item name="android:textAlignment">center</item>
+        <item name="android:textAlignment">viewStart</item>
         <item name="android:textColor">@color/light_blue_900</item>
         <item name="android:textSize">@dimen/textview_dashboard_interval_of_events_textsize</item>
     </style>
@@ -45,6 +45,8 @@
         </item>
         <item name="android:layout_marginTop">@dimen/dashboard_recyclerview_cardview_margin_top
         </item>
+        <item name="android:layout_marginBottom">3dp</item>
+
         <item name="android:padding">@dimen/dashboard_recyclerview_cardview_padding</item>
     </style>
 

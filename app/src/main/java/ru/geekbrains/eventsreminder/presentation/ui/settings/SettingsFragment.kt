@@ -40,7 +40,7 @@ class SettingsFragment(
 
     val bindPreferenceSummaryToValueListener =
         SharedPreferences.OnSharedPreferenceChangeListener { preferences, key ->
-            setPreferences(preferences, key)
+            (requireActivity() as MainActivity).setPreferences(preferences, key)
         }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -144,79 +144,7 @@ class SettingsFragment(
         }
 
     }
-    /**
-     * Применить параметры из настроек
-     * @param preferences набор настроек для применения в приложении
-     * @param key ключ с названием конкретной настройки
-     * (в случае [null] - будут применены все настройки)
-     * */
-    fun setPreferences(preferences: SharedPreferences, key: String? = null) {
-        try {
-            if (key.isNullOrBlank() || key == getString(R.string.key_phonebook_datasource_checkbox_preference)) {
-                settingsData.isDataContact = preferences.getBoolean(
-                    getString(R.string.key_phonebook_datasource_checkbox_preference),
-                    settingsData.isDataContact
-                )}
-
-            if(key.isNullOrBlank() || key == (getString(R.string.key_show_events_interval_preference))){
-                settingsData.daysForShowEvents = preferences.getInt(getString(R.string.key_phonebook_datasource_checkbox_preference),
-                settingsData.daysForShowEvents)
-            }
-
-                if (key.isNullOrBlank()) return
-
-            if (key.isNullOrBlank() || key == getString(R.string.key_notification_start_time_preference)) {
-                // TODO: установить время начала уведомления в соотвествтвующей вьюмодели
-                if (!key.isNullOrBlank()) return
-            }
-
-            if (key.isNullOrBlank() || key == getString(R.string.key_event_date_checkbox_preference)) {
-                // TODO: включить/выключить вывод даты события в соотвествтвующей вьюмодели
-                if (!key.isNullOrBlank()) return
-            }
-            if (key.isNullOrBlank() || key == getString(R.string.key_event_time_checkbox_preference)) {
-                // TODO: включить/выключить вывод времени события в соотвествтвующей вьюмодели
-                if (!key.isNullOrBlank()) return
-            }
-            if (key.isNullOrBlank() || key == getString(R.string.key_age_checkbox_preference)) {
-                // TODO: включить/выключить вывод возраста именинника в соотвествтвующей вьюмодели
-                if (!key.isNullOrBlank()) return
-            }
-            if (key.isNullOrBlank() || key == getString(R.string.key_birthdate_checkbox_preference)) {
-                // TODO: включить/выключить вывод даты дня рожджения в соотвествтвующей вьюмодели
-                if (!key.isNullOrBlank()) return
-            }
-            if (key.isNullOrBlank() || key == getString(R.string.key_age_checkbox_preference)) {
-                // TODO: включить/выключить вывод возраста именинника в соотвествтвующей вьюмодели
-                if (!key.isNullOrBlank()) return
-            }
-
-            if (key.isNullOrBlank() || key == getString(R.string.key_widget_border_rounded_corners_preference)) {
-                // TODO: установить скругление углов рамки виджета в соотвествтвующей вьюмодели
-                if (!key.isNullOrBlank()) return
-            }
-
-            if (key.isNullOrBlank() || key == getString(R.string.key_widget_font_size_preference)) {
-                // TODO: установить размер шрифта виджета в соотвествтвующей вьюмодели
-                if (!key.isNullOrBlank()) return
-            }
-            if (key.isNullOrBlank() || key == getString(R.string.key_export_settings_preference)) {
-                //TODO: записать текущие настройки в файл
-                if (key.isNullOrBlank()) return
-            }
-            if (key.isNullOrBlank() || key == getString(R.string.key_import_settings_preference)) {
-                //TODO: загрузить настройки из файла
-                settingsData.isDataCalendar = preferences.getBoolean(
-                    getString(R.string.key_import_settings_preference),
-                    settingsData.isDataContact
-                )
-
-                if (key.isNullOrBlank()) return
-            }
 
 
-        } catch (t: Throwable) {
-            Toast.makeText(requireActivity(), t.toString(), Toast.LENGTH_SHORT).show()
-        }
-    }
+
 }

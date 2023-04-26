@@ -41,6 +41,9 @@ class DashboardFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        with((requireActivity() as MainActivity)){
+            if (!checkPermission()) initReminderRights()
+        }
         dashboardViewModel =
             ViewModelProvider(this).get(DashboardViewModel::class.java)
     }
@@ -53,11 +56,6 @@ class DashboardFragment : Fragment() {
         binding.recyclerViewListOfEvents.isSaveEnabled = true
         dashboardAdapter!!.stateRestorationPolicy =
             RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
-
-//        val textView: TextView = binding.textViewDashboardIntervalOfEvents
-//        dashboardViewModel.text.observe(viewLifecycleOwner) {
-//            textView.text = it
-//        }
         val addEventFab = binding.dashboardFabAddEvent
         addEventFab.setOnClickListener {
             Toast.makeText(context, "Добавить новое событие", Toast.LENGTH_SHORT).show()
@@ -71,7 +69,6 @@ class DashboardFragment : Fragment() {
 
                        showEvents(data)
                        updateWidget(data)
-                           //.apply { notifyDataSetChanged() }
                        }
                    is AppState.LoadingState-> {
                    //TODO:Show some animation
