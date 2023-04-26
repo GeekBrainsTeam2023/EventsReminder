@@ -184,8 +184,8 @@ class MainActivity : AppCompatActivity() {
                 )}
 
             if(key.isNullOrBlank() || key == (getString(R.string.key_show_events_interval_preference))){
-                settings.daysForShowEvents = preferences.getInt(getString(R.string.key_phonebook_datasource_checkbox_preference),
-                    settings.daysForShowEvents)
+                settings.daysForShowEvents = preferences.getString(getString(R.string.key_show_events_interval_preference),
+                    settings.daysForShowEvents.toString())?.toInt() ?: settings.daysForShowEvents
             }
 
             if (key.isNullOrBlank()) return

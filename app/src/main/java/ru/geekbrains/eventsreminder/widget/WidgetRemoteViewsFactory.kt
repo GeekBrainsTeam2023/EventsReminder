@@ -62,7 +62,7 @@ class WidgetRemoteViewsFactory(applicationContext: Context, intent: Intent?) :
                 EventType.SIMPLE.toString() ->
                     rv.setTextColor(
                         R.id.widgetEventTitleTextview,
-                        mContext.getColor(R.color.color_primary_dark)
+                        mContext.getColor(R.color.purple_500)
                     )
                 EventType.HOLIDAY.toString() ->
                     rv.setTextColor(
@@ -72,7 +72,7 @@ class WidgetRemoteViewsFactory(applicationContext: Context, intent: Intent?) :
                 EventType.BIRTHDAY.toString() ->
                     rv.setTextColor(
                         R.id.widgetEventTitleTextview,
-                        mContext.getColor(com.google.android.material.R.color.material_blue_grey_900)
+                        mContext.getColor(R.color.light_blue_900)
                     )
             }
             rv.setTextViewText(R.id.widgetEventTitleTextview, it.getString(1))
