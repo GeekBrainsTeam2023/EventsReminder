@@ -3,15 +3,17 @@ package ru.geekbrains.eventsreminder.presentation.ui.settings
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.text.InputType
 import android.view.View
 import android.widget.Toast
+import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import ru.geekbrains.eventsreminder.R
 import ru.geekbrains.eventsreminder.di.SettingsDataFactory
-import ru.geekbrains.eventsreminder.domain.SettingsData
 import ru.geekbrains.eventsreminder.presentation.MainActivity
+
 
 class SettingsFragment(
 ) :
@@ -143,6 +145,10 @@ class SettingsFragment(
             true
         }
 
+        val preference = findPreference<EditTextPreference>(getString(R.string.key_show_events_interval_preference))
+        preference?.setOnBindEditTextListener {
+            it.inputType = InputType.TYPE_CLASS_NUMBER
+        }
     }
 
 
