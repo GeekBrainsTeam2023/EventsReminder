@@ -20,41 +20,6 @@ class DashboardRecyclerViewAdapter(var events: List<EventData> ) :
             .also { it.createLifecycle() }
 
     override fun getItemCount(): Int = events.size
-//    override fun getItemViewType(position: Int): Int {
-//        var index = 0
-//        var totalCount = 0
-//        var prevCount = 0
-//        do{
-//            prevCount = totalCount
-//            totalCount += events.values.toList()[index].size + 1
-//            index++
-//        }while (position > totalCount)
-//
-//            when (position - prevCount) {
-//                0 -> return 0
-//                else -> return 1
-//            }
-//    }
-
-//    fun getEventAt(position :Int) : EventData{
-//        var index = 0
-//        var totalCount = 0
-//        var prevCount = 0
-//        var curCount = 0
-//        do{
-//            curCount = events.values.toList()[index].size
-//            prevCount = totalCount
-//            totalCount += curCount
-//            index++
-//        }while (position > totalCount + index)
-//        if (position == 0) {
-//            prevCount = -1
-//        }
-//        return events.values.toList()[index - 1][position - prevCount - index]
-//
-//    }
-
-
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: DashboardViewHolder, position: Int) {
         holder.bind(events[position],
@@ -71,12 +36,3 @@ class DashboardRecyclerViewAdapter(var events: List<EventData> ) :
         super.onViewDetachedFromWindow(holder)
     }
 }
-
-data class Event(
-    var id: Int,
-    var type: String,
-    var title: String,
-    var image: String,
-    var eventDate: String,
-    var daysBeforeEvent: String
-)

@@ -3,6 +3,7 @@ package ru.geekbrains.eventsreminder.di
 import android.app.Application
 import android.content.Context
 import ru.geekbrains.eventsreminder.domain.SettingsData
+import ru.geekbrains.eventsreminder.presentation.ui.settings.SettingsFragment
 import ru.geekbrains.eventsreminder.repo.Repo
 import ru.geekbrains.eventsreminder.repo.RepoImpl
 import ru.geekbrains.eventsreminder.repo.local.LocalRepo
@@ -49,8 +50,8 @@ class LocalRepoFactory{
 
 class SettingsDataFactory{
     companion object{
-        private var settingsData : SettingsData? = null
-        fun getSettingsData() = settingsData ?: SettingsData()
+        private var settingsData = SettingsData()
+        fun getSettingsData() = settingsData
     }
 }
 

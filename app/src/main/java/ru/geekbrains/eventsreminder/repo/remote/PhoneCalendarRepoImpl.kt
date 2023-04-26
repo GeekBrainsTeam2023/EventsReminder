@@ -2,9 +2,11 @@ package ru.geekbrains.eventsreminder.repo.remote
 
 import android.content.ContentUris
 import android.content.Context
+import android.database.Cursor
 import android.icu.util.Calendar
 import android.icu.util.TimeZone
 import android.provider.CalendarContract
+import android.provider.CalendarContract.Calendars
 import androidx.core.database.getLongOrNull
 import androidx.core.database.getStringOrNull
 import ru.geekbrains.eventsreminder.domain.EventData
@@ -48,4 +50,40 @@ class PhoneCalendarRepoImpl(val context: Context) : IPhoneCalendarRepo {
 		}
 		return listBirthDayEvents
 	}
+
+	class ListCalendars {
+		var id : Long = 0
+		var name = ""
+		var accountName = ""
+		var accountType = ""
+	}
+
+	fun getCalendars(): ArrayList<ListCalendars> {
+		val calList = ArrayList<ListCalendars>()
+			val projection = arrayOf(
+				Calendars._ID,
+				Calendars.NAME,
+				Calendars.ACCOUNT_NAME,
+				Calendars.ACCOUNT_TYPE
+			)
+			val selection = "${Calendars.CALENDAR_ACCESS_LEVEL} = ${Calendars.CAL_ACCESS_OWNER}"
+			val cursor: Cursor? = context.contentResolver.query(
+				Calendars.CONTENT_URI,
+				projection,
+				selection,
+				null,
+				Calendars._ID + " ASC"
+			)
+			if (cursor != null) while (cursor.moveToNext()){
+				val calendar = ListCalendars()
+				calendar.id = cursor.getLong(0)
+				calendar.name = cursor.getStringOrNull(1) ?: ""
+				calendar.accountName = cursor.getString(2)
+				calendar.accountType = cursor.getString(3)
+				calList.add(calendar)
+			}
+			cursor?.close()
+		return calList
+	}
+
 }

@@ -31,11 +31,6 @@ class DashboardViewModel() : ViewModel(), LifecycleObserver {
      * Используется для хранения списка из DashboardRecyclerViewAdapter
      * */
     val storedFilteredEvents = mutableListOf<EventData>()
-
-    //    private val _text = MutableLiveData<String>().apply {
-//        value = "Здесь показывается интервал для отображения списка событий"
-//    }
-//    val text: LiveData<String> = _text
     fun handleError(error: Throwable) {
         try {
             statesLiveData.postValue(AppState.ErrorState(error))

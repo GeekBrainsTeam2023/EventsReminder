@@ -109,7 +109,6 @@ class DashboardViewHolder(view: View) : RecyclerView.ViewHolder(view), Lifecycle
                 }
             }
 
-
         }
     }
 
@@ -119,7 +118,7 @@ class DashboardViewHolder(view: View) : RecyclerView.ViewHolder(view), Lifecycle
             0 -> "Сегодня"
             1 -> "Завтра"
             2 -> "Послезавтра"
-            else ->"через " + RusIntPlural(
+            else ->"Через " + RusIntPlural(
                 "д",
                 ChronoUnit.DAYS.between(LocalDate.now(), date).toInt(),
                 "ень", "ня", "ней"
