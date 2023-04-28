@@ -70,6 +70,7 @@ class DashboardViewModel() : ViewModel(), LifecycleObserver {
         }
      }
 
+    fun getDatysToShowEventsCount() = settingsData.daysForShowEvents
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun appendFilter(){
