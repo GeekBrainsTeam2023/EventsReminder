@@ -3,13 +3,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/eventsListTitlesLinearLayout"
+    android:orientation="horizontal"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintBottom_toTopOf="@id/dashboardRecyclerViewCardview">
 
     <TextView
         android:id="@+id/textViewDashboardIntervalOfEvents"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_gravity="start"
+        android:text="today in6 kytr"
         style="@style/textview_dashboard_interval_of_events" />
+
+    <TextView
+        android:id="@+id/textViewDashboardDateOfEvents"
+        android:text="22 may 2023"
+        style="@style/textview_dashboard_date_of_events" />
+</LinearLayout>
+
 
     <androidx.cardview.widget.CardView
         android:id="@+id/dashboardRecyclerViewCardview"
@@ -17,7 +31,7 @@
         app:cardElevation="@dimen/dashboard_recyclerview_cardview_card_elevation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textViewDashboardIntervalOfEvents"
+        app:layout_constraintTop_toBottomOf="@id/eventsListTitlesLinearLayout"
         style="@style/dashboard_recyclerview_cardview">
 
         <LinearLayout
@@ -47,18 +61,20 @@
                     style="@style/dashboard_recyclerview_item_title_textview" />
 
                 <TextView
-                    android:id="@+id/dashboardRecyclerViewItemEventDateTextview"
+                    android:id="@+id/dashboardRecyclerViewItemEventTimeTextview"
                     android:text=""
+                    app:layout_constraintTop_toBottomOf="@id/dashboardRecyclerViewItemTitleTextview"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    style="@style/dashboard_recyclerview_item_event_date_textview" />
+                    style="@style/dashboard_recyclerview_item_event_time_textview" />
 
                 <TextView
-                    android:id="@+id/dashboardRecyclerViewItemDaysBeforeEventTextview"
+                    android:id="@+id/dashboardRecyclerViewItemAgeTextview"
                     android:text=""
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/dashboardRecyclerViewItemTitleTextview"
-                    style="@style/dashboard_recyclerview_item_days_before_event_textview" />
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    style="@style/dashboard_recyclerview_item_age_textview" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

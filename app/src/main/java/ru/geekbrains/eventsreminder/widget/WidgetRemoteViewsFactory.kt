@@ -56,6 +56,10 @@ class WidgetRemoteViewsFactory(applicationContext: Context, intent: Intent?) :
         }
 
         val rv = RemoteViews(mContext.packageName, R.layout.item_app_widget)
+//        val intentActivity =Intent(mContext, MainActivity::class.java)
+//        rv.setOnClickPendingIntent(0,PendingIntent.getActivity(mContext,
+//                0,intentActivity,PendingIntent.FLAG_IMMUTABLE)
+//        )
 
         mCursor?.let {
             when (it.getString(4)) {

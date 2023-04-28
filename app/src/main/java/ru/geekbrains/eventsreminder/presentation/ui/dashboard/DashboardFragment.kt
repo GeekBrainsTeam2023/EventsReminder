@@ -26,6 +26,7 @@ import ru.geekbrains.eventsreminder.widget.Contract
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 
 @RequiresApi(Build.VERSION_CODES.O)
 class DashboardFragment : Fragment() {
@@ -88,7 +89,15 @@ class DashboardFragment : Fragment() {
             dashboardViewModel.storedFilteredEvents.clear()
             dashboardViewModel.storedFilteredEvents.addAll(events)
             dashboardAdapter?.let { diffResult.dispatchUpdatesTo(it) }
-
+            binding.textViewDashboardHeader.text = "всего " + RusIntPlural(
+                "событ",
+                events.count(),
+                "ие", "ия", "ий"
+            ) + " за " + RusIntPlural(
+                "д",
+                dashboardViewModel.getDatysToShowEventsCount(),
+                "ень", "ня", "ней"
+            )
         } catch (t: Throwable) {
             dashboardViewModel.handleError(t)
         }

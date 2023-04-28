@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.InputType
 import android.view.View
 import android.widget.Toast
+import androidx.preference.CheckBoxPreference
 import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
@@ -19,13 +20,13 @@ class SettingsFragment(
 ) :
     PreferenceFragmentCompat() {//, HasAndroidInjector { //это заготовка для даггера
     private val settingsData = SettingsDataFactory.getSettingsData()
+    private  val prefs by lazy {
+        PreferenceManager.getDefaultSharedPreferences(requireActivity().applicationContext)}
     //lateinit var androidInjector: DispatchingAndroidInjector<Any>
     override fun onAttach(context: Context) {
         try {
             //AndroidSupportInjection.inject(this as Fragment)
             super.onAttach(context)
-            val prefs =
-                PreferenceManager.getDefaultSharedPreferences(requireActivity().applicationContext)
             prefs.registerOnSharedPreferenceChangeListener(bindPreferenceSummaryToValueListener)
         } catch (t: Throwable) {
             Toast.makeText(context, "failed to get preferences", Toast.LENGTH_SHORT).show()
@@ -47,7 +48,7 @@ class SettingsFragment(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initPreferenceButtons()
+        initPreferences()
     }
 
     override fun onDetach() {
@@ -57,7 +58,19 @@ class SettingsFragment(
         prefs.unregisterOnSharedPreferenceChangeListener(bindPreferenceSummaryToValueListener)
     }
 
-    private fun initPreferenceButtons() {
+    private fun initPreferences() {
+
+        findPreference<EditTextPreference>(getString(R.string.key_show_events_interval_preference))?.text =
+        prefs.getString(getString(R.string.key_show_events_interval_preference),
+            settingsData.daysForShowEvents.toString())
+
+        findPreference<CheckBoxPreference>(getString(R.string.key_calendar_datasource_checkbox_preference))?.isChecked =
+            prefs.getBoolean(getString(R.string.key_calendar_datasource_checkbox_preference),
+                settingsData.isDataCalendar)
+
+        findPreference<CheckBoxPreference>(getString(R.string.key_phonebook_datasource_checkbox_preference))?.isChecked =
+            prefs.getBoolean(getString(R.string.key_phonebook_datasource_checkbox_preference),
+                settingsData.isDataContact)
 
         val chooseNotificationStartTimeButton: Preference? =
             findPreference(getString(R.string.key_notification_start_time_preference))

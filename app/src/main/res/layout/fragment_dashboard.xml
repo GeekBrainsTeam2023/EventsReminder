@@ -5,14 +5,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".presentation.ui.dashboard.DashboardFragment">
-
+    <TextView
+        android:id="@+id/textViewDashboardHeader"
+        android:layout_gravity="start"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/recyclerViewListOfEvents"
+        android:textColor="@color/light_blue_900"
+        android:layout_margin="@dimen/textview_dashboard_header_layout_margin"
+        android:textSize="@dimen/textview_dashboard_header_textsize"
+        />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewListOfEvents"
         style="@style/dashboard_recyclerview_list_of_events"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textViewDashboardHeader"
         tools:listitem="@layout/dashboard_recyclerview_item" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
