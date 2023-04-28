@@ -12,7 +12,6 @@
 
     <style name="dashboard_recyclerview_list_of_events">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_margin">@dimen/recyclerview_list_of_events_layout_margin</item>
         <item name="android:contentDescription">@string/dashboard_recyclerview_content_description
         </item>

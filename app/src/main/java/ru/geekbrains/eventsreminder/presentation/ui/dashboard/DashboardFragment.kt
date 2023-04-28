@@ -13,12 +13,15 @@ import android.view.*
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
+import dagger.android.support.DaggerFragment
 import ru.geekbrains.eventsreminder.R
 import ru.geekbrains.eventsreminder.databinding.FragmentDashboardBinding
+import ru.geekbrains.eventsreminder.di.ViewModelFactory
 import ru.geekbrains.eventsreminder.domain.*
 import ru.geekbrains.eventsreminder.presentation.MainActivity
 import ru.geekbrains.eventsreminder.widget.AppWidget
@@ -27,13 +30,17 @@ import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
+import javax.inject.Inject
 
-@RequiresApi(Build.VERSION_CODES.O)
-class DashboardFragment : Fragment() {
+class DashboardFragment : DaggerFragment() {
 
     private val binding: FragmentDashboardBinding by viewBinding()
     private var dashboardAdapter: DashboardRecyclerViewAdapter? = null
-    private lateinit var dashboardViewModel : DashboardViewModel
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+    private val dashboardViewModel by viewModels<DashboardViewModel>({ this }) { viewModelFactory }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -45,13 +52,10 @@ class DashboardFragment : Fragment() {
         with((requireActivity() as MainActivity)){
             if (!checkPermission()) initReminderRights()
         }
-        dashboardViewModel =
-            ViewModelProvider(this).get(DashboardViewModel::class.java)
-    }
+   }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //testDataShowing()
         dashboardAdapter = DashboardRecyclerViewAdapter(dashboardViewModel.storedFilteredEvents)
         binding.recyclerViewListOfEvents.adapter = dashboardAdapter
         binding.recyclerViewListOfEvents.isSaveEnabled = true
@@ -115,50 +119,6 @@ class DashboardFragment : Fragment() {
 
     }
 
-
-    fun testDataShowing(){
-
-            // val eventItems: List<DashboardRecyclerviewItem>? = mapOfEvents?.let {  }
-            val event = EventData(
-                EventType.BIRTHDAY,
-                PeriodType.DAY,
-                LocalDate.of(2000, 3, 22),
-                LocalDate.of(2000, 3, 22),
-                LocalTime.of(18, 30, 22),
-                LocalTime.of(10, 20, 55),
-                "Vasiliy Ivanovich Zagorulko"
-            )
-            val event1 = EventData(
-                EventType.HOLIDAY,
-                PeriodType.DAY,
-                null,
-                LocalDate.of(0, 3, 8),
-                LocalTime.of(0, 0, 0),
-                LocalTime.of(10, 20, 55),
-                "Holiday of Holidays"
-            )
-            val event2 = EventData(
-                EventType.BIRTHDAY,
-                PeriodType.DAY,
-                LocalDate.of(2003, 11, 6),
-                LocalDate.of(2003, 11, 6),
-                LocalTime.of(0, 0, 0),
-                LocalTime.of(11, 10, 0),
-                "Svetlana"
-            )
-            val event3 = EventData(
-                EventType.SIMPLE,
-                PeriodType.MONTH,
-                null,
-                LocalDate.of(2023, 11, 27),
-                LocalTime.of(16, 30, 0),
-                LocalTime.of(15, 30, 0),
-                "Visit to my dantist"
-            )
-            val eventsList: List<EventData> = listOf(event, event1, event1, event2, event3)
-            dashboardAdapter = DashboardRecyclerViewAdapter(eventsList)
-     }
-
     fun clearWidgetDB() =
         requireActivity()
             .applicationContext
@@ -201,7 +161,4 @@ class DashboardFragment : Fragment() {
         super.onDestroy()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-    }
 }

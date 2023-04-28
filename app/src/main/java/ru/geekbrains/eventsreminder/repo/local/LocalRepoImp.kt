@@ -1,8 +1,9 @@
 package ru.geekbrains.eventsreminder.repo.local
 
 import ru.geekbrains.eventsreminder.domain.EventData
+import javax.inject.Inject
 
-class LocalRepoImp:LocalRepo {
+class LocalRepoImp @Inject constructor():LocalRepo {
     private val listEvent= mutableListOf<EventData>()
 
     override fun addEvent(event: EventData) {
