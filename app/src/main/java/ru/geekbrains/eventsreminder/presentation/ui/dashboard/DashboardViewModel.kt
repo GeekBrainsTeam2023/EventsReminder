@@ -6,17 +6,19 @@ import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.*
-import ru.geekbrains.eventsreminder.di.RepoFactory
-import ru.geekbrains.eventsreminder.di.SettingsDataFactory
 import ru.geekbrains.eventsreminder.domain.AppState
 import ru.geekbrains.eventsreminder.domain.EventData
 import ru.geekbrains.eventsreminder.domain.ResourceState
+import ru.geekbrains.eventsreminder.domain.SettingsData
+import ru.geekbrains.eventsreminder.repo.Repo
 import java.time.LocalDate
+import javax.inject.Inject
 
 
-class DashboardViewModel() : ViewModel(), LifecycleObserver {
-    private val settingsData = SettingsDataFactory.getSettingsData()
-    private val repo = RepoFactory.getRepo()
+class DashboardViewModel @Inject constructor (
+        val settingsData : SettingsData,
+        val repo : Repo
+    ) : ViewModel(), LifecycleObserver {
     val statesLiveData: MutableLiveData<AppState> = MutableLiveData()
     private var allEvents = listOf<EventData>()
     private val filteredEventsList = mutableListOf<EventData>()

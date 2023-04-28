@@ -20,7 +20,7 @@ class DashboardRecyclerViewAdapter(var events: List<EventData> ) :
             .also { it.createLifecycle() }
 
     override fun getItemCount(): Int = events.size
-    @RequiresApi(Build.VERSION_CODES.O)
+
     override fun onBindViewHolder(holder: DashboardViewHolder, position: Int) {
         holder.bind(events[position],
             position == 0 || events[position - 1].date != events[position].date)

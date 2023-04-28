@@ -12,8 +12,10 @@ import androidx.core.database.getStringOrNull
 import ru.geekbrains.eventsreminder.domain.EventData
 import ru.geekbrains.eventsreminder.usecases.addEventFromCalendar
 import java.time.LocalDate
+import javax.inject.Inject
 
-class PhoneCalendarRepoImpl(val context: Context) : IPhoneCalendarRepo {
+class PhoneCalendarRepoImpl @Inject constructor (
+	val context: Context) : IPhoneCalendarRepo {
 
 	override fun loadEventCalendar(endDay: Int): List<EventData> {
 		val listBirthDayEvents = arrayListOf<EventData>()
