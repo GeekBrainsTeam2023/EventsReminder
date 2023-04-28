@@ -15,7 +15,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -23,16 +22,20 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.preference.PreferenceManager
+import dagger.android.support.DaggerAppCompatActivity
 import ru.geekbrains.eventsreminder.R
 import ru.geekbrains.eventsreminder.databinding.ActivityMainBinding
-import ru.geekbrains.eventsreminder.di.App
-import ru.geekbrains.eventsreminder.di.SettingsDataFactory
+import ru.geekbrains.eventsreminder.domain.SettingsData
+import javax.inject.Inject
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : DaggerAppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+
     var doubleBackToExitPressedOnce = false
+
     private lateinit var navController: NavController
-    private val settings = SettingsDataFactory.getSettingsData()
+    @Inject
+    lateinit var settings : SettingsData
     companion object{
         const val TAG = "MainActivity"
     }
@@ -45,6 +48,7 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         setContentView(binding.root)
+
         navController = findNavController(R.id.nav_host_fragment_activity_main)
 
         val appBarConfiguration = AppBarConfiguration(
@@ -65,7 +69,7 @@ class MainActivity : AppCompatActivity() {
             NavigationUI.onNavDestinationSelected(item, navController)
             super.onOptionsItemSelected(item)
         } catch (t: Throwable) {
-            Toast.makeText(App.context, t.toString(), Toast.LENGTH_SHORT).show()
+            Toast.makeText(applicationContext, t.toString(), Toast.LENGTH_SHORT).show()
             false
         }
 
@@ -86,7 +90,7 @@ class MainActivity : AppCompatActivity() {
                 2000
             )
         } catch (t: Throwable) {
-            Toast.makeText(App.context, t.toString(), Toast.LENGTH_SHORT).show()
+            Toast.makeText(applicationContext, t.toString(), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -125,11 +129,11 @@ class MainActivity : AppCompatActivity() {
     fun checkPermission(): Boolean {
         return (!settings.isDataCalendar ||
                 ContextCompat.checkSelfPermission(
-            App.context!!, Manifest.permission.READ_CALENDAR
+            applicationContext, Manifest.permission.READ_CALENDAR
         ) == PackageManager.PERMISSION_GRANTED) && (
                 !settings.isDataContact ||
                 ContextCompat.checkSelfPermission(
-            App.context!!, Manifest.permission.READ_CONTACTS
+            applicationContext, Manifest.permission.READ_CONTACTS
         )== PackageManager.PERMISSION_GRANTED)
     }
 

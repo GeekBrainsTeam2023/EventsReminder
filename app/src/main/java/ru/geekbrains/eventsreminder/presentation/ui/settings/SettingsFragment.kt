@@ -6,26 +6,32 @@ import android.os.Bundle
 import android.text.InputType
 import android.view.View
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.preference.CheckBoxPreference
 import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
+import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.HasAndroidInjector
+import dagger.android.support.AndroidSupportInjection
 import ru.geekbrains.eventsreminder.R
-import ru.geekbrains.eventsreminder.di.SettingsDataFactory
+import ru.geekbrains.eventsreminder.domain.SettingsData
 import ru.geekbrains.eventsreminder.presentation.MainActivity
+import javax.inject.Inject
 
 
-class SettingsFragment(
-) :
-    PreferenceFragmentCompat() {//, HasAndroidInjector { //это заготовка для даггера
-    private val settingsData = SettingsDataFactory.getSettingsData()
+class SettingsFragment : PreferenceFragmentCompat(), HasAndroidInjector {
+    @Inject
+    lateinit var settingsData : SettingsData
     private  val prefs by lazy {
         PreferenceManager.getDefaultSharedPreferences(requireActivity().applicationContext)}
-    //lateinit var androidInjector: DispatchingAndroidInjector<Any>
+
+    lateinit var androidInjector: DispatchingAndroidInjector<Any>
     override fun onAttach(context: Context) {
         try {
-            //AndroidSupportInjection.inject(this as Fragment)
+            AndroidSupportInjection.inject(this as Fragment)
             super.onAttach(context)
             prefs.registerOnSharedPreferenceChangeListener(bindPreferenceSummaryToValueListener)
         } catch (t: Throwable) {
@@ -33,9 +39,10 @@ class SettingsFragment(
         }
     }
 
-    //    override fun androidInjector(): AndroidInjector<Any> {
-//        return androidInjector
-//    }
+        override fun androidInjector(): AndroidInjector<Any> {
+
+        return androidInjector
+    }
     override fun onCreatePreferences(savedInstanceState: Bundle?, key: String?) {
 
         setPreferencesFromResource(R.xml.preferences, key)

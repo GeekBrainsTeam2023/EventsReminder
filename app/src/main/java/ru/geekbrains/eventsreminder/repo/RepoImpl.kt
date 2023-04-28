@@ -1,14 +1,14 @@
 package ru.geekbrains.eventsreminder.repo
 
-import ru.geekbrains.eventsreminder.domain.AppState
+
 import ru.geekbrains.eventsreminder.domain.EventData
 import ru.geekbrains.eventsreminder.domain.ResourceState
-import ru.geekbrains.eventsreminder.domain.SettingsData
 import ru.geekbrains.eventsreminder.repo.local.LocalRepo
 import ru.geekbrains.eventsreminder.repo.remote.IPhoneCalendarRepo
 import ru.geekbrains.eventsreminder.repo.remote.PhoneContactsRepo
+import javax.inject.Inject
 
-class RepoImpl(
+class RepoImpl @Inject constructor(
     val localRepo: LocalRepo,
     val contactsRepo: PhoneContactsRepo,
     val calendarRepo: IPhoneCalendarRepo

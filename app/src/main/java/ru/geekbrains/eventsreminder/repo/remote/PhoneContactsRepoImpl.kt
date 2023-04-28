@@ -9,8 +9,10 @@ import ru.geekbrains.eventsreminder.domain.EventData
 import ru.geekbrains.eventsreminder.usecases.addBirthDayEventFromContactPhone
 import ru.geekbrains.eventsreminder.usecases.getLocalDateFromBirthDay
 import java.time.LocalDate
+import javax.inject.Inject
 
-class PhoneContactsRepoImpl(val context: Context) : PhoneContactsRepo {
+class PhoneContactsRepoImpl @Inject constructor (
+	val context: Context) : PhoneContactsRepo {
 
 	@SuppressLint("Range")
 	override fun loadBirthDayEvents(endDay: Int): List<EventData> {
