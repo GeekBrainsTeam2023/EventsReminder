@@ -51,39 +51,4 @@ class PhoneCalendarRepoImpl(val context: Context) : IPhoneCalendarRepo {
 		return listBirthDayEvents
 	}
 
-	class ListCalendars {
-		var id : Long = 0
-		var name = ""
-		var accountName = ""
-		var accountType = ""
-	}
-
-	fun getCalendars(): ArrayList<ListCalendars> {
-		val calList = ArrayList<ListCalendars>()
-			val projection = arrayOf(
-				Calendars._ID,
-				Calendars.NAME,
-				Calendars.ACCOUNT_NAME,
-				Calendars.ACCOUNT_TYPE
-			)
-			val selection = "${Calendars.CALENDAR_ACCESS_LEVEL} = ${Calendars.CAL_ACCESS_OWNER}"
-			val cursor: Cursor? = context.contentResolver.query(
-				Calendars.CONTENT_URI,
-				projection,
-				selection,
-				null,
-				Calendars._ID + " ASC"
-			)
-			if (cursor != null) while (cursor.moveToNext()){
-				val calendar = ListCalendars()
-				calendar.id = cursor.getLong(0)
-				calendar.name = cursor.getStringOrNull(1) ?: ""
-				calendar.accountName = cursor.getString(2)
-				calendar.accountType = cursor.getString(3)
-				calList.add(calendar)
-			}
-			cursor?.close()
-		return calList
-	}
-
 }

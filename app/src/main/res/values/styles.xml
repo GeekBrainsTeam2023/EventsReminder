@@ -27,8 +27,9 @@
     </style>
 
     <style name="textview_dashboard_interval_of_events">
-        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1.2</item>
         <item name="android:layout_margin">
             @dimen/textview_dashboard_interval_of_events_layout_margin
         </item>
@@ -64,7 +65,7 @@
         </item>
     </style>
 
-    <style name="dashboard_recyclerview_item_event_date_textview">
+    <style name="dashboard_recyclerview_item_event_time_textview">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">start</item>
@@ -79,7 +80,7 @@
         </item>
     </style>
 
-    <style name="dashboard_recyclerview_item_days_before_event_textview">
+    <style name="dashboard_recyclerview_item_age_textview">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">end</item>
@@ -117,5 +118,16 @@
         <item name="android:layout_margin">@dimen/widget_event_time_textview_layout_margin</item>
         <item name="android:textSize">@dimen/widget_event_time_textview_textsize</item>
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="textview_dashboard_date_of_events">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1.8</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:textSize">@dimen/textview_dashboard_date_or_events_textsize</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_margin">@dimen/textview_dashboard_date_of_events_layout_margin
+        </item>
+        <item name="android:layout_height">wrap_content</item>
     </style>
 </resources>

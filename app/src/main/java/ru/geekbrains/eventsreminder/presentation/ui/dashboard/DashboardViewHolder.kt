@@ -3,9 +3,11 @@ package ru.geekbrains.eventsreminder.presentation.ui.dashboard
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
-import android.opengl.Visibility
 import android.os.Build
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
+import android.widget.ImageView
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -54,99 +56,119 @@ class DashboardViewHolder(view: View) : RecyclerView.ViewHolder(view), Lifecycle
         }
     }
 
-/**
- * Привязать к вьюхолдеру конкретный EventData
- * @param item EvenData для привязки
- * @param isDataHeader Показывать ли в карточке Дату вверху карточки
- * */
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun bind( item: EventData,isDataHeader :Boolean) {
+    /**
+     * Привязать к вьюхолдеру конкретный EventData
+     * @param item EvenData для привязки
+     * @param isDataHeader Показывать ли в карточке Дату вверху карточки
+     * */
+    fun bind(item: EventData, isDataHeader: Boolean) {
         with(binding) {
-            with(dashboardRecyclerViewCardview) {
-                with(dashboardRecyclerViewItemImage) {
-                    with(activity) {
+            when (item.type) {
+                EventType.BIRTHDAY -> {
+                    setBirthdayEventSpecifics(item)
+                }
 
-                            val event = item
-                            when (event.type) {
-                                EventType.BIRTHDAY -> setCardBackgroundColor(
-                                    resources.getColor(
-                                        light_green,
-                                        theme
-                                    )
-                                )
-                                    .also { setImageResource(R.drawable.ic_home_24dp) }
-                                EventType.HOLIDAY -> setCardBackgroundColor(
-                                    resources.getColor(
-                                        R.color.light_violet,
-                                        theme
-                                    )
-                                )
-                                    .also { setImageResource(R.drawable.ic_add_24) }
-                                EventType.SIMPLE -> setCardBackgroundColor(
-                                    resources.getColor(
-                                        R.color.light_blue,
-                                        theme
-                                    )
-                                ).also { setImageResource(R.drawable.ic_dashboard_black_24dp) }
-                            }
-                            dashboardRecyclerViewItemTitleTextview.text = event.name
-                            dashboardRecyclerViewItemDaysBeforeEventTextview.text = dateToDaysInWords(event.date)
-                           if(event.type == EventType.BIRTHDAY){
-                               dashboardRecyclerViewItemEventDateTextview.text = event.birthday?.format(
-                                   DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-                           }
-                           else {dashboardRecyclerViewItemEventDateTextview.text = event.date.format(
-                                DateTimeFormatter.ofPattern("dd-MM-yyyy"))}
-                            textViewDashboardIntervalOfEvents.visibility =
-                                if (isDataHeader) {
-                                    View.VISIBLE.also{
-                                    textViewDashboardIntervalOfEvents.text =
-                                        dashboardRecyclerViewItemDaysBeforeEventTextview.text
-                                    }
-                                } else View.GONE
+                EventType.HOLIDAY -> {
+                    setHolidayEventSpecifics()
+                }
 
-                    }
+                EventType.SIMPLE -> {
+                    setSimpleEventSpecifics(item)
                 }
             }
-
+            setCommonEventVisualisation(item, isDataHeader)
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    private fun DashboardRecyclerviewItemBinding.setCommonEventVisualisation(
+        item: EventData,
+        isDataHeader: Boolean
+    ) {
+        dashboardRecyclerViewItemTitleTextview.text = item.name
+        textViewDashboardIntervalOfEvents.visibility =
+            if (isDataHeader) {
+                View.VISIBLE.also {
+                    textViewDashboardIntervalOfEvents.text =
+                        dateToDaysInWords(item.date)
+                }
+            } else View.GONE
+
+        textViewDashboardDateOfEvents.visibility =
+            if (isDataHeader) {
+                View.VISIBLE.also {
+                    textViewDashboardDateOfEvents.text = item.date.format(
+                        DateTimeFormatter.ofPattern("dd-MM-yyyy")
+                    )
+                }
+            } else View.GONE
+    }
+
+    private fun DashboardRecyclerviewItemBinding.setHolidayEventSpecifics() {
+        dashboardRecyclerViewCardview.setCardBackgroundColor(
+            activity.resources.getColor(
+                R.color.light_violet,
+                activity.theme
+            )
+        )
+        dashboardRecyclerViewItemImage.setImageResource(R.drawable.ic_add_24)
+        dashboardRecyclerViewItemAgeTextview.visibility = GONE
+        dashboardRecyclerViewItemEventTimeTextview.visibility = GONE
+    }
+
+    private fun DashboardRecyclerviewItemBinding.setSimpleEventSpecifics(
+        item: EventData,
+    ) {
+        dashboardRecyclerViewCardview.setCardBackgroundColor(
+            activity.resources.getColor(
+                R.color.light_blue,
+                activity.theme
+            )
+        )
+        dashboardRecyclerViewItemAgeTextview.visibility = GONE
+        dashboardRecyclerViewItemEventTimeTextview.visibility = VISIBLE
+        dashboardRecyclerViewItemImage.setImageResource(R.drawable.ic_dashboard_black_24dp)
+        dashboardRecyclerViewItemEventTimeTextview.text =
+            item.time.format(DateTimeFormatter.ofPattern("HH:mm"))
+    }
+
+    private fun DashboardRecyclerviewItemBinding.setBirthdayEventSpecifics(
+        item: EventData,
+    ) {
+        dashboardRecyclerViewCardview.setCardBackgroundColor(
+            activity.resources.getColor(
+                R.color.light_green,
+                activity.theme
+            )
+        )
+        dashboardRecyclerViewItemImage.setImageResource(R.drawable.ic_home_24dp)
+        if (item.birthday != null && item.birthday.year != 0) {
+            dashboardRecyclerViewItemAgeTextview.text =
+                dateToAgeInWords(item.birthday)
+            dashboardRecyclerViewItemAgeTextview.visibility = VISIBLE
+        }
+        else dashboardRecyclerViewItemAgeTextview.visibility = GONE
+        dashboardRecyclerViewItemEventTimeTextview.visibility = GONE
+    }
+
     fun dateToDaysInWords(date: LocalDate) =
         when (ChronoUnit.DAYS.between(LocalDate.now(), date).toInt()) {
             0 -> "Сегодня"
             1 -> "Завтра"
             2 -> "Послезавтра"
-            else ->"Через " + RusIntPlural(
+            else -> "Через " + RusIntPlural(
                 "д",
                 ChronoUnit.DAYS.between(LocalDate.now(), date).toInt(),
                 "ень", "ня", "ней"
             ).toString()
         }
 
+    fun dateToAgeInWords(date: LocalDate) =
+        "исполнится " + RusIntPlural(
+            "",
+            ChronoUnit.YEARS.between(date, LocalDate.now()).toInt(),
+            "год", "года", "лет"
+        )
 
-    /**
-     * Класс для вывода числительных с правильными окончаниями в зависимости от количества
-     * */
-    data class RusIntPlural(
-        val name: String,
-        val number: Int,
-        val singleEnding: String = "",
-        val twoToFourEnding: String = "",
-        val fiveToTenEnding: String = ""
-    ) {
-        override fun toString(): String {
-            var suffix = fiveToTenEnding
-            if ((number / 10) % 10 != 1) {
-                val num = number % 10
-                if (num > 0 && num < 2) suffix = singleEnding
-                else if (num > 1 && num < 5) suffix = twoToFourEnding
-            }
-            return "$number $name$suffix"
-
-        }
-    }
 
     tailrec fun Context.findActivity(): Activity {
         if (this is Activity) {
