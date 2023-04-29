@@ -23,12 +23,6 @@ class AppWidget : AppWidgetProvider() {
         appWidgetIds: IntArray
     ) {
         for (appWidgetId in appWidgetIds) {
-                        val intentActivity =Intent(context, MainActivity::class.java)
-            //Intent("android.intent.action.MAIN")
-            //intentActivity.addCategory("android.intent.category.LAUNCHER")
-            //intentActivity.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-            //intentActivity.component = ComponentName(context, MainActivity::class.java)
-            val pendIntent = PendingIntent.getActivity(context,appWidgetId,intentActivity,PendingIntent.FLAG_IMMUTABLE)
 
             val widgetView = RemoteViews(
                 context.packageName,
@@ -39,13 +33,19 @@ class AppWidget : AppWidgetProvider() {
 
             widgetView.setRemoteAdapter(R.id.widgetList, intent)
 
-            // template to handle the click listener for each item
+            // Темплейт pendingIntent с вызовом MainActivity для элементов списка
+            // Обязательно в WigetRemoteViewsFactory.getViewAt нужно вызвать
+            // rv.setOnClickFillInIntent(R.id.itemAppWidget,Intent()) чтобы  клики по элементам
+            // списка работали
             val clickIntentTemplate = Intent(context, MainActivity::class.java)
             val clickPendingIntentTemplate: PendingIntent = TaskStackBuilder.create(context)
                 .addNextIntentWithParentStack(clickIntentTemplate)
-                .getPendingIntent(appWidgetId, PendingIntent.FLAG_UPDATE_CURRENT xor PendingIntent.FLAG_IMMUTABLE)
-
-            widgetView.setPendingIntentTemplate(R.id.widgetList,clickPendingIntentTemplate)
+                .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT xor PendingIntent.FLAG_IMMUTABLE)
+            widgetView.setPendingIntentTemplate(R.id.widgetList, clickPendingIntentTemplate)
+            // Тело списка сделаем кликабельным для возможности реакции на клики при пустом списке
+            val intentActivity = Intent(context, MainActivity::class.java)
+            val pendIntent = PendingIntent.getActivity(context,appWidgetId,intentActivity,PendingIntent.FLAG_IMMUTABLE)
+            widgetView.setOnClickPendingIntent(R.id.widgetLayout, pendIntent);
 
             appWidgetManager.updateAppWidget(appWidgetId, widgetView)
         }

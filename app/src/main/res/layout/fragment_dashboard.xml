@@ -14,6 +14,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/recyclerViewListOfEvents"
         android:textColor="@color/light_blue_900"
+        android:textAlignment="viewStart"
         android:layout_margin="@dimen/textview_dashboard_header_layout_margin"
         android:textSize="@dimen/textview_dashboard_header_textsize"
         />

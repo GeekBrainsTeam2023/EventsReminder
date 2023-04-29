@@ -116,7 +116,6 @@ class DashboardFragment : DaggerFragment() {
             null,
             LocalDate.of(2023,5,31),
             LocalTime.now(), LocalTime.now(),"Дедлайн по eventreminder"))
-
     }
 
     fun clearWidgetDB() =
