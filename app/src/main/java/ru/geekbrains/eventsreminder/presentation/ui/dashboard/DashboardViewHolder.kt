@@ -3,12 +3,9 @@ package ru.geekbrains.eventsreminder.presentation.ui.dashboard
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
-import android.os.Build
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
-import android.widget.ImageView
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
@@ -136,11 +133,11 @@ class DashboardViewHolder(view: View) : RecyclerView.ViewHolder(view), Lifecycle
     ) {
         dashboardRecyclerViewCardview.setCardBackgroundColor(
             activity.resources.getColor(
-                R.color.light_green,
+                light_green,
                 activity.theme
             )
         )
-        dashboardRecyclerViewItemImage.setImageResource(R.drawable.ic_home_24dp)
+        dashboardRecyclerViewItemImage.setImageResource(R.drawable.birthday_balloons)
         if (item.birthday != null && item.birthday.year != 0) {
             dashboardRecyclerViewItemAgeTextview.text =
                 dateToAgeInWords(item.birthday)
