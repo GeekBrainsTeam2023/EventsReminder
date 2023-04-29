@@ -56,10 +56,11 @@ class WidgetRemoteViewsFactory(applicationContext: Context, intent: Intent?) :
         }
 
         val rv = RemoteViews(mContext.packageName, R.layout.item_app_widget)
-//        val intentActivity =Intent(mContext, MainActivity::class.java)
-//        rv.setOnClickPendingIntent(0,PendingIntent.getActivity(mContext,
-//                0,intentActivity,PendingIntent.FLAG_IMMUTABLE)
-//        )
+        // Для работы кликов по элементам списка в AppWidget.onUpdate()
+        // требуется установить темплейт виджета
+        // widgetView.setPendingIntentTemplate(R.id.widgetList, clickPendingIntentTemplate)
+        rv.setOnClickFillInIntent(R.id.itemAppWidget,Intent())// Здесь достаточно пустого интента
+
 
         mCursor?.let {
             when (it.getString(4)) {

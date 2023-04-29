@@ -34,7 +34,7 @@ http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
     <dimen name="appwidget_relative_layout_padding">4dp</dimen>
     <dimen name="textview_dashboard_date_or_events_textsize">16sp</dimen>
     <dimen name="textview_dashboard_date_of_events_layout_margin">5dp</dimen>
-    <dimen name="textview_dashboard_header_layout_margin">5dp</dimen>
+    <dimen name="textview_dashboard_header_layout_margin">6dp</dimen>
     <dimen name="textview_dashboard_header_textsize">16sp</dimen>
     <dimen name="recyclerview_list_of_events_padding_bottom">50dp</dimen>
 </resources>
