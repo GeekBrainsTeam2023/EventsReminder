@@ -64,4 +64,16 @@
     <string name="app_widget_description">This is an app widget description</string>
     <string name="title_show_event_interval_preference">выберите количество дней для показа событий</string>
     <string name="key_show_events_interval_preference">interval for events</string>
+    <string name="widget_item_preview_first_title">День Труда</string>
+    <string name="widget_item_preview_first_date">01-05-2023</string>
+    <string name="widget_item_preview_first_time">03:00</string>
+    <string name="widget_second_item_preview_title">Александр Сергеевич Пушкин</string>
+    <string name="widget_second_item_preview_date">06-06-1799</string>
+    <string name="widget_second_item_preview_age">224 года</string>
+    <string name="widget_third_item_preview_title">Иван Федорович Крузенштерн</string>
+    <string name="widget_third_item_preview_date">19-11-1770</string>
+    <string name="widget_third_item_preview_age">253 года</string>
+    <string name="widget_forth_item_preview_title">Новый Год</string>
+    <string name="widget_forth_item_preview_date">01-01-2024</string>
+    <string name="widget_forth_item_preview_time">03:00</string>
 </resources>
