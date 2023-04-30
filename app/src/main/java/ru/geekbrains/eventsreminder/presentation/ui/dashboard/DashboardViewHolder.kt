@@ -16,6 +16,9 @@ import ru.geekbrains.eventsreminder.R.color.light_green
 import ru.geekbrains.eventsreminder.databinding.DashboardRecyclerviewItemBinding
 import ru.geekbrains.eventsreminder.domain.EventData
 import ru.geekbrains.eventsreminder.domain.EventType
+import ru.geekbrains.eventsreminder.presentation.ui.RusIntPlural
+import ru.geekbrains.eventsreminder.presentation.ui.toAgeInWordsByDate
+import ru.geekbrains.eventsreminder.presentation.ui.toDaysSinceNowInWords
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
@@ -86,7 +89,7 @@ class DashboardViewHolder(view: View) : RecyclerView.ViewHolder(view), Lifecycle
             if (isDataHeader) {
                 View.VISIBLE.also {
                     textViewDashboardIntervalOfEvents.text =
-                        dateToDaysInWords(item.date)
+                        item.date.toDaysSinceNowInWords()
                 }
             } else View.GONE
 
@@ -139,8 +142,9 @@ class DashboardViewHolder(view: View) : RecyclerView.ViewHolder(view), Lifecycle
         )
         dashboardRecyclerViewItemImage.setImageResource(R.drawable.birthday_balloons)
         if (item.birthday != null && item.birthday.year != 0) {
-            dashboardRecyclerViewItemAgeTextview.text =
-                dateToAgeInWords(item.birthday)
+            dashboardRecyclerViewItemAgeTextview.text = "исполнится " +
+                item.birthday.toAgeInWordsByDate(item.date)
+                //dateToAgeInWords(item.birthday,item.date)
             dashboardRecyclerViewItemAgeTextview.visibility = VISIBLE
         }
         else dashboardRecyclerViewItemAgeTextview.visibility = GONE
@@ -159,10 +163,10 @@ class DashboardViewHolder(view: View) : RecyclerView.ViewHolder(view), Lifecycle
             ).toString()
         }
 
-    fun dateToAgeInWords(date: LocalDate) =
+    fun dateToAgeInWords(birthday: LocalDate, date: LocalDate) =
         "исполнится " + RusIntPlural(
             "",
-            ChronoUnit.YEARS.between(date, LocalDate.now()).toInt(),
+            ChronoUnit.YEARS.between(birthday,date).toInt(),
             "год", "года", "лет"
         )
 

@@ -35,6 +35,7 @@
         <receiver
             android:name=".widget.AppWidget"
             android:exported="false">
+
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="ru.geekbrains.eventsreminder.app.ACTION_DATA_UPDATED" />
