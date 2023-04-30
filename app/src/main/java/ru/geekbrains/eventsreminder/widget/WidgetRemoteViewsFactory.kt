@@ -10,6 +10,7 @@ import android.os.Binder
 import android.widget.AdapterView
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
+import androidx.core.content.ContextCompat.getColor
 import ru.geekbrains.eventsreminder.R
 import ru.geekbrains.eventsreminder.domain.EventType
 import ru.geekbrains.eventsreminder.presentation.MainActivity
@@ -59,32 +60,53 @@ class WidgetRemoteViewsFactory(applicationContext: Context, intent: Intent?) :
         // Для работы кликов по элементам списка в AppWidget.onUpdate()
         // требуется установить темплейт виджета
         // widgetView.setPendingIntentTemplate(R.id.widgetList, clickPendingIntentTemplate)
-        rv.setOnClickFillInIntent(R.id.itemAppWidget,Intent())// Здесь достаточно пустого интента
+        rv.setOnClickFillInIntent(R.id.itemAppWidget, Intent())// Здесь достаточно пустого интента
 
+        if (position % 2 == 0) {
+            rv.setInt(R.id.itemAppWidget, "setBackgroundColor",getColor(mContext,
+                androidx.cardview.R.color.cardview_light_background))
+        } else {
+            rv.setInt(
+                R.id.itemAppWidget, "setBackgroundColor",
+                getColor(mContext,R.color.light_blue_50)
+            )
+        }
 
         mCursor?.let {
             when (it.getString(4)) {
                 EventType.SIMPLE.toString() ->
-                    rv.setTextColor(
-                        R.id.widgetEventTitleTextview,
-                        mContext.getColor(R.color.purple_500)
-                    )
+                    setWidgetLineColor(rv,
+                       mContext.getColor(R.color.purple_500))
+
                 EventType.HOLIDAY.toString() ->
-                    rv.setTextColor(
-                        R.id.widgetEventTitleTextview,
-                        mContext.getColor(R.color.color_secondary)
-                    )
+                    setWidgetLineColor(rv,
+                        mContext.getColor(R.color.color_secondary))
+
                 EventType.BIRTHDAY.toString() ->
-                    rv.setTextColor(
-                        R.id.widgetEventTitleTextview,
-                        mContext.getColor(R.color.light_blue_900)
-                    )
+                    setWidgetLineColor(rv,
+                        mContext.getColor(R.color.light_blue_900))
+
             }
             rv.setTextViewText(R.id.widgetEventTitleTextview, it.getString(1))
             rv.setTextViewText(R.id.widgetEventDateTextview, it.getString(2))
             rv.setTextViewText(R.id.widgetEventTimeTextview, it.getString(3))
         }
         return rv
+    }
+
+    private fun setWidgetLineColor(rv: RemoteViews, color: Int) {
+        rv.setTextColor(
+            R.id.widgetEventTitleTextview,
+            color
+        )
+        rv.setTextColor(
+            R.id.widgetEventDateTextview,
+            color
+        )
+        rv.setTextColor(
+            R.id.widgetEventTimeTextview,
+            color
+        )
     }
 
     override fun getLoadingView(): RemoteViews? {

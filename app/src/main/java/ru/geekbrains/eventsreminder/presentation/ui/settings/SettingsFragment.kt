@@ -168,6 +168,7 @@ class SettingsFragment : PreferenceFragmentCompat(), HasAndroidInjector {
         val preference = findPreference<EditTextPreference>(getString(R.string.key_show_events_interval_preference))
         preference?.setOnBindEditTextListener {
             it.inputType = InputType.TYPE_CLASS_NUMBER
+            it.selectAll()
         }
     }
 

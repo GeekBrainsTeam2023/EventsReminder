@@ -1,4 +1,4 @@
-package ru.geekbrains.eventsreminder.presentation.ui.dashboard
+package ru.geekbrains.eventsreminder.presentation.ui
 
 /**
  * Класс для вывода числительных с правильными окончаниями в зависимости от количества
