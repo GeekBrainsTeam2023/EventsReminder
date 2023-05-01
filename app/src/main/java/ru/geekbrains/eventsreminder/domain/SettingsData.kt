@@ -14,8 +14,7 @@ data class SettingsData(
     val colorSimpleEvent: Int = Color.BLUE,
     val colorBirthdayEvent: Int = Color.GREEN,
     val colorHolidayEvent: Int = Color.RED,
-    val sizeWidget: SizeWidgetType = SizeWidgetType.Small,
-    val colorWidget: Int = Color.BLUE,
-    val transparentWidget: Int = 50,
-    val sizeFontWidget: Int = 12,
+    var colorWidget: Int = 0xE8E6EC,
+    var alternatingColorWidget: Int = 0xDCF3F3,
+    var sizeFontWidget: Int = 13,
     )

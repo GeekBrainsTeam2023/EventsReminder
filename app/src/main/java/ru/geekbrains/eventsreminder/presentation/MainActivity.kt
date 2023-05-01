@@ -26,6 +26,7 @@ import dagger.android.support.DaggerAppCompatActivity
 import ru.geekbrains.eventsreminder.R
 import ru.geekbrains.eventsreminder.databinding.ActivityMainBinding
 import ru.geekbrains.eventsreminder.domain.SettingsData
+import ru.geekbrains.eventsreminder.widget.AppWidget
 import javax.inject.Inject
 
 class MainActivity : DaggerAppCompatActivity() {
@@ -192,7 +193,34 @@ class MainActivity : DaggerAppCompatActivity() {
                     settings.daysForShowEvents.toString())?.toInt() ?: settings.daysForShowEvents
             }
 
-            if (key.isNullOrBlank()) return
+            if (key.isNullOrBlank() || key == getString(R.string.key_widget_font_size_preference)) {
+                settings.sizeFontWidget = preferences.getInt(getString(R.string.key_widget_font_size_preference),
+                    settings.sizeFontWidget)
+                runOnUiThread {
+                    AppWidget.sendRefreshBroadcast(this)
+                }
+                if (!key.isNullOrBlank()) return
+            }
+
+            if (key.isNullOrBlank() || key == getString(R.string.key_background_color_preference)) {
+                settings.colorWidget = preferences.getInt(getString(R.string.key_background_color_preference),
+                    settings.colorWidget)
+                runOnUiThread {
+                    AppWidget.sendRefreshBroadcast(this)
+                }
+                if (!key.isNullOrBlank()) return
+            }
+
+            if (key.isNullOrBlank() || key == getString(R.string.key_background_alternating_color_preference)) {
+                settings.alternatingColorWidget = preferences.getInt(getString(R.string.key_background_alternating_color_preference),
+                    settings.alternatingColorWidget)
+                runOnUiThread {
+                    AppWidget.sendRefreshBroadcast(this)
+                }
+                if (!key.isNullOrBlank()) return
+            }
+
+            //if (key.isNullOrBlank()) return
 
             if (key.isNullOrBlank() || key == getString(R.string.key_notification_start_time_preference)) {
                 // TODO: установить время начала уведомления в соотвествтвующей вьюмодели
@@ -225,13 +253,10 @@ class MainActivity : DaggerAppCompatActivity() {
                 if (!key.isNullOrBlank()) return
             }
 
-            if (key.isNullOrBlank() || key == getString(R.string.key_widget_font_size_preference)) {
-                // TODO: установить размер шрифта виджета в соотвествтвующей вьюмодели
-                if (!key.isNullOrBlank()) return
-            }
+
             if (key.isNullOrBlank() || key == getString(R.string.key_export_settings_preference)) {
                 //TODO: записать текущие настройки в файл
-                if (key.isNullOrBlank()) return
+                if (!key.isNullOrBlank()) return
             }
             if (key.isNullOrBlank() || key == getString(R.string.key_import_settings_preference)) {
                 //TODO: загрузить настройки из файла
