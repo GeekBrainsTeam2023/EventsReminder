@@ -20,9 +20,9 @@
     <dimen name="widget_event_title_textview_layout_margin">3dp</dimen>
     <dimen name="widget_event_title_textview_textsize">13sp</dimen>
     <dimen name="widget_event_date_textview_layout_margin">3dp</dimen>
-    <dimen name="widget_event_date_textview_textsize">12sp</dimen>
+    <dimen name="widget_event_date_textview_textsize">13sp</dimen>
     <dimen name="widget_event_time_textview_layout_margin">3dp</dimen>
-    <dimen name="widget_event_time_textview_textsize">12sp</dimen>
+    <dimen name="widget_event_time_textview_textsize">13sp</dimen>
     <dimen name="appwidget_relative_layout_padding">4dp</dimen>
     <dimen name="textview_dashboard_date_or_events_textsize">16sp</dimen>
     <dimen name="textview_dashboard_date_of_events_layout_margin">6dp</dimen>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
         app:iconSpaceReserved="false"
@@ -22,7 +23,6 @@
         app:key="@string/key_show_events_interval_preference"
         app:title="@string/title_show_event_interval_preference"
         app:useSimpleSummaryProvider="true"/>
-
 
     <PreferenceCategory
         app:iconSpaceReserved="false"
@@ -87,21 +87,27 @@
         app:iconSpaceReserved="false"
         app:title="@string/widget_appearance_settings_preference_category">
 
-        <Preference
-            app:iconSpaceReserved="false"
+        <ru.geekbrains.eventsreminder.presentation.ui.FontSizeSeekBarPreference
             app:key="@string/key_widget_font_size_preference"
+            app:min="6"
+            android:max="60"
+            app:seekBarIncrement="1"
             app:title="@string/title_widget_font_size_preference"
-            app:useSimpleSummaryProvider="true" />
-        <Preference
             app:iconSpaceReserved="false"
-            app:key="@string/key_background_color_preference"
-            app:title="@string/title_background_color_preference"
-            app:useSimpleSummaryProvider="true" />
-        <Preference
+            app:showSeekBarValue="true"/>
+
+        <com.rarepebble.colorpicker.ColorPreference
+            android:key="@string/key_background_color_preference"
+            android:title="@string/title_background_color_preference"
             app:iconSpaceReserved="false"
-            app:key="@string/key_background_transparency_preference"
-            app:title="@string/title_background_transparency_preference"
-            app:useSimpleSummaryProvider="true" />
+            android:defaultValue="#E8E6EC"/>
+
+        <com.rarepebble.colorpicker.ColorPreference
+            android:key="@string/key_background_alternating_color_preference"
+            app:title="@string/title_background_alternating_color_preference"
+            app:iconSpaceReserved="false"
+            android:defaultValue="#DCF3F3"/>
+
         <Preference
             app:iconSpaceReserved="false"
             app:key="@string/key_widget_border_thickness_preference"

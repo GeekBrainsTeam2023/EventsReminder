@@ -3,6 +3,7 @@ package ru.geekbrains.eventsreminder
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import ru.geekbrains.eventsreminder.di.EventsReminderComponent
+import ru.geekbrains.eventsreminder.di.WidgetModule
 
 class App : DaggerApplication() {
     companion object {
@@ -19,6 +20,7 @@ class App : DaggerApplication() {
             ru.geekbrains.eventsreminder.di.DaggerEventsReminderComponent
                 .builder()
                 .withContext(applicationContext)
+                .widgetModule(WidgetModule(applicationContext))
                 .build()
 
         return eventsReminderComponent

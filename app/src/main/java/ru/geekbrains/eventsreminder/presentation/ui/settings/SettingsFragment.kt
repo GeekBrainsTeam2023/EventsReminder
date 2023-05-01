@@ -7,11 +7,8 @@ import android.text.InputType
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.preference.CheckBoxPreference
-import androidx.preference.EditTextPreference
-import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.PreferenceManager
+import androidx.preference.*
+import com.rarepebble.colorpicker.ColorPreference
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
@@ -19,6 +16,7 @@ import dagger.android.support.AndroidSupportInjection
 import ru.geekbrains.eventsreminder.R
 import ru.geekbrains.eventsreminder.domain.SettingsData
 import ru.geekbrains.eventsreminder.presentation.MainActivity
+import ru.geekbrains.eventsreminder.presentation.ui.FontSizeSeekBarPreference
 import javax.inject.Inject
 
 
@@ -39,6 +37,13 @@ class SettingsFragment : PreferenceFragmentCompat(), HasAndroidInjector {
         }
     }
 
+
+
+    override fun onDisplayPreferenceDialog(preference: Preference) {
+        if (preference is ColorPreference) {
+            preference.showDialog(this, 0)
+        } else super.onDisplayPreferenceDialog(preference)
+    }
         override fun androidInjector(): AndroidInjector<Any> {
 
         return androidInjector
@@ -113,25 +118,21 @@ class SettingsFragment : PreferenceFragmentCompat(), HasAndroidInjector {
             true
         }
 
-        val chooseWidgetFontSizeButton: Preference? =
+        val chooseWidgetFontSize: FontSizeSeekBarPreference? =
             findPreference(getString(R.string.key_widget_font_size_preference))
-        chooseWidgetFontSizeButton?.setOnPreferenceClickListener {
-            Toast.makeText(context, "choose widget font size", Toast.LENGTH_SHORT).show()
+        chooseWidgetFontSize?.value = prefs.getInt(getString(R.string.key_widget_font_size_preference),settingsData.sizeFontWidget)
+        chooseWidgetFontSize?.setOnPreferenceClickListener {
+            Toast.makeText(context, "размер шрифта виджета " + chooseWidgetFontSize.value.toString(), Toast.LENGTH_SHORT).show()
             true
         }
-        val chooseWidgetBackgroundColorButton: Preference? =
-            findPreference(getString(R.string.key_background_color_preference))
-        chooseWidgetBackgroundColorButton?.setOnPreferenceClickListener {
-            Toast.makeText(context, "choose widget background color", Toast.LENGTH_SHORT).show()
-            true
-        }
-        val chooseWidgetBackgroundTransparencyButton: Preference? =
-            findPreference(getString(R.string.key_background_transparency_preference))
-        chooseWidgetBackgroundTransparencyButton?.setOnPreferenceClickListener {
-            Toast.makeText(context, "choose widget background transparency", Toast.LENGTH_SHORT)
-                .show()
-            true
-        }
+        val chooseWidgetBackgroundColor =
+            findPreference(getString(R.string.key_background_color_preference)) as ColorPreference?
+            chooseWidgetBackgroundColor?.setDefaultValue(settingsData.colorWidget)
+
+        val chooseWidgetBackgroundAltColor =
+            findPreference(getString(R.string.key_background_alternating_color_preference)) as ColorPreference?
+        chooseWidgetBackgroundAltColor?.setDefaultValue(settingsData.alternatingColorWidget)
+
         val chooseWidgetBorderThicknessButton: Preference? =
             findPreference(getString(R.string.key_widget_border_thickness_preference))
         chooseWidgetBorderThicknessButton?.setOnPreferenceClickListener {
