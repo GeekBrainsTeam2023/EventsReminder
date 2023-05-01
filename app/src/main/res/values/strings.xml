@@ -43,9 +43,9 @@
     <string name="key_widget_font_size_preference">widget_font_size</string>
     <string name="title_widget_font_size_preference">размер шрифта</string>
     <string name="key_background_color_preference">background_color</string>
-    <string name="title_background_color_preference">цвет фона</string>
-    <string name="key_background_transparency_preference">background_transparency</string>
-    <string name="title_background_transparency_preference">прозрачность фона</string>
+    <string name="title_background_color_preference">цвет фона нечётных строк виджета</string>
+    <string name="key_background_alternating_color_preference">background_alt_color</string>
+    <string name="title_background_alternating_color_preference">цвет фона чётных строк виджета</string>
     <string name="key_widget_border_thickness_preference">widget_border_thickness</string>
     <string name="title_widget_border_thickness_preference">толщина рамки виджета</string>
     <string name="key_widget_border_color_preference">widget_border_color</string>

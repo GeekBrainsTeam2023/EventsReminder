@@ -14,7 +14,8 @@ import javax.inject.Singleton
         EventsReminderDataModule::class,
         SettingsModule::class,
         ViewModelFactoryModule::class,
-        UIModule::class
+        UIModule::class,
+        WidgetModule::class
     ]
 )
 interface EventsReminderComponent : AndroidInjector<App> {
@@ -24,6 +25,8 @@ interface EventsReminderComponent : AndroidInjector<App> {
 
         @BindsInstance
         fun withContext(context: Context): Builder
+
+        fun widgetModule(widgetModule: WidgetModule): Builder
 
         fun build(): EventsReminderComponent
 
