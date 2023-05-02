@@ -18,7 +18,6 @@ import javax.inject.Inject
 
 class PhoneCalendarRepoImpl @Inject constructor (
 	val context: Context) : IPhoneCalendarRepo {
-	private val LOG_TAG = "myLogs"
 
 	override fun loadEventCalendar(endDay: Int): List<EventData> {
 		val listBirthDayEvents = arrayListOf<EventData>()
@@ -55,7 +54,6 @@ class PhoneCalendarRepoImpl @Inject constructor (
 					if (description.contains("birthday")) eventType=EventType.BIRTHDAY
 					 else eventType=EventType.HOLIDAY
 				}
-				//Log.d(LOG_TAG, "Status="+type)
 				listBirthDayEvents.add(addEventFromCalendar(title, start,eventType))
 			}
 			close()
