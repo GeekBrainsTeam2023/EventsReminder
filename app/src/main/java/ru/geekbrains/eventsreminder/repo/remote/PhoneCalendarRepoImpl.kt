@@ -7,15 +7,18 @@ import android.icu.util.Calendar
 import android.icu.util.TimeZone
 import android.provider.CalendarContract
 import android.provider.CalendarContract.Calendars
+import android.util.Log
 import androidx.core.database.getLongOrNull
 import androidx.core.database.getStringOrNull
 import ru.geekbrains.eventsreminder.domain.EventData
+import ru.geekbrains.eventsreminder.domain.EventType
 import ru.geekbrains.eventsreminder.usecases.addEventFromCalendar
 import java.time.LocalDate
 import javax.inject.Inject
 
 class PhoneCalendarRepoImpl @Inject constructor (
 	val context: Context) : IPhoneCalendarRepo {
+	private val LOG_TAG = "myLogs"
 
 	override fun loadEventCalendar(endDay: Int): List<EventData> {
 		val listBirthDayEvents = arrayListOf<EventData>()
@@ -46,7 +49,14 @@ class PhoneCalendarRepoImpl @Inject constructor (
 				val title =
 					getStringOrNull(getColumnIndex(CalendarContract.Instances.TITLE)).orEmpty()
 				val start = getLongOrNull(getColumnIndex(CalendarContract.Instances.DTSTART)) ?: 0
-				listBirthDayEvents.add(addEventFromCalendar(title, start))
+				val description = getStringOrNull(getColumnIndex(CalendarContract.Instances.DESCRIPTION)).orEmpty()
+				var eventType = EventType.SIMPLE
+				if (description.length >0 ) {
+					if (description.contains("birthday")) eventType=EventType.BIRTHDAY
+					 else eventType=EventType.HOLIDAY
+				}
+				//Log.d(LOG_TAG, "Status="+type)
+				listBirthDayEvents.add(addEventFromCalendar(title, start,eventType))
 			}
 			close()
 		}

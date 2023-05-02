@@ -23,13 +23,16 @@ fun addBirthDayEventFromContactPhone(name: String, birthDay: String): EventData 
 )
 
 
-fun addEventFromCalendar(name: String, startDate: Long): EventData {
+fun addEventFromCalendar(name: String, startDate: Long, eventType: EventType): EventData {
     val date =
         LocalDateTime.ofInstant(Instant.ofEpochSecond(startDate / 1000), ZoneId.systemDefault())
+    var birthDay = date.toLocalDate()
+    if (eventType != EventType.BIRTHDAY)  birthDay=null
+
     return EventData(
-        EventType.SIMPLE,
+        eventType,
         null,
-        null,
+        birthDay,
         date.toLocalDate(),
         date.toLocalTime(),
         LocalTime.parse("00:15:00"),
