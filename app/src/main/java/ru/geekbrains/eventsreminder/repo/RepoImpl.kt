@@ -6,6 +6,7 @@ import ru.geekbrains.eventsreminder.domain.ResourceState
 import ru.geekbrains.eventsreminder.repo.local.LocalRepo
 import ru.geekbrains.eventsreminder.repo.remote.IPhoneCalendarRepo
 import ru.geekbrains.eventsreminder.repo.remote.PhoneContactsRepo
+import ru.geekbrains.eventsreminder.usecases.deleteDuplicateEvents
 import javax.inject.Inject
 
 class RepoImpl @Inject constructor(
@@ -30,7 +31,7 @@ class RepoImpl @Inject constructor(
                 return ResourceState.ErrorState(Throwable("Ошибка заргрузки событий из календаря"))
             }
         }
-        return ResourceState.SuccessState(listEvents.toList())
+        return ResourceState.SuccessState(deleteDuplicateEvents(listEvents.toMutableList()))
     }
 
 }

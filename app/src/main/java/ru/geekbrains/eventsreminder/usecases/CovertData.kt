@@ -1,5 +1,6 @@
 package ru.geekbrains.eventsreminder.usecases
 
+import android.util.Log
 import ru.geekbrains.eventsreminder.domain.EventData
 import ru.geekbrains.eventsreminder.domain.EventType
 import ru.geekbrains.eventsreminder.domain.PeriodType
@@ -26,16 +27,27 @@ fun addBirthDayEventFromContactPhone(name: String, birthDay: String): EventData 
 fun addEventFromCalendar(name: String, startDate: Long, eventType: EventType): EventData {
     val date =
         LocalDateTime.ofInstant(Instant.ofEpochSecond(startDate / 1000), ZoneId.systemDefault())
-    var birthDay = date.toLocalDate()
-    if (eventType != EventType.BIRTHDAY)  birthDay=null
 
     return EventData(
         eventType,
         null,
-        birthDay,
+        null,
         date.toLocalDate(),
         date.toLocalTime(),
         LocalTime.parse("00:15:00"),
         name
     )
+}
+
+fun deleteDuplicateEvents(eventList:MutableList<EventData>):List<EventData>{
+    for(i in 0..eventList.size-2){
+       if (eventList[i].type == EventType.BIRTHDAY) {
+           for (j in i+1..eventList.size-1){
+               if (eventList[i].type == eventList[j].type) {
+                   if ((eventList[i].name.contains(eventList[j].name)) or ((eventList[j].name.contains(eventList[i].name)))) eventList.removeAt(j)
+               }
+           }
+       }
+    }
+    return eventList.toList()
 }
