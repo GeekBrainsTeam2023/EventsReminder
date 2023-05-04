@@ -3,7 +3,6 @@ package ru.geekbrains.eventsreminder.presentation.ui.settings
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.text.InputType
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -72,10 +71,11 @@ class SettingsFragment : PreferenceFragmentCompat(), HasAndroidInjector {
 
     private fun initPreferences() {
 
-        findPreference<EditTextPreference>(getString(R.string.key_show_events_interval_preference))?.text =
-        prefs.getString(getString(R.string.key_show_events_interval_preference),
-            settingsData.daysForShowEvents.toString())
-
+        findPreference<SeekBarPreference>(getString(R.string.key_show_events_interval_preference))?.let{it.value =
+        prefs.getInt(getString(R.string.key_show_events_interval_preference),
+            settingsData.daysForShowEvents)
+            it.seekBarIncrement = 1
+        }
         findPreference<CheckBoxPreference>(getString(R.string.key_calendar_datasource_checkbox_preference))?.isChecked =
             prefs.getBoolean(getString(R.string.key_calendar_datasource_checkbox_preference),
                 settingsData.isDataCalendar)
@@ -90,6 +90,12 @@ class SettingsFragment : PreferenceFragmentCompat(), HasAndroidInjector {
             Toast.makeText(context, "time picker will be here", Toast.LENGTH_SHORT).show()
             true
         }
+        findPreference<CheckBoxPreference>(getString(R.string.key_event_date_checkbox_preference))
+            ?.isChecked = prefs.getBoolean(getString(R.string.key_event_date_checkbox_preference), settingsData.showDateEvent)
+        findPreference<CheckBoxPreference>(getString(R.string.key_event_time_checkbox_preference))
+              ?.isChecked = prefs.getBoolean(getString(R.string.key_event_time_checkbox_preference),settingsData.showTimeEvent)
+        findPreference<CheckBoxPreference>(getString(R.string.key_age_checkbox_preference))
+            ?.isChecked = prefs.getBoolean(getString(R.string.key_age_checkbox_preference),settingsData.showAge)
         val chooseNotificationMelodyButton: Preference? =
             findPreference(getString(R.string.key_notification_melody_preference))
         chooseNotificationMelodyButton?.setOnPreferenceClickListener {
@@ -107,52 +113,32 @@ class SettingsFragment : PreferenceFragmentCompat(), HasAndroidInjector {
             true
         }
 
-        val chooseDaysBeforeEventToStartNotificationButton: Preference? =
-            findPreference(getString(R.string.key_days_before_notification_preference))
-        chooseDaysBeforeEventToStartNotificationButton?.setOnPreferenceClickListener {
-            Toast.makeText(
-                context,
-                "choose days before event to start notification",
-                Toast.LENGTH_SHORT
-            ).show()
-            true
-        }
+            findPreference<SeekBarPreference>(getString(R.string.key_widget_interval_of_events_preference))?.let { it.value =
+           prefs.getInt(getString(R.string.key_widget_interval_of_events_preference),settingsData.daysForShowEventsWidget)
+            it.seekBarIncrement = 1}
 
         val chooseWidgetFontSize: FontSizeSeekBarPreference? =
             findPreference(getString(R.string.key_widget_font_size_preference))
         chooseWidgetFontSize?.value = prefs.getInt(getString(R.string.key_widget_font_size_preference),settingsData.sizeFontWidget)
         chooseWidgetFontSize?.setOnPreferenceClickListener {
-            Toast.makeText(context, "размер шрифта виджета " + chooseWidgetFontSize.value.toString(), Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, getString(R.string.widget_fontsize_toast) + chooseWidgetFontSize.value.toString(), Toast.LENGTH_SHORT).show()
             true
         }
-        val chooseWidgetBackgroundColor =
-            findPreference(getString(R.string.key_background_color_preference)) as ColorPreference?
-            chooseWidgetBackgroundColor?.setDefaultValue(settingsData.colorWidget)
-
-        val chooseWidgetBackgroundAltColor =
+        val chooseWidgetBirthdayFontColor : ColorPreference? =
+            findPreference(getString(R.string.key_widget_birthday_font_color_preference)) as ColorPreference?
+        chooseWidgetBirthdayFontColor?.setDefaultValue(settingsData.colorBirthdayFontWidget)
+        val chooseWidgetHolidayFontColor: ColorPreference? =
+            findPreference(getString(R.string.key_widget_holiday_font_color_preference)) as ColorPreference?
+        chooseWidgetHolidayFontColor?.setDefaultValue(settingsData.colorHolidayFontWidget)
+        val chooseWidgetSimpleEventFontColor: ColorPreference? =
+            findPreference(getString(R.string.key_widget_simple_event_font_color_preference)) as ColorPreference?
+        chooseWidgetSimpleEventFontColor?.setDefaultValue(settingsData.colorSimpleEventFontWidget)
+        val chooseWidgetBackgroundAltColor : ColorPreference?=
             findPreference(getString(R.string.key_background_alternating_color_preference)) as ColorPreference?
         chooseWidgetBackgroundAltColor?.setDefaultValue(settingsData.alternatingColorWidget)
-
-        val chooseWidgetBorderThicknessButton: Preference? =
-            findPreference(getString(R.string.key_widget_border_thickness_preference))
-        chooseWidgetBorderThicknessButton?.setOnPreferenceClickListener {
-            Toast.makeText(context, "choose widget border thickness", Toast.LENGTH_SHORT).show()
-            true
-        }
-        val chooseWidgetBorderColorButton: Preference? =
-            findPreference(getString(R.string.key_widget_border_color_preference))
-        chooseWidgetBorderColorButton?.setOnPreferenceClickListener {
-            Toast.makeText(context, "choose widget border color", Toast.LENGTH_SHORT).show()
-            true
-        }
-        val chooseWidgetBorderRoundedCornersButton: Preference? =
-            findPreference(getString(R.string.key_widget_border_rounded_corners_preference))
-        chooseWidgetBorderRoundedCornersButton?.setOnPreferenceClickListener {
-            Toast.makeText(context, "choose widget border rounded corners", Toast.LENGTH_SHORT)
-                .show()
-            true
-        }
-
+        val chooseWidgetBackgroundColor : ColorPreference? =
+            findPreference(getString(R.string.key_background_color_preference)) as ColorPreference?
+        chooseWidgetBackgroundColor?.setDefaultValue(settingsData.colorWidget)
         val exportSettingsButton: Preference? =
             findPreference(getString(R.string.key_export_settings_preference))
         exportSettingsButton?.setOnPreferenceClickListener {
@@ -165,14 +151,10 @@ class SettingsFragment : PreferenceFragmentCompat(), HasAndroidInjector {
             Toast.makeText(context, "import settings", Toast.LENGTH_SHORT).show()
             true
         }
-
-        val preference = findPreference<EditTextPreference>(getString(R.string.key_show_events_interval_preference))
-        preference?.setOnBindEditTextListener {
-            it.inputType = InputType.TYPE_CLASS_NUMBER
-            it.selectAll()
-        }
+//        val preference = findPreference<EditTextPreference>(getString(R.string.key_show_events_interval_preference))
+//        preference?.setOnBindEditTextListener {
+//            it.inputType = InputType.TYPE_CLASS_NUMBER
+//            it.selectAll()
+//        }
     }
-
-
-
 }

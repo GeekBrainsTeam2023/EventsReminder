@@ -2,6 +2,7 @@ package ru.geekbrains.eventsreminder.repo
 
 
 import ru.geekbrains.eventsreminder.domain.EventData
+import ru.geekbrains.eventsreminder.domain.EventType
 import ru.geekbrains.eventsreminder.domain.ResourceState
 import ru.geekbrains.eventsreminder.repo.local.LocalRepo
 import ru.geekbrains.eventsreminder.repo.remote.IPhoneCalendarRepo
@@ -13,21 +14,34 @@ class RepoImpl @Inject constructor(
     val localRepo: LocalRepo,
     val contactsRepo: PhoneContactsRepo,
     val calendarRepo: IPhoneCalendarRepo
-):Repo {
-    override suspend fun loadData(daysForShowEvents:Int,isDataContact:Boolean,isDataCalendar:Boolean): ResourceState<List<EventData>> {
+) : Repo {
+    override suspend fun loadData(
+        daysForShowEvents: Int,
+        isDataContact: Boolean,
+        isDataCalendar: Boolean
+    ): ResourceState<List<EventData>> {
         val listEvents = mutableListOf<EventData>()
         listEvents.addAll(localRepo.getList())
         if (isDataContact) {
             try {
                 listEvents.addAll(contactsRepo.loadBirthDayEvents(daysForShowEvents))
-            } catch(exc:Throwable) {
+            } catch (exc: Throwable) {
                 return ResourceState.ErrorState(Throwable("Ошибка заргрузки ДР из телефонной книжки"))
             }
         }
         if (isDataCalendar) {
             try {
-            listEvents.addAll(calendarRepo.loadEventCalendar(daysForShowEvents))
-            } catch(exc:Throwable) {
+                listEvents.addAll(
+                    calendarRepo.loadEventCalendar(daysForShowEvents).filter { calendarEvent ->
+                        !(calendarEvent.type == EventType.BIRTHDAY && listEvents.any { contactEvent ->
+                            contactEvent.date == calendarEvent.date &&
+                            contactEvent.type == EventType.BIRTHDAY && calendarEvent.name.contains(
+                                contactEvent.name
+                            )
+                        })
+
+                    })
+            } catch (exc: Throwable) {
                 return ResourceState.ErrorState(Throwable("Ошибка заргрузки событий из календаря"))
             }
         }

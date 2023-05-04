@@ -149,10 +149,13 @@ class DashboardFragment : DaggerFragment() {
                 eventData.time.format(DateTimeFormatter.ofPattern("HH:mm"))
             )
         }
+        with (eventData.date){
         values.put(
             Contract.COL_EVENT_DATE,
-            eventData.date.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-        )
+            (year*10000)+(month.value * 100)+ dayOfMonth)
+        }
+            //eventData.date.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+
         val uri: Uri? = requireActivity()
             .applicationContext
             .contentResolver
