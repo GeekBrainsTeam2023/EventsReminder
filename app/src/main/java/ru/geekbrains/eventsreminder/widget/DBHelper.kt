@@ -12,7 +12,7 @@ class DbHelper(context: Context?) :
                 Contract.TABLE_NAME + "(" +
                 Contract._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 Contract.COL_EVENT_TITLE + " TEXT NOT NULL, " +
-                Contract.COL_EVENT_DATE + " TEXT NOT NULL, " +
+                Contract.COL_EVENT_DATE + " INTEGER NOT NULL, " +
                 Contract.COL_EVENT_TIME + " TEXT NOT NULL, " +
                 Contract.COL_EVENT_TYPE + " TEXT NOT NULL" +
                 ")"

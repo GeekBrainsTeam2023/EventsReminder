@@ -25,12 +25,9 @@ http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
     <dimen name="dashboard_recyclerview_item_event_date_textview_padding_end">5dp</dimen>
     <dimen name="recyclerview_list_of_events_layout_margin">4dp</dimen>
     <dimen name="dashboard_fab_add_event_layout_margin">10dp</dimen>
-    <dimen name="widget_event_title_textview_layout_margin">3dp</dimen>
-    <dimen name="widget_event_title_textview_textsize">13sp</dimen>
-    <dimen name="widget_event_date_textview_layout_margin">3dp</dimen>
-    <dimen name="widget_event_date_textview_textsize">13sp</dimen>
-    <dimen name="widget_event_time_textview_layout_margin">3dp</dimen>
-    <dimen name="widget_event_time_textview_textsize">13sp</dimen>
+    <dimen name="widget_event_textview_textsize">13sp</dimen>
+    <dimen name="widget_textview_padding_start">2dp</dimen>
+    <dimen name="widget_textview_padding_end">2dp</dimen>
     <dimen name="appwidget_relative_layout_padding">4dp</dimen>
     <dimen name="textview_dashboard_date_or_events_textsize">16sp</dimen>
     <dimen name="textview_dashboard_date_of_events_layout_margin">5dp</dimen>

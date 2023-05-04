@@ -8,15 +8,15 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.Binder
 import android.util.TypedValue.COMPLEX_UNIT_SP
+import android.view.View
 import android.widget.AdapterView
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
-import androidx.core.content.ContextCompat.getColor
 import androidx.preference.PreferenceManager
 import ru.geekbrains.eventsreminder.R
 import ru.geekbrains.eventsreminder.domain.EventType
+import java.time.LocalDate
 import javax.inject.Inject
-
 
 class WidgetRemoteViewsFactory
 @Inject
@@ -24,25 +24,32 @@ constructor(
     private val applicationContext: Context,
 ) :
     RemoteViewsService.RemoteViewsFactory {
-    //private val applicationContext: Context
     private var mCursor: Cursor? = null
-
-//  init {
-//        this.applicationContext = applicationContext
-//    }
-
     override fun onCreate() {}
     override fun onDataSetChanged() {
+
+        // Получаем настройки из приложения
+        val prefs: SharedPreferences =
+            PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        val interval = prefs.getInt(
+            applicationContext.getString(R.string.key_widget_interval_of_events_preference),
+            365
+        )
+
         mCursor?.close()
         val identityToken = Binder.clearCallingIdentity()
         val uri: Uri = Contract.PATH_EVENTS_URI
+
+        val toDate = with(LocalDate.now().plusDays(interval.toLong()))
+        {year*10000+month.value*100+dayOfMonth}
         mCursor = applicationContext.contentResolver.query(
             uri,
             null,
-            null,
-            null,
+            Contract.COL_EVENT_DATE+" < ?",
+            arrayOf(toDate.toString()),
             Contract._ID + " ASC"
         )
+        //db.rawQuery("SELECT Description FROM Table_Name WHERE Num BETWEEN "+(inputNumber-Range)+" AND "+(inputNumber+Range) +"ORDER BY ABS(Num- "+inputNumber+")", null)
         Binder.restoreCallingIdentity(identityToken)
     }
 
@@ -71,6 +78,18 @@ constructor(
         // Получаем настройки из приложения
         val prefs: SharedPreferences =
             PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        val isShowingEventDate = prefs.getBoolean(
+            applicationContext.getString(R.string.key_event_date_checkbox_preference),
+            true
+        )
+        val isShowingEventTime = prefs.getBoolean(
+            applicationContext.getString(R.string.key_event_time_checkbox_preference),
+            true
+        )
+        val isShowingAge = prefs.getBoolean(
+            applicationContext.getString(R.string.key_age_checkbox_preference),
+            true
+        )
         val sizeFontWidget = prefs.getInt(
             applicationContext.getString(R.string.key_widget_font_size_preference), 13
         ).toFloat()
@@ -81,7 +100,18 @@ constructor(
             applicationContext.getString(R.string.key_background_alternating_color_preference),
             0xDCF3F3
         )
-
+        val birthdayTextColor = prefs.getInt(
+            applicationContext.getString(R.string.key_widget_birthday_font_color_preference),
+            0x151414
+        )
+        val holidayTextColor = prefs.getInt(
+            applicationContext.getString(R.string.key_widget_holiday_font_color_preference),
+            0x151414
+        )
+        val simpleEventTextColor = prefs.getInt(
+            applicationContext.getString(R.string.key_widget_simple_event_font_color_preference),
+            0x151414
+        )
         if (position % 2 == 0) {
             rv.setInt(R.id.itemAppWidget, "setBackgroundColor", backColor)
         } else {
@@ -90,33 +120,73 @@ constructor(
 
         mCursor?.let {
             when (it.getString(4)) {
-                EventType.SIMPLE.toString() ->
+                EventType.SIMPLE.toString() -> {
                     setWidgetLineParameters(
                         rv,
-                        applicationContext.getColor(R.color.purple_500),
+                        simpleEventTextColor,
                         sizeFontWidget
                     )
+                    bindTimeWithEventTimeTextView(isShowingEventTime, rv, it)
+                }
 
-                EventType.HOLIDAY.toString() ->
+                EventType.HOLIDAY.toString() -> {
                     setWidgetLineParameters(
                         rv,
-                        applicationContext.getColor(R.color.color_secondary),
+                        holidayTextColor,
                         sizeFontWidget
                     )
+                    bindTimeWithEventTimeTextView(isShowingEventTime,rv,it)
+                }
 
-                EventType.BIRTHDAY.toString() ->
+                EventType.BIRTHDAY.toString() -> {
                     setWidgetLineParameters(
                         rv,
-                        applicationContext.getColor(R.color.light_blue_900),
+                        birthdayTextColor,
                         sizeFontWidget
                     )
-
+                    bindAgeWithEventTimeTextView(isShowingAge, rv, it)
+                }
             }
             rv.setTextViewText(R.id.widgetEventTitleTextview, it.getString(1))
-            rv.setTextViewText(R.id.widgetEventDateTextview, it.getString(2))
-            rv.setTextViewText(R.id.widgetEventTimeTextview, it.getString(3))
+            if (isShowingEventDate) {
+                with(it.getInt(2)){
+                    val date = String.format("%02d", this%100) + "-" +
+                            String.format("%02d", this/100%100) + "-" +
+                            (this/10000).toString()
+                    rv.setTextViewText(R.id.widgetEventDateTextview, date)
+                    rv.setViewVisibility(R.id.widgetEventDateTextview, View.VISIBLE)
+                }
+            } else {
+                rv.setViewVisibility(R.id.widgetEventDateTextview, View.GONE)
+            }
+
+            // rv.setTextViewText(R.id.widgetEventTimeTextview, it.getString(3))
         }
         return rv
+
+
+    }
+
+    private fun bindAgeWithEventTimeTextView(
+        isShowingAge: Boolean,
+        rv: RemoteViews,
+        it: Cursor
+    ) {
+        if (isShowingAge) {
+            rv.setTextViewText(R.id.widgetEventTimeTextview, it.getString(3))
+            rv.setViewVisibility(R.id.widgetEventTimeTextview, View.VISIBLE)
+        } else rv.setViewVisibility(R.id.widgetEventTimeTextview, View.GONE)
+    }
+
+    private fun bindTimeWithEventTimeTextView(
+        isShowingEventTime: Boolean,
+        rv: RemoteViews,
+        it: Cursor
+    ) {
+        if (isShowingEventTime) {
+            rv.setTextViewText(R.id.widgetEventTimeTextview, it.getString(3))
+            rv.setViewVisibility(R.id.widgetEventTimeTextview, View.VISIBLE)
+        } else rv.setViewVisibility(R.id.widgetEventTimeTextview, View.GONE)
     }
 
     private fun setWidgetLineParameters(rv: RemoteViews, color: Int, sizeFontWidget: Float) {
@@ -126,15 +196,15 @@ constructor(
             setTextColor(R.id.widgetEventTimeTextview, color)
             setTextViewTextSize(
                 R.id.widgetEventTitleTextview, COMPLEX_UNIT_SP,
-                sizeFontWidget.toFloat()
+                sizeFontWidget
             )
             setTextViewTextSize(
                 R.id.widgetEventDateTextview, COMPLEX_UNIT_SP,
-                sizeFontWidget.toFloat()
+                sizeFontWidget
             )
             setTextViewTextSize(
                 R.id.widgetEventTimeTextview, COMPLEX_UNIT_SP,
-                sizeFontWidget.toFloat()
+                sizeFontWidget
             )
         }
     }

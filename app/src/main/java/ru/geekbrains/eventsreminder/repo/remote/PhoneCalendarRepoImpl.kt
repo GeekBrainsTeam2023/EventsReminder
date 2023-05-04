@@ -52,7 +52,9 @@ class PhoneCalendarRepoImpl @Inject constructor (
 				val description = getStringOrNull(getColumnIndex(CalendarContract.Instances.DESCRIPTION)).orEmpty()
 				var eventType = EventType.SIMPLE
 				if (description.length >0 ) {
-					if (description.contains("birthday")) eventType=EventType.BIRTHDAY
+					if (description.contains("birthday") ||
+						description.contains("день рождения"))
+						eventType=EventType.BIRTHDAY
 					 else eventType=EventType.HOLIDAY
 				}
 				//Log.d(LOG_TAG, "Status="+type)

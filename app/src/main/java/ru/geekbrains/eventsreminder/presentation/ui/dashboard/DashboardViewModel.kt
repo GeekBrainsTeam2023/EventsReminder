@@ -16,8 +16,8 @@ import javax.inject.Inject
 
 
 class DashboardViewModel @Inject constructor (
-        val settingsData : SettingsData,
-        val repo : Repo
+    val settingsData : SettingsData,
+    val repo : Repo
     ) : ViewModel(), LifecycleObserver {
     val statesLiveData: MutableLiveData<AppState> = MutableLiveData()
     private var allEvents = listOf<EventData>()
