@@ -45,7 +45,8 @@ class MainActivity : DaggerAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setPreferences(PreferenceManager.getDefaultSharedPreferences(applicationContext))
+        val isParamsSetRequired =
+            !setPreferences(PreferenceManager.getDefaultSharedPreferences(applicationContext))
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -60,6 +61,8 @@ class MainActivity : DaggerAppCompatActivity() {
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
+        if (isParamsSetRequired)
+            navController.navigate(R.id.settings)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -170,10 +173,16 @@ class MainActivity : DaggerAppCompatActivity() {
      * Применить параметры из настроек
      * @param preferences набор настроек для применения в приложении
      * @param key ключ с названием конкретной настройки
+     * @return true в случае успешного применения всех параметров
+     *         false если требуется установка параметров
      * (в случае [null] - будут применены все настройки)
      * */
-    fun setPreferences(preferences: SharedPreferences, key: String? = null) {
+    fun setPreferences(preferences: SharedPreferences, key: String? = null): Boolean {
+        var ret = false
         try {
+            if (preferences.contains(getString(R.string.key_phonebook_datasource_checkbox_preference)))
+              ret = true
+
             if (key.isNullOrBlank() || key == getString(R.string.key_phonebook_datasource_checkbox_preference)) {
                 settings.isDataContact = preferences.getBoolean(
                     getString(R.string.key_phonebook_datasource_checkbox_preference),
@@ -202,14 +211,14 @@ class MainActivity : DaggerAppCompatActivity() {
                 runOnUiThread {
                     AppWidget.sendRefreshBroadcast(this)
                 }
-                if (!key.isNullOrBlank()) return
+                if (!key.isNullOrBlank()) return ret
             }
             if(key.isNullOrBlank() || key == getString(R.string.key_event_time_checkbox_preference)){
                 settings.showTimeEvent = preferences.getBoolean(getString(R.string.key_event_time_checkbox_preference),settings.showTimeEvent)
                 runOnUiThread {
                     AppWidget.sendRefreshBroadcast(this)
                 }
-                if(!key.isNullOrBlank()) return
+                if(!key.isNullOrBlank()) return ret
             }
             if (key.isNullOrBlank() || key == getString(R.string.key_widget_font_size_preference)) {
                 settings.sizeFontWidget = preferences.getInt(
@@ -219,7 +228,7 @@ class MainActivity : DaggerAppCompatActivity() {
                 runOnUiThread {
                     AppWidget.sendRefreshBroadcast(this)
                 }
-                if (!key.isNullOrBlank()) return
+                if (!key.isNullOrBlank()) return ret
             }
             if (key.isNullOrBlank() || key == getString(R.string.key_widget_birthday_font_color_preference)) {
                 settings.colorBirthdayFontWidget = preferences.getInt(
@@ -229,7 +238,7 @@ class MainActivity : DaggerAppCompatActivity() {
                 runOnUiThread {
                     AppWidget.sendRefreshBroadcast(this)
                 }
-                if (!key.isNullOrBlank()) return
+                if (!key.isNullOrBlank()) return ret
             }
             if (key.isNullOrBlank() || key == getString(R.string.key_widget_holiday_font_color_preference)) {
                 settings.colorHolidayFontWidget = preferences.getInt(
@@ -239,7 +248,7 @@ class MainActivity : DaggerAppCompatActivity() {
                 runOnUiThread {
                     AppWidget.sendRefreshBroadcast(this)
                 }
-                if (!key.isNullOrBlank()) return
+                if (!key.isNullOrBlank()) return ret
             }
             if (key.isNullOrBlank() || key == getString(R.string.key_widget_simple_event_font_color_preference)) {
                 settings.colorSimpleEventFontWidget = preferences.getInt(
@@ -249,7 +258,7 @@ class MainActivity : DaggerAppCompatActivity() {
                 runOnUiThread {
                     AppWidget.sendRefreshBroadcast(this)
                 }
-                if (!key.isNullOrBlank()) return
+                if (!key.isNullOrBlank()) return ret
             }
             if (key.isNullOrBlank() || key == getString(R.string.key_background_color_preference)) {
                 settings.colorWidget = preferences.getInt(
@@ -259,7 +268,7 @@ class MainActivity : DaggerAppCompatActivity() {
                 runOnUiThread {
                     AppWidget.sendRefreshBroadcast(this)
                 }
-                if (!key.isNullOrBlank()) return
+                if (!key.isNullOrBlank()) return ret
             }
 
             if (key.isNullOrBlank() || key == getString(R.string.key_background_alternating_color_preference)) {
@@ -270,7 +279,7 @@ class MainActivity : DaggerAppCompatActivity() {
                 runOnUiThread {
                     AppWidget.sendRefreshBroadcast(this)
                 }
-                if (!key.isNullOrBlank()) return
+                if (!key.isNullOrBlank()) return ret
             }
 
             if (key.isNullOrBlank() || key == getString(R.string.key_widget_interval_of_events_preference)) {
@@ -278,7 +287,7 @@ class MainActivity : DaggerAppCompatActivity() {
                 runOnUiThread {
                     AppWidget.sendRefreshBroadcast(this)
                 }
-                if (!key.isNullOrBlank()) return
+                if (!key.isNullOrBlank()) return ret
             }
 
             if (key.isNullOrBlank() || key == getString(R.string.key_age_checkbox_preference)) {
@@ -286,19 +295,21 @@ class MainActivity : DaggerAppCompatActivity() {
                 runOnUiThread {
                     AppWidget.sendRefreshBroadcast(this)
                 }
-                if (!key.isNullOrBlank()) return
+                if (!key.isNullOrBlank()) return ret
             }
 
             if (key.isNullOrBlank() || key == getString(R.string.key_export_settings_preference)) {
                 //TODO: записать текущие настройки в файл
-                if (!key.isNullOrBlank()) return
+                if (!key.isNullOrBlank()) return ret
             }
             if (key.isNullOrBlank() || key == getString(R.string.key_import_settings_preference)) {
                 //TODO: загрузить настройки из файла
-                if (key.isNullOrBlank()) return
+                if (key.isNullOrBlank()) return ret
             }
         } catch (t: Throwable) {
             Toast.makeText(this, t.toString(), Toast.LENGTH_SHORT).show()
+            return false
         }
+        return ret
     }
 }
