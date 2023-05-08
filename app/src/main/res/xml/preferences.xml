@@ -100,12 +100,12 @@ app:showSeekBarValue="true"
             android:key="@string/key_widget_birthday_font_color_preference"
             android:title="@string/title_widget_birthday_font_color_preference"
             app:iconSpaceReserved="false"
-            android:defaultValue="#151414"/>
+            android:defaultValue="#01579B"/>
         <com.rarepebble.colorpicker.ColorPreference
             android:key="@string/key_widget_holiday_font_color_preference"
             android:title="@string/title_widget_holiday_font_color_preference"
             app:iconSpaceReserved="false"
-            android:defaultValue="#151414"/>
+            android:defaultValue="#3700B3"/>
         <com.rarepebble.colorpicker.ColorPreference
             android:key="@string/key_widget_simple_event_font_color_preference"
             android:title="@string/title_widget_simple_event_font_color_preference"

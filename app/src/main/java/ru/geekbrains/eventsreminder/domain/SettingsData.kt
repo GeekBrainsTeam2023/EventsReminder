@@ -18,7 +18,7 @@ data class SettingsData(
     var colorWidget: Int = 0xE8E6EC,
     var alternatingColorWidget: Int = 0xDCF3F3,
     var sizeFontWidget: Int = 13,
-    var colorBirthdayFontWidget: Int = 0x151414,
-    var colorHolidayFontWidget: Int = 0x151414,
+    var colorBirthdayFontWidget: Int = 0x01579B,
+    var colorHolidayFontWidget: Int = 0x3700B3,
     var colorSimpleEventFontWidget: Int = 0x151414,
     )

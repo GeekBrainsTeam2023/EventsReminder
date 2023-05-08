@@ -62,7 +62,7 @@
     <string name="widget_third_item_preview_title">Иван Федорович Крузенштерн</string>
     <string name="widget_third_item_preview_date">19-11-1770</string>
     <string name="widget_third_item_preview_age">253 года</string>
-    <string name="widget_forth_item_preview_title">Новый Год</string>
+    <string name="widget_forth_item_preview_title">Запуск салюта!</string>
     <string name="widget_forth_item_preview_date">01-01-2024</string>
     <string name="widget_forth_item_preview_time">03:00</string>
     <string name="key_widget_birthday_font_color_preference">widget_font_color</string>

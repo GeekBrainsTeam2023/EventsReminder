@@ -147,7 +147,7 @@ class MainActivity : DaggerAppCompatActivity() {
                 (if (settings.isDataCalendar && settings.isDataContact) " и " else "") +
                 rightContactToDemand
         builder.setTitle("Предоставьте права")
-            .setMessage("Необходим доступ к $rightsToDemand, пожалуйста, предоставьте Права либо измените Настройки приложения")
+            .setMessage("Необходим доступ к $rightsToDemand, пожалуйста, предоставьте Права либо измените Настройки приложения (уберите галочку в источниках данных)")
             .setCancelable(false)
             .setPositiveButton("      права") { dialog, id ->
                 // открываем настройки приложения, чтобы пользователь дал разрешение вручную
