@@ -5,6 +5,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.viewModels
@@ -19,8 +20,9 @@ import ru.geekbrains.eventsreminder.domain.*
 import ru.geekbrains.eventsreminder.presentation.MainActivity
 import ru.geekbrains.eventsreminder.presentation.ui.RusIntPlural
 import ru.geekbrains.eventsreminder.presentation.ui.toAgeInWordsByDate
+import ru.geekbrains.eventsreminder.presentation.ui.toInt
 import ru.geekbrains.eventsreminder.widget.AppWidget
-import ru.geekbrains.eventsreminder.widget.Contract
+import ru.geekbrains.eventsreminder.repo.cache.Contract
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -46,6 +48,7 @@ class DashboardFragment : DaggerFragment() {
         with((requireActivity() as MainActivity)) {
             if (!checkPermission()) initReminderRights()
         }
+        dashboardViewModel.loadEvents()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -72,14 +75,18 @@ class DashboardFragment : DaggerFragment() {
                     is AppState.LoadingState -> {
                         //TODO:Show some animation
                     }
-                    is AppState.ErrorState -> dashboardViewModel.handleError(appState.error)
+                    is AppState.ErrorState -> {
+                        Toast.makeText(context, appState.error.toString(), Toast.LENGTH_LONG).show()
+                        Log.d(TAG, appState.error.toString())
+                    }
 
                 }
             } catch (t: Throwable) {
-                dashboardViewModel.handleError(t)
+                Toast.makeText(context, t.toString(), Toast.LENGTH_LONG).show()
+                Log.d(TAG, t.toString())
             }
         }
-        dashboardViewModel.loadEvents()
+
     }
 
 
@@ -109,19 +116,23 @@ class DashboardFragment : DaggerFragment() {
     }
 
     fun updateWidget(eventsList: List<EventData>) {
-        clearWidgetDB()
-        eventsList.forEach { addToWidget(it) }
+            requireActivity().runOnUiThread {
+                AppWidget.sendRefreshBroadcast(requireActivity() as MainActivity)
+            }
+        }
+//        clearWidgetDB()
+//        eventsList.forEach { addToWidget(it) }
         // TODO: Finish project intime!
-        addToWidget(
-            EventData(
-                EventType.SIMPLE,
-                null,
-                null,
-                LocalDate.of(2023, 5, 31),
-                LocalTime.now(), LocalTime.now(), "Дедлайн по eventreminder"
-            )
-        )
-    }
+//        addToWidget(
+//            EventData(
+//                EventType.SIMPLE,
+//                null,
+//                null,
+//                LocalDate.of(2023, 5, 31),
+//                LocalTime.now(), LocalTime.now(), "Дедлайн по eventreminder"
+//            )
+//        )
+//    }
 
     fun clearWidgetDB() =
         requireActivity()
@@ -131,28 +142,14 @@ class DashboardFragment : DaggerFragment() {
 
     fun addToWidget(eventData: EventData) {
         val values = ContentValues()
-        values.put(Contract.COL_EVENT_TITLE, eventData.name)
         values.put(Contract.COL_EVENT_TYPE, eventData.type.toString())
-        if (eventData.type == EventType.BIRTHDAY) {
-            values.put(
-                Contract.COL_EVENT_TIME,
-                eventData.birthday?.toAgeInWordsByDate(eventData.date).toString()
-            )
-        } else if (eventData.type == EventType.HOLIDAY)
-            values.put(
-                Contract.COL_EVENT_TIME,
-                ""
-            )
-            else{
-            values.put(
-                Contract.COL_EVENT_TIME,
-                eventData.time.format(DateTimeFormatter.ofPattern("HH:mm"))
-            )
-        }
-        values.put(
-            Contract.COL_EVENT_DATE,
-            eventData.date.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-        )
+        values.put(Contract.COL_EVENT_PERIOD, eventData.period?.toString())
+        values.put(Contract.COL_BIRTHDAY,eventData.birthday?.toInt())
+        values.put(Contract.COL_EVENT_DATE, eventData.date.toInt())
+        values.put(Contract.COL_EVENT_TIME, eventData.time.toInt())
+        values.put(Contract.COL_TIME_NOTIFICATION, eventData.timeNotifications.toInt())
+        values.put(Contract.COL_EVENT_TITLE, eventData.name)
+
         val uri: Uri? = requireActivity()
             .applicationContext
             .contentResolver
@@ -173,6 +170,9 @@ class DashboardFragment : DaggerFragment() {
         }
     }
 
+    companion object{
+        val TAG = "ru.geekbrains.eventsreminder.presentation.ui.dashboard.DashboardFragment"
+    }
 
     override fun onDestroy() {
         dashboardAdapter = null

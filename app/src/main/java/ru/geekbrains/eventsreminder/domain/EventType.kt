@@ -4,5 +4,4 @@ enum class EventType {
     SIMPLE,
     BIRTHDAY,
     HOLIDAY;
-
 }

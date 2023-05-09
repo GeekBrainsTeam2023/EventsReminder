@@ -29,11 +29,11 @@
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1.2</item>
-        <item name="android:layout_margin">
-            @dimen/textview_dashboard_interval_of_events_layout_margin
-        </item>
+<!--        <item name="android:layout_margin">-->
+<!--            @dimen/textview_dashboard_interval_of_events_layout_margin-->
+<!--        </item>-->
         <item name="android:textAlignment">viewStart</item>
-        <item name="android:textColor">@color/light_blue_900</item>
+<!--        <item name="android:textColor">@color/light_blue_900</item>-->
         <item name="android:textSize">@dimen/textview_dashboard_interval_of_events_textsize</item>
     </style>
 
@@ -45,7 +45,7 @@
         </item>
         <item name="android:layout_marginTop">@dimen/dashboard_recyclerview_cardview_margin_top
         </item>
-        <item name="android:layout_marginBottom">3dp</item>
+        <item name="android:layout_marginBottom">2dp</item>
 
         <item name="android:padding">@dimen/dashboard_recyclerview_cardview_padding</item>
     </style>
@@ -97,25 +97,27 @@
     <style name="widget_event_title_textview">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_margin">@dimen/widget_event_title_textview_layout_margin</item>
-        <item name="android:textColor">@color/black</item>
-        <item name="android:textSize">@dimen/widget_event_title_textview_textsize</item>
+        <item name="android:paddingStart">@dimen/widget_textview_padding_start</item>
+        <item name="android:paddingEnd">@dimen/widget_textview_padding_end</item>
+        <item name="android:textSize">@dimen/widget_event_textview_textsize</item>
         <item name="android:textStyle">normal</item>
     </style>
 
     <style name="widget_event_date_textview">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_margin">@dimen/widget_event_date_textview_layout_margin</item>
-        <item name="android:textSize">@dimen/widget_event_date_textview_textsize</item>
+        <item name="android:paddingStart">@dimen/widget_textview_padding_start</item>
+        <item name="android:paddingEnd">@dimen/widget_textview_padding_end</item>
+        <item name="android:textSize">@dimen/widget_event_textview_textsize</item>
         <item name="android:textStyle">normal</item>
     </style>
 
     <style name="widget_event_time_textview">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_margin">@dimen/widget_event_time_textview_layout_margin</item>
-        <item name="android:textSize">@dimen/widget_event_time_textview_textsize</item>
+        <item name="android:paddingStart">@dimen/widget_textview_padding_start</item>
+        <item name="android:paddingEnd">@dimen/widget_textview_padding_end</item>
+<item name="android:textSize">@dimen/widget_event_textview_textsize</item>
         <item name="android:textStyle">normal</item>
     </style>
 
@@ -125,8 +127,8 @@
         <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:textSize">@dimen/textview_dashboard_date_or_events_textsize</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:layout_margin">@dimen/textview_dashboard_date_of_events_layout_margin
-        </item>
+<!--        <item name="android:layout_margin">@dimen/textview_dashboard_date_of_events_layout_margin-->
+<!--        </item>-->
         <item name="android:layout_height">wrap_content</item>
     </style>
 </resources>

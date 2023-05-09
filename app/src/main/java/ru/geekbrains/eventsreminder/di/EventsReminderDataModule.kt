@@ -1,9 +1,13 @@
 package ru.geekbrains.eventsreminder.di
 
+import android.content.ContentProvider
+import android.content.Context
 import dagger.Binds
 import dagger.Module
 import ru.geekbrains.eventsreminder.repo.Repo
 import ru.geekbrains.eventsreminder.repo.RepoImpl
+import ru.geekbrains.eventsreminder.repo.cache.CacheRepo
+import ru.geekbrains.eventsreminder.repo.cache.CacheRepoImpl
 import ru.geekbrains.eventsreminder.repo.local.LocalRepo
 import ru.geekbrains.eventsreminder.repo.local.LocalRepoImp
 import ru.geekbrains.eventsreminder.repo.remote.IPhoneCalendarRepo
@@ -22,6 +26,11 @@ interface EventsReminderDataModule {
     fun bindLocalRepo(
         localRepo: LocalRepoImp
     ): LocalRepo
+
+    @Binds
+    fun bindCacheRepo(
+        caheRepo : CacheRepoImpl
+    ): CacheRepo
 
     @Binds
     fun bindIPhoneCalendarRepo(

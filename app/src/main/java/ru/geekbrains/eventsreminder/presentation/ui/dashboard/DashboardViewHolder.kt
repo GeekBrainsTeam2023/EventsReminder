@@ -16,14 +16,16 @@ import ru.geekbrains.eventsreminder.R.color.light_green
 import ru.geekbrains.eventsreminder.databinding.DashboardRecyclerviewItemBinding
 import ru.geekbrains.eventsreminder.domain.EventData
 import ru.geekbrains.eventsreminder.domain.EventType
+import ru.geekbrains.eventsreminder.domain.SettingsData
 import ru.geekbrains.eventsreminder.presentation.ui.RusIntPlural
 import ru.geekbrains.eventsreminder.presentation.ui.toAgeInWordsByDate
 import ru.geekbrains.eventsreminder.presentation.ui.toDaysSinceNowInWords
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
+import javax.inject.Inject
 
-class DashboardViewHolder(view: View) : RecyclerView.ViewHolder(view), LifecycleOwner {
+class DashboardViewHolder (view: View) : RecyclerView.ViewHolder(view), LifecycleOwner {
     private val binding: DashboardRecyclerviewItemBinding by viewBinding()
     private val lifecycleRegistry = LifecycleRegistry(this)
     private val activity = view.context.findActivity()
@@ -87,20 +89,20 @@ class DashboardViewHolder(view: View) : RecyclerView.ViewHolder(view), Lifecycle
         dashboardRecyclerViewItemTitleTextview.text = item.name
         textViewDashboardIntervalOfEvents.visibility =
             if (isDataHeader) {
-                View.VISIBLE.also {
+                VISIBLE.also {
                     textViewDashboardIntervalOfEvents.text =
                         item.date.toDaysSinceNowInWords()
                 }
-            } else View.GONE
+            } else GONE
 
         textViewDashboardDateOfEvents.visibility =
             if (isDataHeader) {
-                View.VISIBLE.also {
+                VISIBLE.also {
                     textViewDashboardDateOfEvents.text = item.date.format(
                         DateTimeFormatter.ofPattern("dd-MM-yyyy")
                     )
                 }
-            } else View.GONE
+            } else GONE
     }
 
     private fun DashboardRecyclerviewItemBinding.setHolidayEventSpecifics() {
@@ -110,7 +112,7 @@ class DashboardViewHolder(view: View) : RecyclerView.ViewHolder(view), Lifecycle
                 activity.theme
             )
         )
-        dashboardRecyclerViewItemImage.setImageResource(R.drawable.ic_add_24)
+        dashboardRecyclerViewItemImage.setImageResource(R.drawable.holiday_icon_1)
         dashboardRecyclerViewItemAgeTextview.visibility = GONE
         dashboardRecyclerViewItemEventTimeTextview.visibility = GONE
     }
@@ -126,7 +128,7 @@ class DashboardViewHolder(view: View) : RecyclerView.ViewHolder(view), Lifecycle
         )
         dashboardRecyclerViewItemAgeTextview.visibility = GONE
         dashboardRecyclerViewItemEventTimeTextview.visibility = VISIBLE
-        dashboardRecyclerViewItemImage.setImageResource(R.drawable.ic_dashboard_black_24dp)
+        dashboardRecyclerViewItemImage.setImageResource(R.drawable.simple_event_icon)
         dashboardRecyclerViewItemEventTimeTextview.text =
             item.time.format(DateTimeFormatter.ofPattern("HH:mm"))
     }
@@ -141,9 +143,10 @@ class DashboardViewHolder(view: View) : RecyclerView.ViewHolder(view), Lifecycle
             )
         )
         dashboardRecyclerViewItemImage.setImageResource(R.drawable.birthday_balloons)
-        if (item.birthday != null && item.birthday.year != 0) {
-            dashboardRecyclerViewItemAgeTextview.text = "исполнится " +
-                item.birthday.toAgeInWordsByDate(item.date)
+        if (item.birthday != null && item.birthday.year != 0 && item.birthday <= item.date) {
+            dashboardRecyclerViewItemAgeTextview.text =
+                "исполнится ${item.birthday.toAgeInWordsByDate(item.date)}"
+
                 //dateToAgeInWords(item.birthday,item.date)
             dashboardRecyclerViewItemAgeTextview.visibility = VISIBLE
         }
