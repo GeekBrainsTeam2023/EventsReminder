@@ -9,7 +9,7 @@
         android:id="@+id/firstItemPreviewLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/cardview_light_background"
+        android:background="@color/widget_first_line_default_color"
         android:orientation="horizontal">
 
         <TextView
@@ -19,7 +19,7 @@
             android:layout_weight="1"
             android:maxLines="1"
             android:text="@string/widget_item_preview_first_title"
-            android:textColor="@color/purple_500"
+            android:textColor="@color/purple_700"
             android:textSize="13sp"
             android:textStyle="normal" />
 
@@ -30,7 +30,7 @@
             android:layout_weight="0"
             android:maxLines="1"
             android:text="@string/widget_item_preview_first_date"
-            android:textColor="@color/purple_500"
+            android:textColor="@color/purple_700"
             android:textSize="13sp"
             android:textStyle="normal" />
 
@@ -41,7 +41,7 @@
             android:layout_weight="0"
             android:maxLines="1"
             android:text="@string/widget_item_preview_first_time"
-            android:textColor="@color/purple_500"
+            android:textColor="@color/purple_700"
             android:textSize="13sp"
             android:textStyle="normal" />
     </LinearLayout>
@@ -50,7 +50,7 @@
         android:id="@+id/secondItemPreviewLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/light_blue_50"
+        android:background="@color/widget_second_line_default_color"
         android:orientation="horizontal">
 
         <TextView
@@ -91,7 +91,7 @@
         android:id="@+id/thirdItemPreviewLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/cardview_light_background"
+        android:background="@color/widget_first_line_default_color"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -135,7 +135,7 @@
         android:id="@+id/forthItemPreviewLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/light_blue_50"
+        android:background="@color/widget_second_line_default_color"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -148,7 +148,7 @@
             android:layout_weight="1"
             android:maxLines="1"
             android:text="@string/widget_forth_item_preview_title"
-            android:textColor="@color/purple_500"
+            android:textColor="@color/widget_simple_event_default_font_color"
             android:textSize="13sp"
             android:textStyle="normal" />
 
@@ -159,7 +159,7 @@
             android:layout_weight="0"
             android:maxLines="1"
             android:text="@string/widget_forth_item_preview_date"
-            android:textColor="@color/purple_500"
+            android:textColor="@color/widget_simple_event_default_font_color"
             android:textSize="13sp"
             android:textStyle="normal" />
 
@@ -170,7 +170,7 @@
             android:layout_weight="0"
             android:maxLines="1"
             android:text="@string/widget_forth_item_preview_time"
-            android:textColor="@color/purple_500"
+            android:textColor="@color/widget_simple_event_default_font_color"
             android:textSize="13sp"
             android:textStyle="normal" />
     </LinearLayout>

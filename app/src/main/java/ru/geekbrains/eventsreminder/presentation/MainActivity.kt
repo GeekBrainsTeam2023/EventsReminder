@@ -45,7 +45,8 @@ class MainActivity : DaggerAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setPreferences(PreferenceManager.getDefaultSharedPreferences(applicationContext))
+        val isParamsSetRequired =
+            !setPreferences(PreferenceManager.getDefaultSharedPreferences(applicationContext))
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -60,6 +61,8 @@ class MainActivity : DaggerAppCompatActivity() {
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
+        if (isParamsSetRequired)
+            navController.navigate(R.id.settings)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -144,7 +147,7 @@ class MainActivity : DaggerAppCompatActivity() {
                 (if (settings.isDataCalendar && settings.isDataContact) " и " else "") +
                 rightContactToDemand
         builder.setTitle("Предоставьте права")
-            .setMessage("Необходим доступ к $rightsToDemand, пожалуйста, предоставьте Права либо измените Настройки приложения")
+            .setMessage("Необходим доступ к $rightsToDemand, пожалуйста, предоставьте Права либо измените Настройки приложения (уберите галочку в источниках данных)")
             .setCancelable(false)
             .setPositiveButton("      права") { dialog, id ->
                 // открываем настройки приложения, чтобы пользователь дал разрешение вручную
@@ -170,10 +173,16 @@ class MainActivity : DaggerAppCompatActivity() {
      * Применить параметры из настроек
      * @param preferences набор настроек для применения в приложении
      * @param key ключ с названием конкретной настройки
+     * @return true в случае успешного применения всех параметров
+     *         false если требуется установка параметров
      * (в случае [null] - будут применены все настройки)
      * */
-    fun setPreferences(preferences: SharedPreferences, key: String? = null) {
+    fun setPreferences(preferences: SharedPreferences, key: String? = null): Boolean {
+        var ret = false
         try {
+            if (preferences.contains(getString(R.string.key_phonebook_datasource_checkbox_preference)))
+              ret = true
+
             if (key.isNullOrBlank() || key == getString(R.string.key_phonebook_datasource_checkbox_preference)) {
                 settings.isDataContact = preferences.getBoolean(
                     getString(R.string.key_phonebook_datasource_checkbox_preference),
@@ -199,67 +208,81 @@ class MainActivity : DaggerAppCompatActivity() {
                     getString(R.string.key_event_date_checkbox_preference),
                     settings.showDateEvent
                 )
-                runOnUiThread {
-                    AppWidget.sendRefreshBroadcast(this)
+                if (!key.isNullOrBlank()) {
+                    runOnUiThread {
+                        AppWidget.sendRefreshBroadcast(this)
+                    }
+                    return ret
                 }
-                if (!key.isNullOrBlank()) return
             }
             if(key.isNullOrBlank() || key == getString(R.string.key_event_time_checkbox_preference)){
                 settings.showTimeEvent = preferences.getBoolean(getString(R.string.key_event_time_checkbox_preference),settings.showTimeEvent)
-                runOnUiThread {
-                    AppWidget.sendRefreshBroadcast(this)
+                if (!key.isNullOrBlank()) {
+                    runOnUiThread {
+                        AppWidget.sendRefreshBroadcast(this)
+                    }
+                    return ret
                 }
-                if(!key.isNullOrBlank()) return
             }
             if (key.isNullOrBlank() || key == getString(R.string.key_widget_font_size_preference)) {
                 settings.sizeFontWidget = preferences.getInt(
                     getString(R.string.key_widget_font_size_preference),
                     settings.sizeFontWidget
                 )
-                runOnUiThread {
-                    AppWidget.sendRefreshBroadcast(this)
+                if (!key.isNullOrBlank()) {
+                    runOnUiThread {
+                        AppWidget.sendRefreshBroadcast(this)
+                    }
+                    return ret
                 }
-                if (!key.isNullOrBlank()) return
             }
             if (key.isNullOrBlank() || key == getString(R.string.key_widget_birthday_font_color_preference)) {
                 settings.colorBirthdayFontWidget = preferences.getInt(
                     getString(R.string.key_widget_birthday_font_color_preference),
                     settings.colorBirthdayFontWidget
                 )
-                runOnUiThread {
-                    AppWidget.sendRefreshBroadcast(this)
+                if (!key.isNullOrBlank()) {
+                    runOnUiThread {
+                        AppWidget.sendRefreshBroadcast(this)
+                    }
+                    return ret
                 }
-                if (!key.isNullOrBlank()) return
             }
             if (key.isNullOrBlank() || key == getString(R.string.key_widget_holiday_font_color_preference)) {
                 settings.colorHolidayFontWidget = preferences.getInt(
                     getString(R.string.key_widget_holiday_font_color_preference),
                     settings.colorHolidayFontWidget
                 )
-                runOnUiThread {
-                    AppWidget.sendRefreshBroadcast(this)
+                if (!key.isNullOrBlank()) {
+                    runOnUiThread {
+                        AppWidget.sendRefreshBroadcast(this)
+                    }
+                    return ret
                 }
-                if (!key.isNullOrBlank()) return
             }
             if (key.isNullOrBlank() || key == getString(R.string.key_widget_simple_event_font_color_preference)) {
                 settings.colorSimpleEventFontWidget = preferences.getInt(
                     getString(R.string.key_widget_simple_event_font_color_preference),
                     settings.colorSimpleEventFontWidget
                 )
-                runOnUiThread {
-                    AppWidget.sendRefreshBroadcast(this)
+                if (!key.isNullOrBlank()) {
+                    runOnUiThread {
+                        AppWidget.sendRefreshBroadcast(this)
+                    }
+                    return ret
                 }
-                if (!key.isNullOrBlank()) return
             }
             if (key.isNullOrBlank() || key == getString(R.string.key_background_color_preference)) {
                 settings.colorWidget = preferences.getInt(
                     getString(R.string.key_background_color_preference),
                     settings.colorWidget
                 )
-                runOnUiThread {
-                    AppWidget.sendRefreshBroadcast(this)
+                if (!key.isNullOrBlank()) {
+                    runOnUiThread {
+                        AppWidget.sendRefreshBroadcast(this)
+                    }
+                    return ret
                 }
-                if (!key.isNullOrBlank()) return
             }
 
             if (key.isNullOrBlank() || key == getString(R.string.key_background_alternating_color_preference)) {
@@ -267,38 +290,46 @@ class MainActivity : DaggerAppCompatActivity() {
                     getString(R.string.key_background_alternating_color_preference),
                     settings.alternatingColorWidget
                 )
-                runOnUiThread {
-                    AppWidget.sendRefreshBroadcast(this)
+                if (!key.isNullOrBlank()) {
+                    runOnUiThread {
+                        AppWidget.sendRefreshBroadcast(this)
+                    }
+                    return ret
                 }
-                if (!key.isNullOrBlank()) return
             }
 
             if (key.isNullOrBlank() || key == getString(R.string.key_widget_interval_of_events_preference)) {
                 settings.daysForShowEventsWidget = preferences.getInt(getString(R.string.key_widget_interval_of_events_preference),settings.daysForShowEventsWidget)
-                runOnUiThread {
-                    AppWidget.sendRefreshBroadcast(this)
+                if (!key.isNullOrBlank()) {
+                    runOnUiThread {
+                        AppWidget.sendRefreshBroadcast(this)
+                    }
+                    return ret
                 }
-                if (!key.isNullOrBlank()) return
             }
 
             if (key.isNullOrBlank() || key == getString(R.string.key_age_checkbox_preference)) {
                 settings.showAge = preferences.getBoolean(getString(R.string.key_age_checkbox_preference),settings.showAge)
-                runOnUiThread {
-                    AppWidget.sendRefreshBroadcast(this)
+                if (!key.isNullOrBlank()) {
+                    runOnUiThread {
+                        AppWidget.sendRefreshBroadcast(this)
+                    }
+                    return ret
                 }
-                if (!key.isNullOrBlank()) return
             }
 
             if (key.isNullOrBlank() || key == getString(R.string.key_export_settings_preference)) {
                 //TODO: записать текущие настройки в файл
-                if (!key.isNullOrBlank()) return
+                if (!key.isNullOrBlank()) return ret
             }
             if (key.isNullOrBlank() || key == getString(R.string.key_import_settings_preference)) {
                 //TODO: загрузить настройки из файла
-                if (key.isNullOrBlank()) return
+                if (key.isNullOrBlank()) return ret
             }
         } catch (t: Throwable) {
             Toast.makeText(this, t.toString(), Toast.LENGTH_SHORT).show()
+            return false
         }
+        return ret
     }
 }

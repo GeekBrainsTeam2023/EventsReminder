@@ -1,6 +1,7 @@
 package ru.geekbrains.eventsreminder.presentation.ui
 
 import java.time.LocalDate
+import java.time.LocalTime
 import java.time.temporal.ChronoUnit
 
 /**
@@ -28,3 +29,17 @@ import java.time.temporal.ChronoUnit
             ChronoUnit.YEARS.between(this,dateSinceBirthday).toInt(),
             "год", "года", "лет"
         ).toString()
+
+fun LocalDate.toInt() =
+    this.year * 10000 + this.month.value * 100 + this.dayOfMonth
+
+fun LocalTime.toInt() =
+    this.hour * 10000 + this.minute * 100 + this.second
+
+fun Int.toLocalDate() =
+    LocalDate.of(this / 10000, this / 100 % 100, this % 100)
+
+fun Int.toLocalTime() =
+    LocalTime.of(this / 10000, this / 100 % 100, this % 100)
+
+

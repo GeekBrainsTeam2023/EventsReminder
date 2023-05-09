@@ -62,7 +62,7 @@
             android:name=".widget.MyWidgetRemoteViewsService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
         <provider
-            android:name=".widget.MyContentProvider"
+            android:name=".repo.cache.MyContentProvider"
             android:authorities="ru.geekbrains.eventsreminder.widget"
             android:exported="false" />
     </application>

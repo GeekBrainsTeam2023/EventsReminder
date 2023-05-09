@@ -1,4 +1,4 @@
-package ru.geekbrains.eventsreminder.widget
+package ru.geekbrains.eventsreminder.repo.cache
 
 import android.content.*
 import android.database.Cursor
@@ -68,6 +68,7 @@ class MyContentProvider : ContentProvider() {
 
     override fun delete(uri: Uri, selection: String?, selectionArgs: Array<out String>?): Int {
         var res = 0
+
         mDbHelper?.let {
             val db: SQLiteDatabase = it.writableDatabase
             val match = sUriMatcher.match(uri)
@@ -82,7 +83,6 @@ class MyContentProvider : ContentProvider() {
         return res
     }
 
-
     override fun update(
         uri: Uri,
         values: ContentValues?,
@@ -91,7 +91,6 @@ class MyContentProvider : ContentProvider() {
     ): Int {
         return 0
     }
-
 
     companion object {
         const val EVENTS_CODE = 100
