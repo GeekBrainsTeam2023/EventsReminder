@@ -143,7 +143,7 @@ class DashboardViewHolder (view: View) : RecyclerView.ViewHolder(view), Lifecycl
             )
         )
         dashboardRecyclerViewItemImage.setImageResource(R.drawable.birthday_balloons)
-        if (item.birthday != null && item.birthday.year != 0 && item.birthday >= item.date) {
+        if (item.birthday != null && item.birthday.year != 0 && item.birthday <= item.date) {
             dashboardRecyclerViewItemAgeTextview.text =
                 "исполнится ${item.birthday.toAgeInWordsByDate(item.date)}"
 

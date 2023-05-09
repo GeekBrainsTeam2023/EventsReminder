@@ -208,67 +208,81 @@ class MainActivity : DaggerAppCompatActivity() {
                     getString(R.string.key_event_date_checkbox_preference),
                     settings.showDateEvent
                 )
-                runOnUiThread {
-                    AppWidget.sendRefreshBroadcast(this)
+                if (!key.isNullOrBlank()) {
+                    runOnUiThread {
+                        AppWidget.sendRefreshBroadcast(this)
+                    }
+                    return ret
                 }
-                if (!key.isNullOrBlank()) return ret
             }
             if(key.isNullOrBlank() || key == getString(R.string.key_event_time_checkbox_preference)){
                 settings.showTimeEvent = preferences.getBoolean(getString(R.string.key_event_time_checkbox_preference),settings.showTimeEvent)
-                runOnUiThread {
-                    AppWidget.sendRefreshBroadcast(this)
+                if (!key.isNullOrBlank()) {
+                    runOnUiThread {
+                        AppWidget.sendRefreshBroadcast(this)
+                    }
+                    return ret
                 }
-                if(!key.isNullOrBlank()) return ret
             }
             if (key.isNullOrBlank() || key == getString(R.string.key_widget_font_size_preference)) {
                 settings.sizeFontWidget = preferences.getInt(
                     getString(R.string.key_widget_font_size_preference),
                     settings.sizeFontWidget
                 )
-                runOnUiThread {
-                    AppWidget.sendRefreshBroadcast(this)
+                if (!key.isNullOrBlank()) {
+                    runOnUiThread {
+                        AppWidget.sendRefreshBroadcast(this)
+                    }
+                    return ret
                 }
-                if (!key.isNullOrBlank()) return ret
             }
             if (key.isNullOrBlank() || key == getString(R.string.key_widget_birthday_font_color_preference)) {
                 settings.colorBirthdayFontWidget = preferences.getInt(
                     getString(R.string.key_widget_birthday_font_color_preference),
                     settings.colorBirthdayFontWidget
                 )
-                runOnUiThread {
-                    AppWidget.sendRefreshBroadcast(this)
+                if (!key.isNullOrBlank()) {
+                    runOnUiThread {
+                        AppWidget.sendRefreshBroadcast(this)
+                    }
+                    return ret
                 }
-                if (!key.isNullOrBlank()) return ret
             }
             if (key.isNullOrBlank() || key == getString(R.string.key_widget_holiday_font_color_preference)) {
                 settings.colorHolidayFontWidget = preferences.getInt(
                     getString(R.string.key_widget_holiday_font_color_preference),
                     settings.colorHolidayFontWidget
                 )
-                runOnUiThread {
-                    AppWidget.sendRefreshBroadcast(this)
+                if (!key.isNullOrBlank()) {
+                    runOnUiThread {
+                        AppWidget.sendRefreshBroadcast(this)
+                    }
+                    return ret
                 }
-                if (!key.isNullOrBlank()) return ret
             }
             if (key.isNullOrBlank() || key == getString(R.string.key_widget_simple_event_font_color_preference)) {
                 settings.colorSimpleEventFontWidget = preferences.getInt(
                     getString(R.string.key_widget_simple_event_font_color_preference),
                     settings.colorSimpleEventFontWidget
                 )
-                runOnUiThread {
-                    AppWidget.sendRefreshBroadcast(this)
+                if (!key.isNullOrBlank()) {
+                    runOnUiThread {
+                        AppWidget.sendRefreshBroadcast(this)
+                    }
+                    return ret
                 }
-                if (!key.isNullOrBlank()) return ret
             }
             if (key.isNullOrBlank() || key == getString(R.string.key_background_color_preference)) {
                 settings.colorWidget = preferences.getInt(
                     getString(R.string.key_background_color_preference),
                     settings.colorWidget
                 )
-                runOnUiThread {
-                    AppWidget.sendRefreshBroadcast(this)
+                if (!key.isNullOrBlank()) {
+                    runOnUiThread {
+                        AppWidget.sendRefreshBroadcast(this)
+                    }
+                    return ret
                 }
-                if (!key.isNullOrBlank()) return ret
             }
 
             if (key.isNullOrBlank() || key == getString(R.string.key_background_alternating_color_preference)) {
@@ -276,26 +290,32 @@ class MainActivity : DaggerAppCompatActivity() {
                     getString(R.string.key_background_alternating_color_preference),
                     settings.alternatingColorWidget
                 )
-                runOnUiThread {
-                    AppWidget.sendRefreshBroadcast(this)
+                if (!key.isNullOrBlank()) {
+                    runOnUiThread {
+                        AppWidget.sendRefreshBroadcast(this)
+                    }
+                    return ret
                 }
-                if (!key.isNullOrBlank()) return ret
             }
 
             if (key.isNullOrBlank() || key == getString(R.string.key_widget_interval_of_events_preference)) {
                 settings.daysForShowEventsWidget = preferences.getInt(getString(R.string.key_widget_interval_of_events_preference),settings.daysForShowEventsWidget)
-                runOnUiThread {
-                    AppWidget.sendRefreshBroadcast(this)
+                if (!key.isNullOrBlank()) {
+                    runOnUiThread {
+                        AppWidget.sendRefreshBroadcast(this)
+                    }
+                    return ret
                 }
-                if (!key.isNullOrBlank()) return ret
             }
 
             if (key.isNullOrBlank() || key == getString(R.string.key_age_checkbox_preference)) {
                 settings.showAge = preferences.getBoolean(getString(R.string.key_age_checkbox_preference),settings.showAge)
-                runOnUiThread {
-                    AppWidget.sendRefreshBroadcast(this)
+                if (!key.isNullOrBlank()) {
+                    runOnUiThread {
+                        AppWidget.sendRefreshBroadcast(this)
+                    }
+                    return ret
                 }
-                if (!key.isNullOrBlank()) return ret
             }
 
             if (key.isNullOrBlank() || key == getString(R.string.key_export_settings_preference)) {
