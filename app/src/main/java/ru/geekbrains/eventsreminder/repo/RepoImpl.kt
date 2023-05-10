@@ -54,7 +54,7 @@ class RepoImpl @Inject constructor(
                 return ResourceState.ErrorState(Throwable("Ошибка заргрузки событий из календаря"))
             }
         }
-        return ResourceState.SuccessState(deleteDuplicateEvents(listEvents.toMutableList()))
+        return ResourceState.SuccessState(listEvents.toList())
     }
 
 }

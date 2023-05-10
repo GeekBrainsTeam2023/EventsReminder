@@ -12,22 +12,29 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/recyclerViewListOfEvents"
+        app:layout_constraintBottom_toTopOf="@id/swipeLayout"
         android:textColor="@color/light_blue_900"
         android:textAlignment="viewStart"
         android:layout_margin="@dimen/textview_dashboard_header_layout_margin"
         android:textSize="@dimen/textview_dashboard_header_textsize"
         />
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewListOfEvents"
-        style="@style/dashboard_recyclerview_list_of_events"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        android:paddingBottom="@dimen/recyclerview_list_of_events_padding_bottom"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textViewDashboardHeader"
-        tools:listitem="@layout/dashboard_recyclerview_item" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textViewDashboardHeader">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewListOfEvents"
+            style="@style/dashboard_recyclerview_list_of_events"
+            android:layout_height="wrap_content"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:paddingBottom="@dimen/recyclerview_list_of_events_padding_bottom"
+
+            tools:listitem="@layout/dashboard_recyclerview_item" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/dashboardFabAddEvent"
@@ -36,3 +43,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
+    <!--            app:layout_constraintEnd_toEndOf="parent"-->
+    <!--            app:layout_constraintStart_toStartOf="parent"-->
+    <!--            app:layout_constraintTop_toBottomOf="@id/textViewDashboardHeader"-->

@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
-    <ImageView
-        android:id="@+id/background"
-        android:src="@drawable/app_widget_background"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"/>
+<!--<FrameLayout-->
+<!--    android:layout_width="wrap_content"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--   android:id="@+id/frameWidget"-->
+<!--    android:padding="4dp">-->
+<!--    <ImageView-->
+<!--        android:id="@+id/background"-->
+<!--        android:src="@drawable/app_widget_background"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:layout_width="match_parent"/>-->
 <RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/widgetLayout"
-    android:clickable="true"
     >
-<!--    android:background="@drawable/app_widget_background"-->
 
     <ListView
         android:id="@+id/widgetList"
@@ -26,4 +28,4 @@
         android:dividerHeight="0dp"
         tools:listitem="@layout/item_app_widget" />
 </RelativeLayout>
-</FrameLayout>
+<!--</FrameLayout>-->

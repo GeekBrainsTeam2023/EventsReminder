@@ -10,6 +10,7 @@ import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.android.support.DaggerFragment
@@ -53,8 +54,15 @@ class DashboardFragment : DaggerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.swipeLayout.setOnRefreshListener {
+            binding.swipeLayout.isRefreshing = false
+            dashboardViewModel.loadEvents()
+            Toast.makeText(context,"Список событий обновлён",Toast.LENGTH_SHORT).show()
+        }
+
         dashboardAdapter = DashboardRecyclerViewAdapter(dashboardViewModel.storedFilteredEvents)
         binding.recyclerViewListOfEvents.adapter = dashboardAdapter
+
         binding.recyclerViewListOfEvents.isSaveEnabled = true
         dashboardAdapter!!.stateRestorationPolicy =
             RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
@@ -77,13 +85,13 @@ class DashboardFragment : DaggerFragment() {
                     }
                     is AppState.ErrorState -> {
                         Toast.makeText(context, appState.error.toString(), Toast.LENGTH_LONG).show()
-                        Log.d(TAG, appState.error.toString())
+                        Log.e(TAG, "",appState.error)
                     }
 
                 }
             } catch (t: Throwable) {
                 Toast.makeText(context, t.toString(), Toast.LENGTH_LONG).show()
-                Log.d(TAG, t.toString())
+                Log.e(TAG, "",t)
             }
         }
 

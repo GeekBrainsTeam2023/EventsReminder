@@ -16,6 +16,7 @@ import android.widget.AdapterView
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 import androidx.core.database.getIntOrNull
+import androidx.core.graphics.alpha
 import androidx.preference.PreferenceManager
 import ru.geekbrains.eventsreminder.R
 import ru.geekbrains.eventsreminder.domain.EventType
@@ -138,10 +139,11 @@ constructor(
                 0x151414
             )
 
-            rv.setInt(
-                R.id.background, "setImageColor",
-                backColor
-            )
+//            rv.setInt(
+//                R.id.background, "setImageColor",
+//                backColor
+//            )
+          //  rv.setInt(R.id.frameWidget,"setBackground",0x151414)
             if (position % 2 == 0) {
                 rv.setInt(R.id.itemAppWidget, "setBackgroundColor", backColor)
 
