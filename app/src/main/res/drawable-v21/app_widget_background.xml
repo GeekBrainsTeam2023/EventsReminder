@@ -9,6 +9,6 @@ appWidgetRadius attribute value
 <!--       android:tint="#ADE3E0E0" -->
     <corners android:radius="15dp" />
   <solid android:color="#5CFFFFFF" />
-<!--    <stroke android:width="5dp"-->
-<!--        android:color="@color/color_on_primary"/>-->
+    <stroke android:width="5dp"
+        android:color="#B5B0B0"/>
 </shape>
