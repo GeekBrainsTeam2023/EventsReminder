@@ -19,10 +19,7 @@ class RepoImpl @Inject constructor(
     val contactsRepo: PhoneContactsRepo,
     val calendarRepo: IPhoneCalendarRepo
 ) : Repo {
-    companion object {
-        // TODO : вынести в di
 
-    }
 
     override suspend fun loadData(
         daysForShowEvents: Int,

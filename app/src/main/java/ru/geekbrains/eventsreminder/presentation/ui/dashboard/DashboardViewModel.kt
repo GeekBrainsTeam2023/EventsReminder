@@ -57,9 +57,14 @@ class DashboardViewModel @Inject constructor(
     @RequiresApi(Build.VERSION_CODES.O)
     fun loadEvents() {
         try {
-            val cached = cache.getList()
-            if (cached.any()) statesLiveData.postValue(AppState.SuccessState(cached))
-            statesLiveData.postValue(AppState.SuccessState(filteredEventsList.toList()))
+
+            if (filteredEventsList.any())
+                statesLiveData.postValue(AppState.SuccessState(filteredEventsList.toList()))
+            else {
+                val cached = cache.getList()
+                if (cached.any()) statesLiveData.postValue(AppState.SuccessState(cached))
+            }
+
             loadEventsListJob?.let { return }
             loadEventsListJob = viewmodelCoroutineScope.launch {
                 val result = repo.loadData(
