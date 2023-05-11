@@ -26,4 +26,9 @@
     <dimen name="textview_dashboard_header_layout_margin">5dp</dimen>
     <dimen name="textview_dashboard_header_textsize">16sp</dimen>
     <dimen name="recyclerview_list_of_events_padding_bottom">50dp</dimen>
+    <dimen name="dashboard_item_image_height">47dp</dimen>
+    <dimen name="dashboard_item_image_layout_margin">0dp</dimen>
+    <dimen name="dashboard_item_image_width">0dp</dimen>
+    <dimen name="dashboard_events_list_titles_linearlayout_margin">2dp</dimen>
+    <dimen name="dashboard_events_list_titles_linearlayout_padding">5dp</dimen>
 </resources>

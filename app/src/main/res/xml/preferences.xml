@@ -45,12 +45,19 @@ app:showSeekBarValue="true"
             app:key="@string/key_notification_melody_preference"
             app:title="@string/title_notification_melody_preference"
             app:useSimpleSummaryProvider="true" />
-
-        <Preference
+        <SeekBarPreference
+            app:key="@string/key_minutes_before_notification_preference"
+            app:title="@string/title_minutes_before_notification_preference"
+            app:iconSpaceReserved="false"
+            app:showSeekBarValue="true"
+            app:min="1"
+            android:max="60"
+            app:useSimpleSummaryProvider="true"/>
+     <!--   <Preference
             app:iconSpaceReserved="false"
             app:key="@string/key_minutes_before_notification_preference"
             app:title="@string/title_minutes_before_notification_preference"
-            app:useSimpleSummaryProvider="true" />
+            app:useSimpleSummaryProvider="true" /> -->
 
     </PreferenceCategory>
 

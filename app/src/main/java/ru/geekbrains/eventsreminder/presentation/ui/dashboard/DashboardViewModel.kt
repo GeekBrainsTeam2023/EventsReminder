@@ -60,13 +60,15 @@ class DashboardViewModel @Inject constructor(
 
             if (filteredEventsList.any())
                 statesLiveData.postValue(AppState.SuccessState(filteredEventsList.toList()))
-            else {
-                val cached = cache.getList()
-                if (cached.any()) statesLiveData.postValue(AppState.SuccessState(cached))
-            }
-
+            else statesLiveData.postValue(AppState.LoadingState)
             loadEventsListJob?.let { return }
             loadEventsListJob = viewmodelCoroutineScope.launch {
+
+                if (filteredEventsList.isEmpty()){
+                    //delay(5000)
+                    val cached = cache.getList()
+                    if (cached.any()) statesLiveData.postValue(AppState.SuccessState(cached))
+                }
                 val result = repo.loadData(
                     settingsData.daysForShowEvents,
                     settingsData.isDataContact, settingsData.isDataCalendar

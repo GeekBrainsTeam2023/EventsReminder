@@ -102,16 +102,21 @@ class SettingsFragment : PreferenceFragmentCompat(), HasAndroidInjector {
             Toast.makeText(context, "choose melody", Toast.LENGTH_SHORT).show()
             true
         }
-        val chooseMinutesBeforeEventToStartNotificationButton: Preference? =
-            findPreference(getString(R.string.key_minutes_before_notification_preference))
-        chooseMinutesBeforeEventToStartNotificationButton?.setOnPreferenceClickListener {
-            Toast.makeText(
-                context,
-                "choose minutes before event to start notification",
-                Toast.LENGTH_SHORT
-            ).show()
-            true
+        findPreference<SeekBarPreference>(getString(R.string.key_minutes_before_notification_preference))?.let{it.value =
+            prefs.getInt(getString(R.string.key_minutes_before_notification_preference),
+                settingsData.minutesForStartNotification)
+            it.seekBarIncrement = 1
         }
+    //    val chooseMinutesBeforeEventToStartNotificationButton: Preference? =
+    //        findPreference(getString(R.string.key_minutes_before_notification_preference))
+    //    chooseMinutesBeforeEventToStartNotificationButton?.setOnPreferenceClickListener {
+    //       Toast.makeText(
+    //            context,
+    //            "choose minutes before event to start notification",
+    //            Toast.LENGTH_SHORT
+    //        ).show()
+    //       true
+    //    }
 
             findPreference<SeekBarPreference>(getString(R.string.key_widget_interval_of_events_preference))?.let { it.value =
            prefs.getInt(getString(R.string.key_widget_interval_of_events_preference),settingsData.daysForShowEventsWidget)
