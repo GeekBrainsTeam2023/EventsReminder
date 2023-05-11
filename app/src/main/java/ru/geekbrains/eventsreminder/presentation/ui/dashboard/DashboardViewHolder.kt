@@ -115,6 +115,8 @@ class DashboardViewHolder (view: View) : RecyclerView.ViewHolder(view), Lifecycl
         dashboardRecyclerViewItemImage.setImageResource(R.drawable.holiday_icon_1)
         dashboardRecyclerViewItemAgeTextview.visibility = GONE
         dashboardRecyclerViewItemEventTimeTextview.visibility = GONE
+      //  dashboardRecyclerViewItemTitleTextview.height = dashboardRecyclerViewCardview.height
+
     }
 
     private fun DashboardRecyclerviewItemBinding.setSimpleEventSpecifics(

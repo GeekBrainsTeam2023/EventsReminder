@@ -1,16 +1,14 @@
 package ru.geekbrains.eventsreminder.presentation.ui.dashboard
 
 
-import android.content.ContentValues
 import android.content.Context
-import android.net.Uri
+
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.android.support.DaggerFragment
@@ -20,13 +18,7 @@ import ru.geekbrains.eventsreminder.di.ViewModelFactory
 import ru.geekbrains.eventsreminder.domain.*
 import ru.geekbrains.eventsreminder.presentation.MainActivity
 import ru.geekbrains.eventsreminder.presentation.ui.RusIntPlural
-import ru.geekbrains.eventsreminder.presentation.ui.toAgeInWordsByDate
-import ru.geekbrains.eventsreminder.presentation.ui.toInt
 import ru.geekbrains.eventsreminder.widget.AppWidget
-import ru.geekbrains.eventsreminder.repo.cache.Contract
-import java.time.LocalDate
-import java.time.LocalTime
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 class DashboardFragment : DaggerFragment() {
@@ -128,55 +120,7 @@ class DashboardFragment : DaggerFragment() {
                 AppWidget.sendRefreshBroadcast(requireActivity() as MainActivity)
             }
         }
-//        clearWidgetDB()
-//        eventsList.forEach { addToWidget(it) }
-        // TODO: Finish project intime!
-//        addToWidget(
-//            EventData(
-//                EventType.SIMPLE,
-//                null,
-//                null,
-//                LocalDate.of(2023, 5, 31),
-//                LocalTime.now(), LocalTime.now(), "Дедлайн по eventreminder"
-//            )
-//        )
-//    }
 
-    fun clearWidgetDB() =
-        requireActivity()
-            .applicationContext
-            .contentResolver
-            .delete(Contract.PATH_EVENTS_URI, null, null)
-
-    fun addToWidget(eventData: EventData) {
-        val values = ContentValues()
-        values.put(Contract.COL_EVENT_TYPE, eventData.type.toString())
-        values.put(Contract.COL_EVENT_PERIOD, eventData.period?.toString())
-        values.put(Contract.COL_BIRTHDAY,eventData.birthday?.toInt())
-        values.put(Contract.COL_EVENT_DATE, eventData.date.toInt())
-        values.put(Contract.COL_EVENT_TIME, eventData.time.toInt())
-        values.put(Contract.COL_TIME_NOTIFICATION, eventData.timeNotifications.toInt())
-        values.put(Contract.COL_EVENT_TITLE, eventData.name)
-
-        val uri: Uri? = requireActivity()
-            .applicationContext
-            .contentResolver
-            .insert(Contract.PATH_EVENTS_URI, values)
-
-        if (uri != null) {
-            requireActivity().runOnUiThread {
-                AppWidget.sendRefreshBroadcast(requireActivity() as MainActivity)
-            }
-        } else {
-            requireActivity().runOnUiThread {
-                Toast.makeText(
-                    requireActivity(),
-                    "Something went wrong, event cannot be created.",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        }
-    }
 
     companion object{
         val TAG = "ru.geekbrains.eventsreminder.presentation.ui.dashboard.DashboardFragment"
