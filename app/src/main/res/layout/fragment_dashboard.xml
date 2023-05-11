@@ -18,6 +18,29 @@
         android:layout_margin="@dimen/textview_dashboard_header_layout_margin"
         android:textSize="@dimen/textview_dashboard_header_textsize"
         />
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textViewDashboardHeader">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/shimmer_viewholder" />
+            <include layout="@layout/shimmer_viewholder" />
+            <include layout="@layout/shimmer_viewholder" />
+            <include layout="@layout/shimmer_viewholder" />
+            <include layout="@layout/shimmer_viewholder" />
+            <include layout="@layout/shimmer_viewholder" />
+            <include layout="@layout/shimmer_viewholder" />
+            <include layout="@layout/shimmer_viewholder" />
+
+        </LinearLayout>
+    </com.facebook.shimmer.ShimmerFrameLayout>
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeLayout"
         android:layout_width="match_parent"
@@ -25,6 +48,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textViewDashboardHeader">
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewListOfEvents"
             style="@style/dashboard_recyclerview_list_of_events"
@@ -35,7 +59,6 @@
             tools:listitem="@layout/dashboard_recyclerview_item" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/dashboardFabAddEvent"
         style="@style/dashboard_fab"
@@ -43,6 +66,3 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
-    <!--            app:layout_constraintEnd_toEndOf="parent"-->
-    <!--            app:layout_constraintStart_toStartOf="parent"-->
-    <!--            app:layout_constraintTop_toBottomOf="@id/textViewDashboardHeader"-->
