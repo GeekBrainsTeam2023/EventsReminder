@@ -2,10 +2,11 @@ package ru.geekbrains.eventsreminder.presentation.ui.dashboard
 
 
 import android.content.Context
-
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DiffUtil
@@ -20,6 +21,7 @@ import ru.geekbrains.eventsreminder.presentation.MainActivity
 import ru.geekbrains.eventsreminder.presentation.ui.RusIntPlural
 import ru.geekbrains.eventsreminder.widget.AppWidget
 import javax.inject.Inject
+
 
 class DashboardFragment : DaggerFragment() {
 
@@ -68,12 +70,18 @@ class DashboardFragment : DaggerFragment() {
                 when (appState) {
                     is AppState.SuccessState<*> -> {
                         val data = appState.data as List<EventData>
+                        if (binding.shimmerLayout.isShimmerVisible)
+                        {
+                            binding.shimmerLayout.hideShimmer()
+                            binding.shimmerLayout.visibility = GONE
+                            binding.recyclerViewListOfEvents.visibility = VISIBLE
 
+                        }
                         showEvents(data)
                         updateWidget(data)
                     }
                     is AppState.LoadingState -> {
-                        //TODO:Show some animation
+                        //shimmer animation is on fragment load
                     }
                     is AppState.ErrorState -> {
                         Toast.makeText(context, appState.error.toString(), Toast.LENGTH_LONG).show()
@@ -89,6 +97,15 @@ class DashboardFragment : DaggerFragment() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        binding.shimmerLayout.startShimmer()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        binding.shimmerLayout.stopShimmer()
+    }
 
     fun showEvents(events: List<EventData>) {
         try {
