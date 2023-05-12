@@ -1,7 +1,6 @@
 package ru.geekbrains.eventsreminder.di
 
-import android.content.ContentProvider
-import android.content.Context
+
 import dagger.Binds
 import dagger.Module
 import ru.geekbrains.eventsreminder.repo.Repo
@@ -19,7 +18,7 @@ import ru.geekbrains.eventsreminder.repo.remote.PhoneContactsRepoImpl
 * предоставляет возможность работать с Repo, IPhoneCalendarRepo и
 * PhoneContactsRepo
 * */
-@Module
+@Module(includes = [StorageModule::class])
 interface EventsReminderDataModule {
 
     @Binds
@@ -46,4 +45,6 @@ interface EventsReminderDataModule {
     fun bindsRepo(
         repo : RepoImpl
     ): Repo
+
+
 }

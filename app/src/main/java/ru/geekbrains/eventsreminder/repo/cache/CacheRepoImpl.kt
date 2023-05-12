@@ -6,6 +6,7 @@ import android.database.Cursor
 import androidx.core.database.getIntOrNull
 import androidx.core.database.getStringOrNull
 import ru.geekbrains.eventsreminder.domain.EventData
+import ru.geekbrains.eventsreminder.domain.EventSourceType
 import ru.geekbrains.eventsreminder.domain.EventType
 import ru.geekbrains.eventsreminder.domain.PeriodType
 import ru.geekbrains.eventsreminder.presentation.ui.toInt
@@ -39,7 +40,9 @@ class CacheRepoImpl @Inject constructor(val context: Context): CacheRepo {
                         cur.getInt(cur.getColumnIndexOrThrow(Contract.COL_EVENT_DATE)).toLocalDate(),
                         cur.getInt(cur.getColumnIndexOrThrow(Contract.COL_EVENT_TIME)).toLocalTime(),
                         cur.getInt(cur.getColumnIndexOrThrow(Contract.COL_TIME_NOTIFICATION)).toLocalTime(),
-                        cur.getString(cur.getColumnIndexOrThrow(Contract.COL_EVENT_TITLE))
+                        cur.getString(cur.getColumnIndexOrThrow(Contract.COL_EVENT_TITLE)),
+                        cur.getLong(cur.getColumnIndexOrThrow(Contract.COL_EVENT_SOURCE_ID)),
+                        EventSourceType.valueOf(cur.getString(cur.getColumnIndexOrThrow(Contract.COL_EVENT_SOURCE_TYPE)))
                     )
                 )
             }
@@ -61,7 +64,8 @@ class CacheRepoImpl @Inject constructor(val context: Context): CacheRepo {
         values.put(Contract.COL_EVENT_TIME, eventData.time.toInt())
         values.put(Contract.COL_TIME_NOTIFICATION, eventData.timeNotifications.toInt())
         values.put(Contract.COL_EVENT_TITLE, eventData.name)
-        //values.put(Contract.COL_EVENT_SOURCE, eventSourceType.toString())
+        values.put(Contract.COL_EVENT_SOURCE_ID, eventData.sourceId)
+        values.put(Contract.COL_EVENT_SOURCE_TYPE, eventData.sourceType.toString())
         context.applicationContext.contentResolver.insert(Contract.PATH_EVENTS_URI, values)
     }
 

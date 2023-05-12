@@ -17,8 +17,9 @@ class DbHelper(context: Context?) :
                 Contract.COL_EVENT_DATE + " INTEGER NOT NULL, " +
                 Contract.COL_EVENT_TIME + " INTEGER NOT NULL, " +
                 Contract.COL_TIME_NOTIFICATION + " INTEGER NOT NULL, " +
-                Contract.COL_EVENT_TITLE + " TEXT NOT NULL " +
-               // Contract.COL_EVENT_SOURCE + " TEXT NOT NULL " +
+                Contract.COL_EVENT_TITLE + " TEXT NOT NULL, " +
+                Contract.COL_EVENT_SOURCE_ID + " INTEGER NOT NULL, " +
+                Contract.COL_EVENT_SOURCE_TYPE + " TEXT NOT NULL " +
                 ")"
         db.execSQL(SQL_CREATE_TABLE)
     }

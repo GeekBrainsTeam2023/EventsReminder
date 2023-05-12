@@ -6,6 +6,6 @@ import ru.geekbrains.eventsreminder.domain.EventData
 
 interface LocalRepo {
     fun addEvent(event:EventData)
-    fun addListEvents(listEvent: List<EventData>)
+    fun updateEvent(event: EventData)
     fun getList():List<EventData>
 }

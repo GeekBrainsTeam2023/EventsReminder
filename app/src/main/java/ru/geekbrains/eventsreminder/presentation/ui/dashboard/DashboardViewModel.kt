@@ -119,7 +119,9 @@ class DashboardViewModel @Inject constructor(
                                         it.withYear(curYear),
                                         event.time,
                                         event.timeNotifications,
-                                        event.name
+                                        event.name,
+                                        event.sourceId,
+                                        event.sourceType
                                     )
                                 )
                                 break

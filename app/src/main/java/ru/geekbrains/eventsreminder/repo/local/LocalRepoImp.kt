@@ -3,16 +3,24 @@ package ru.geekbrains.eventsreminder.repo.local
 import ru.geekbrains.eventsreminder.domain.EventData
 import javax.inject.Inject
 
-class LocalRepoImp @Inject constructor():LocalRepo {
-    private val listEvent= mutableListOf<EventData>()
+class LocalRepoImp @Inject constructor(
+    private val localEventsDB: LocalEventsDB
+):LocalRepo {
 
-    override fun addEvent(event: EventData) {
-        listEvent.add(event)
+    override fun addEvent(event: EventData) =
+        localEventsDB
+            .getLocalEventsDao()
+            .insert(LocalEvent.fromEventData(event))
+
+    override fun updateEvent(event: EventData) {
+        localEventsDB
+            .getLocalEventsDao()
+            .insert(LocalEvent.fromEventData(event))
     }
 
-    override fun addListEvents(listEvent: List<EventData>) {
-        this.listEvent.addAll(listEvent)
-    }
-
-    override fun getList(): List<EventData> = listEvent.toList()
+    override fun getList(): List<EventData> =
+        localEventsDB
+            .getLocalEventsDao()
+            .getLocalEvents()
+            .map { event->event.toEventData() }
 }

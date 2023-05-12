@@ -2,6 +2,7 @@ package ru.geekbrains.eventsreminder.usecases
 
 import android.util.Log
 import ru.geekbrains.eventsreminder.domain.EventData
+import ru.geekbrains.eventsreminder.domain.EventSourceType
 import ru.geekbrains.eventsreminder.domain.EventType
 import ru.geekbrains.eventsreminder.domain.PeriodType
 import java.time.*
@@ -13,18 +14,20 @@ fun getLocalDateFromBirthDay(birthDay: String): LocalDate = LocalDate.of(
 )
 
 
-fun addBirthDayEventFromContactPhone(name: String, birthDay: String): EventData = EventData(
+fun addBirthDayEventFromContactPhone(name: String, birthDay: String, id: Long): EventData = EventData(
     EventType.BIRTHDAY,
     null,
     LocalDate.parse(birthDay),
     getLocalDateFromBirthDay(birthDay),
     LocalTime.parse("00:00:00"),
     LocalTime.parse("00:15:00"),
-    name
+    name,
+    id,
+    EventSourceType.CONTACTS
 )
 
 
-fun addEventFromCalendar(name: String, startDate: Long, eventType: EventType): EventData {
+fun addEventFromCalendar(name: String, startDate: Long, eventType: EventType,id:Long): EventData {
     val date =
         LocalDateTime.ofInstant(Instant.ofEpochSecond(startDate / 1000), ZoneId.systemDefault())
 
@@ -35,7 +38,9 @@ fun addEventFromCalendar(name: String, startDate: Long, eventType: EventType): E
         date.toLocalDate(),
         date.toLocalTime(),
         LocalTime.parse("00:15:00"),
-        name
+        name,
+        id,
+        EventSourceType.CALENDAR
     )
 }
 

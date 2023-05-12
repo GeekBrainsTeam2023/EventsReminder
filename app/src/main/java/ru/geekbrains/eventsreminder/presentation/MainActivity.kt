@@ -31,9 +31,7 @@ import javax.inject.Inject
 
 class MainActivity : DaggerAppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-
     var doubleBackToExitPressedOnce = false
-
     private lateinit var navController: NavController
 
     @Inject
@@ -42,19 +40,15 @@ class MainActivity : DaggerAppCompatActivity() {
     companion object {
         const val TAG = "MainActivity"
     }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val isParamsSetRequired =
             !setPreferences(PreferenceManager.getDefaultSharedPreferences(applicationContext))
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
         setContentView(binding.root)
 
         navController = findNavController(R.id.nav_host_fragment_activity_main)
-
         val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.homeToDashboard, R.id.notifications, R.id.settings
@@ -64,12 +58,10 @@ class MainActivity : DaggerAppCompatActivity() {
         if (isParamsSetRequired)
             navController.navigate(R.id.settings)
     }
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.overflow_menu, menu)
         return true
     }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
         try {
             NavigationUI.onNavDestinationSelected(item, navController)
@@ -78,7 +70,6 @@ class MainActivity : DaggerAppCompatActivity() {
             Toast.makeText(applicationContext, t.toString(), Toast.LENGTH_SHORT).show()
             false
         }
-
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         try {

@@ -50,13 +50,14 @@ class PhoneCalendarRepoImpl @Inject constructor (
 				val start = getLongOrNull(getColumnIndex(CalendarContract.Instances.DTSTART)) ?: 0
 				val description = getStringOrNull(getColumnIndex(CalendarContract.Instances.DESCRIPTION)).orEmpty()
 				var eventType = EventType.SIMPLE
+				val id = getLongOrNull(getColumnIndex(CalendarContract.Instances.EVENT_ID)) ?: 0
 				if (description.length >0 ) {
 					if (description.contains("birthday") ||
 						description.contains("день рождения"))
 						eventType=EventType.BIRTHDAY
 					 else eventType=EventType.HOLIDAY
 				}
-				listBirthDayEvents.add(addEventFromCalendar(title, start,eventType))
+				listBirthDayEvents.add(addEventFromCalendar(title, start,eventType,id))
 			}
 			close()
 		}

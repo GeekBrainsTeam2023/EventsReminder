@@ -24,7 +24,6 @@ class SettingsFragment : PreferenceFragmentCompat(), HasAndroidInjector {
     lateinit var settingsData : SettingsData
     private  val prefs by lazy {
         PreferenceManager.getDefaultSharedPreferences(requireActivity().applicationContext)}
-
     lateinit var androidInjector: DispatchingAndroidInjector<Any>
     override fun onAttach(context: Context) {
         try {

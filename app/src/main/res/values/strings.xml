@@ -71,4 +71,5 @@
     <string name="title_widget_holiday_font_color_preference">цвет шрифта для праздников</string>
     <string name="key_widget_simple_event_font_color_preference">widget_simple_event_font_color</string>
     <string name="title_widget_simple_event_font_color_preference">цвет шрифта для обычных событий</string>
+    <string name="toast_text_for_settings_fragment_failed_to_get_preferences">failed to get preferences</string>
 </resources>

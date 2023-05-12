@@ -30,12 +30,12 @@ class PhoneContactsRepoImpl @Inject constructor (
 			cursorWithContacts?.let { cursor ->
 				while (cursor.moveToNext()) {
 					val id =
-						cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID))
+						cursor.getLong(cursor.getColumnIndex(ContactsContract.Contacts._ID))
 					val name =
 						cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
 					val selection = "%s = %s and %s = '%s' and %s = '%s'".format(
 						ContactsContract.Data.RAW_CONTACT_ID,
-						id,
+						id.toString(),
 						ContactsContract.Data.MIMETYPE,
 						ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE,
 						ContactsContract.CommonDataKinds.Event.TYPE,
@@ -54,7 +54,8 @@ class PhoneContactsRepoImpl @Inject constructor (
 								listBirthDayEvents.add(
 									addBirthDayEventFromContactPhone(
 										name,
-										birthDay
+										birthDay,
+										id
 									)
 								)
 							}
