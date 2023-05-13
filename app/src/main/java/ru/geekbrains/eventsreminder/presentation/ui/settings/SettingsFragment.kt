@@ -34,20 +34,15 @@ class SettingsFragment : PreferenceFragmentCompat(), HasAndroidInjector {
             Toast.makeText(context, "failed to get preferences", Toast.LENGTH_SHORT).show()
         }
     }
-
-
-
     override fun onDisplayPreferenceDialog(preference: Preference) {
         if (preference is ColorPreference) {
             preference.showDialog(this, 0)
         } else super.onDisplayPreferenceDialog(preference)
     }
         override fun androidInjector(): AndroidInjector<Any> {
-
         return androidInjector
     }
     override fun onCreatePreferences(savedInstanceState: Bundle?, key: String?) {
-
         setPreferencesFromResource(R.xml.preferences, key)
     }
 
@@ -60,16 +55,13 @@ class SettingsFragment : PreferenceFragmentCompat(), HasAndroidInjector {
         super.onViewCreated(view, savedInstanceState)
         initPreferences()
     }
-
     override fun onDetach() {
         super.onDetach()
         val prefs =
             PreferenceManager.getDefaultSharedPreferences(requireContext().applicationContext)
         prefs.unregisterOnSharedPreferenceChangeListener(bindPreferenceSummaryToValueListener)
     }
-
     private fun initPreferences() {
-
         findPreference<SeekBarPreference>(getString(R.string.key_show_events_interval_preference))?.let{it.value =
         prefs.getInt(getString(R.string.key_show_events_interval_preference),
             settingsData.daysForShowEvents)
@@ -78,7 +70,6 @@ class SettingsFragment : PreferenceFragmentCompat(), HasAndroidInjector {
         findPreference<CheckBoxPreference>(getString(R.string.key_calendar_datasource_checkbox_preference))?.isChecked =
             prefs.getBoolean(getString(R.string.key_calendar_datasource_checkbox_preference),
                 settingsData.isDataCalendar)
-
         findPreference<CheckBoxPreference>(getString(R.string.key_phonebook_datasource_checkbox_preference))?.isChecked =
             prefs.getBoolean(getString(R.string.key_phonebook_datasource_checkbox_preference),
                 settingsData.isDataContact)
@@ -106,17 +97,6 @@ class SettingsFragment : PreferenceFragmentCompat(), HasAndroidInjector {
                 settingsData.minutesForStartNotification)
             it.seekBarIncrement = 1
         }
-    //    val chooseMinutesBeforeEventToStartNotificationButton: Preference? =
-    //        findPreference(getString(R.string.key_minutes_before_notification_preference))
-    //    chooseMinutesBeforeEventToStartNotificationButton?.setOnPreferenceClickListener {
-    //       Toast.makeText(
-    //            context,
-    //            "choose minutes before event to start notification",
-    //            Toast.LENGTH_SHORT
-    //        ).show()
-    //       true
-    //    }
-
             findPreference<SeekBarPreference>(getString(R.string.key_widget_interval_of_events_preference))?.let { it.value =
            prefs.getInt(getString(R.string.key_widget_interval_of_events_preference),settingsData.daysForShowEventsWidget)
             it.seekBarIncrement = 1}
@@ -155,10 +135,5 @@ class SettingsFragment : PreferenceFragmentCompat(), HasAndroidInjector {
             Toast.makeText(context, "import settings", Toast.LENGTH_SHORT).show()
             true
         }
-//        val preference = findPreference<EditTextPreference>(getString(R.string.key_show_events_interval_preference))
-//        preference?.setOnBindEditTextListener {
-//            it.inputType = InputType.TYPE_CLASS_NUMBER
-//            it.selectAll()
-//        }
     }
 }

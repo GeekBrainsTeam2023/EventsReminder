@@ -115,8 +115,6 @@ class DashboardViewHolder (view: View) : RecyclerView.ViewHolder(view), Lifecycl
         dashboardRecyclerViewItemImage.setImageResource(R.drawable.holiday_icon_1)
         dashboardRecyclerViewItemAgeTextview.visibility = GONE
         dashboardRecyclerViewItemEventTimeTextview.visibility = GONE
-      //  dashboardRecyclerViewItemTitleTextview.height = dashboardRecyclerViewCardview.height
-
     }
 
     private fun DashboardRecyclerviewItemBinding.setSimpleEventSpecifics(
@@ -147,7 +145,7 @@ class DashboardViewHolder (view: View) : RecyclerView.ViewHolder(view), Lifecycl
         dashboardRecyclerViewItemImage.setImageResource(R.drawable.birthday_balloons)
         if (item.birthday != null && item.birthday.year != 0 && item.birthday <= item.date) {
             dashboardRecyclerViewItemAgeTextview.text =
-                "исполнится ${item.birthday.toAgeInWordsByDate(item.date)}"
+                item.birthday.toAgeInWordsByDate(item.date)
 
                 //dateToAgeInWords(item.birthday,item.date)
             dashboardRecyclerViewItemAgeTextview.visibility = VISIBLE
