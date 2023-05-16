@@ -15,33 +15,28 @@ import ru.geekbrains.eventsreminder.R
 import ru.geekbrains.eventsreminder.R.color.light_green
 import ru.geekbrains.eventsreminder.databinding.DashboardRecyclerviewItemBinding
 import ru.geekbrains.eventsreminder.domain.EventData
+import ru.geekbrains.eventsreminder.domain.EventSourceType
 import ru.geekbrains.eventsreminder.domain.EventType
-import ru.geekbrains.eventsreminder.domain.SettingsData
 import ru.geekbrains.eventsreminder.presentation.ui.RusIntPlural
 import ru.geekbrains.eventsreminder.presentation.ui.toAgeInWordsByDate
 import ru.geekbrains.eventsreminder.presentation.ui.toDaysSinceNowInWords
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
-import javax.inject.Inject
 
 class DashboardViewHolder (view: View) : RecyclerView.ViewHolder(view), LifecycleOwner {
     private val binding: DashboardRecyclerviewItemBinding by viewBinding()
     private val lifecycleRegistry = LifecycleRegistry(this)
     private val activity = view.context.findActivity()
     private var paused: Boolean = false
-
     init {
         lifecycleRegistry.currentState = Lifecycle.State.INITIALIZED
     }
-
     fun createLifecycle() {
         lifecycleRegistry.currentState = Lifecycle.State.CREATED
     }
-
     override val lifecycle: Lifecycle
         get() = lifecycleRegistry
-
     fun attachToWindow() {
         if (paused) {
             lifecycleRegistry.currentState = Lifecycle.State.RESUMED
@@ -50,14 +45,12 @@ class DashboardViewHolder (view: View) : RecyclerView.ViewHolder(view), Lifecycl
             lifecycleRegistry.currentState = Lifecycle.State.STARTED
         }
     }
-
     fun detachFromWindow() {
         if (!paused) {
             lifecycleRegistry.currentState = Lifecycle.State.CREATED
             paused = true
         }
     }
-
     /**
      * Привязать к вьюхолдеру конкретный EventData
      * @param item EvenData для привязки
@@ -69,11 +62,9 @@ class DashboardViewHolder (view: View) : RecyclerView.ViewHolder(view), Lifecycl
                 EventType.BIRTHDAY -> {
                     setBirthdayEventSpecifics(item)
                 }
-
                 EventType.HOLIDAY -> {
-                    setHolidayEventSpecifics()
+                    setHolidayEventSpecifics(item)
                 }
-
                 EventType.SIMPLE -> {
                     setSimpleEventSpecifics(item)
                 }
@@ -81,7 +72,6 @@ class DashboardViewHolder (view: View) : RecyclerView.ViewHolder(view), Lifecycl
             setCommonEventVisualisation(item, isDataHeader)
         }
     }
-
     private fun DashboardRecyclerviewItemBinding.setCommonEventVisualisation(
         item: EventData,
         isDataHeader: Boolean
@@ -94,7 +84,6 @@ class DashboardViewHolder (view: View) : RecyclerView.ViewHolder(view), Lifecycl
                         item.date.toDaysSinceNowInWords()
                 }
             } else GONE
-
         textViewDashboardDateOfEvents.visibility =
             if (isDataHeader) {
                 VISIBLE.also {
@@ -104,8 +93,7 @@ class DashboardViewHolder (view: View) : RecyclerView.ViewHolder(view), Lifecycl
                 }
             } else GONE
     }
-
-    private fun DashboardRecyclerviewItemBinding.setHolidayEventSpecifics() {
+    private fun DashboardRecyclerviewItemBinding.setHolidayEventSpecifics( item: EventData) {
         dashboardRecyclerViewCardview.setCardBackgroundColor(
             activity.resources.getColor(
                 R.color.light_violet,
@@ -114,13 +102,17 @@ class DashboardViewHolder (view: View) : RecyclerView.ViewHolder(view), Lifecycl
         )
         dashboardRecyclerViewItemImage.setImageResource(R.drawable.holiday_icon_1)
         dashboardRecyclerViewItemAgeTextview.visibility = GONE
-        dashboardRecyclerViewItemEventTimeTextview.visibility = GONE
-      //  dashboardRecyclerViewItemTitleTextview.height = dashboardRecyclerViewCardview.height
-
+        if (item.sourceType != EventSourceType.LOCAL)
+            dashboardRecyclerViewItemEventTimeTextview.visibility = GONE
+        else
+        {
+            dashboardRecyclerViewItemEventTimeTextview.visibility = VISIBLE
+            dashboardRecyclerViewItemEventTimeTextview.text =
+                item.time.format(DateTimeFormatter.ofPattern("HH:mm"))
+        }
     }
-
     private fun DashboardRecyclerviewItemBinding.setSimpleEventSpecifics(
-        item: EventData,
+        item: EventData
     ) {
         dashboardRecyclerViewCardview.setCardBackgroundColor(
             activity.resources.getColor(
@@ -134,7 +126,6 @@ class DashboardViewHolder (view: View) : RecyclerView.ViewHolder(view), Lifecycl
         dashboardRecyclerViewItemEventTimeTextview.text =
             item.time.format(DateTimeFormatter.ofPattern("HH:mm"))
     }
-
     private fun DashboardRecyclerviewItemBinding.setBirthdayEventSpecifics(
         item: EventData,
     ) {
@@ -147,15 +138,12 @@ class DashboardViewHolder (view: View) : RecyclerView.ViewHolder(view), Lifecycl
         dashboardRecyclerViewItemImage.setImageResource(R.drawable.birthday_balloons)
         if (item.birthday != null && item.birthday.year != 0 && item.birthday <= item.date) {
             dashboardRecyclerViewItemAgeTextview.text =
-                "исполнится ${item.birthday.toAgeInWordsByDate(item.date)}"
-
-                //dateToAgeInWords(item.birthday,item.date)
+                item.birthday.toAgeInWordsByDate(item.date)
             dashboardRecyclerViewItemAgeTextview.visibility = VISIBLE
         }
         else dashboardRecyclerViewItemAgeTextview.visibility = GONE
         dashboardRecyclerViewItemEventTimeTextview.visibility = GONE
     }
-
     fun dateToDaysInWords(date: LocalDate) =
         when (ChronoUnit.DAYS.between(LocalDate.now(), date).toInt()) {
             0 -> "Сегодня"
@@ -167,15 +155,12 @@ class DashboardViewHolder (view: View) : RecyclerView.ViewHolder(view), Lifecycl
                 "ень", "ня", "ней"
             ).toString()
         }
-
     fun dateToAgeInWords(birthday: LocalDate, date: LocalDate) =
         "исполнится " + RusIntPlural(
             "",
             ChronoUnit.YEARS.between(birthday,date).toInt(),
             "год", "года", "лет"
         )
-
-
     tailrec fun Context.findActivity(): Activity {
         if (this is Activity) {
             return this

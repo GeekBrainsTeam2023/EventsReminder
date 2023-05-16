@@ -1,17 +1,12 @@
 package ru.geekbrains.eventsreminder.repo
 
 
-import ru.geekbrains.eventsreminder.App
 import ru.geekbrains.eventsreminder.domain.EventData
 import ru.geekbrains.eventsreminder.domain.EventType
 import ru.geekbrains.eventsreminder.domain.ResourceState
-import ru.geekbrains.eventsreminder.repo.cache.CacheRepo
-import ru.geekbrains.eventsreminder.repo.cache.CacheRepoImpl
-import ru.geekbrains.eventsreminder.repo.cache.MyContentProvider
 import ru.geekbrains.eventsreminder.repo.local.LocalRepo
 import ru.geekbrains.eventsreminder.repo.remote.IPhoneCalendarRepo
 import ru.geekbrains.eventsreminder.repo.remote.PhoneContactsRepo
-import ru.geekbrains.eventsreminder.usecases.deleteDuplicateEvents
 import javax.inject.Inject
 
 class RepoImpl @Inject constructor(
@@ -19,20 +14,17 @@ class RepoImpl @Inject constructor(
     val contactsRepo: PhoneContactsRepo,
     val calendarRepo: IPhoneCalendarRepo
 ) : Repo {
-
-
     override suspend fun loadData(
         daysForShowEvents: Int,
         isDataContact: Boolean,
         isDataCalendar: Boolean
     ): ResourceState<List<EventData>> {
         val listEvents = mutableListOf<EventData>()
-        listEvents.addAll(localRepo.getList())
         if (isDataContact) {
             try {
                 listEvents.addAll(contactsRepo.loadBirthDayEvents(daysForShowEvents))
             } catch (exc: Throwable) {
-                return ResourceState.ErrorState(Throwable("Ошибка заргрузки ДР из телефонной книжки"))
+                return ResourceState.ErrorState(Throwable("Ошибка заргрузки ДР из телефонной книжки",exc))
             }
         }
         if (isDataCalendar) {
@@ -48,10 +40,14 @@ class RepoImpl @Inject constructor(
                         })
                     })
             } catch (exc: Throwable) {
-                return ResourceState.ErrorState(Throwable("Ошибка заргрузки событий из календаря"))
+                return ResourceState.ErrorState(Throwable("Ошибка заргрузки событий из календаря",exc))
             }
+        }
+        try{
+            listEvents.addAll(localRepo.getList())
+        }catch (t: Throwable) {
+            return ResourceState.ErrorState(Throwable("Ошибка заргрузки событий из списка пользователя",t))
         }
         return ResourceState.SuccessState(listEvents.toList())
     }
-
 }

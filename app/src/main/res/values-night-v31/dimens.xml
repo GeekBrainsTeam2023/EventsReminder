@@ -6,4 +6,8 @@
     <dimen name="dashboard_item_image_width">0dp</dimen>
     <dimen name="dashboard_events_list_titles_linearlayout_margin">2dp</dimen>
     <dimen name="dashboard_events_list_titles_linearlayout_padding">5dp</dimen>
+    <dimen name="event_dialogs_inner_padding">4dp</dimen>
+    <dimen name="create_events_dialog_title_textsize">17sp</dimen>
+    <dimen name="dialog_btns_textsize">15sp</dimen>
+    <dimen name="create_event_dialog_radio_btn_textsize">13sp</dimen>
 </resources>

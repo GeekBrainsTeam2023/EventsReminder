@@ -5,8 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.database.Cursor
-import android.graphics.drawable.DrawableContainer.DrawableContainerState
-import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Binder
 import android.util.Log
@@ -16,7 +14,6 @@ import android.widget.AdapterView
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 import androidx.core.database.getIntOrNull
-import androidx.core.graphics.alpha
 import androidx.preference.PreferenceManager
 import ru.geekbrains.eventsreminder.R
 import ru.geekbrains.eventsreminder.domain.EventType
@@ -36,26 +33,21 @@ constructor(
 ) :
     RemoteViewsService.RemoteViewsFactory {
     private var mCursor: Cursor? = null
-
     companion object {
         val TAG = "ru.geekbrains.eventsreminder.widget.WidgetRemoteViewsFactory"
     }
-
     override fun onCreate() {}
     override fun onDataSetChanged() {
         try {
-            // Получаем настройки из приложения
             val prefs: SharedPreferences =
                 PreferenceManager.getDefaultSharedPreferences(applicationContext)
             val interval = prefs.getInt(
                 applicationContext.getString(R.string.key_widget_interval_of_events_preference),
                 365
             )
-
             mCursor?.close()
             val identityToken = Binder.clearCallingIdentity()
             val uri: Uri = Contract.PATH_EVENTS_URI
-
             val toDate = with(LocalDate.now().plusDays(interval.toLong()))
             { year * 10000 + month.value * 100 + dayOfMonth }
             mCursor = applicationContext.contentResolver.query(
@@ -65,14 +57,12 @@ constructor(
                 arrayOf(toDate.toString()),
                 Contract._ID + " ASC"
             )
-            //db.rawQuery("SELECT Description FROM Table_Name WHERE Num BETWEEN "+(inputNumber-Range)+" AND "+(inputNumber+Range) +"ORDER BY ABS(Num- "+inputNumber+")", null)
             Binder.restoreCallingIdentity(identityToken)
         } catch (t: Throwable) {
             Log.e(TAG, null, t)
             throw t
         }
     }
-
     override fun onDestroy() {
         try {
             mCursor?.close()
@@ -81,27 +71,24 @@ constructor(
             throw t
         }
     }
-
     override fun getCount(): Int {
         return mCursor?.count ?: 0
     }
-
     override fun getViewAt(position: Int): RemoteViews? {
         try {
             if (position == AdapterView.INVALID_POSITION ||
                 mCursor?.moveToPosition(position) != true
             ) return null
-
             val rv = RemoteViews(applicationContext.packageName, R.layout.item_app_widget)
-            // Для работы кликов по элементам списка в AppWidget.onUpdate()
-            // требуется установить темплейт виджета
-            // widgetView.setPendingIntentTemplate(R.id.widgetList, clickPendingIntentTemplate)
+            /**
+             * Для работы кликов по элементам списка в AppWidget.onUpdate()
+             * требуется установить темплейт виджета
+             * widgetView.setPendingIntentTemplate(R.id.widgetList, clickPendingIntentTemplate)
+             */
             rv.setOnClickFillInIntent(
                 R.id.itemAppWidget,
                 Intent()
             )// Здесь достаточно пустого интента
-
-            // Получаем настройки из приложения
             val prefs: SharedPreferences =
                 PreferenceManager.getDefaultSharedPreferences(applicationContext)
             val isShowingEventDate = prefs.getBoolean(
@@ -138,19 +125,11 @@ constructor(
                 applicationContext.getString(R.string.key_widget_simple_event_font_color_preference),
                 0x151414
             )
-
-//            rv.setInt(
-//                R.id.background, "setImageColor",
-//                backColor
-//            )
-          //  rv.setInt(R.id.frameWidget,"setBackground",0x151414)
             if (position % 2 == 0) {
                 rv.setInt(R.id.itemAppWidget, "setBackgroundColor", backColor)
-
             } else {
                 rv.setInt(R.id.itemAppWidget, "setBackgroundColor", altBackColor)
             }
-
             mCursor?.let {
                 when (it.getString(it.getColumnIndexOrThrow(Contract.COL_EVENT_TYPE))) {
                     EventType.SIMPLE.toString() -> {
@@ -161,7 +140,6 @@ constructor(
                         )
                         bindTimeWithEventTimeTextView(isShowingEventTime, rv, it)
                     }
-
                     EventType.HOLIDAY.toString() -> {
                         setWidgetLineParameters(
                             rv,
@@ -170,7 +148,6 @@ constructor(
                         )
                         bindTimeWithEventTimeTextView(false, rv, it)
                     }
-
                     EventType.BIRTHDAY.toString() -> {
                         setWidgetLineParameters(
                             rv,
@@ -195,18 +172,13 @@ constructor(
                 } else {
                     rv.setViewVisibility(R.id.widgetEventDateTextview, View.GONE)
                 }
-
-                // rv.setTextViewText(R.id.widgetEventTimeTextview,
-                //    it.getInt(it.getColumnIndexOrThrow(Contract.COL_EVENT_TITLE)))
             }
             return rv
         } catch (t: Throwable) {
             Log.e(TAG, null, t)
             throw t
         }
-
     }
-
     private fun bindAgeWithEventTimeTextView(
         isShowingAge: Boolean,
         rv: RemoteViews,
@@ -234,7 +206,6 @@ constructor(
             throw t
         }
     }
-
     private fun bindTimeWithEventTimeTextView(
         isShowingEventTime: Boolean,
         rv: RemoteViews,
@@ -256,7 +227,6 @@ constructor(
             throw t
         }
     }
-
     private fun setWidgetLineParameters(rv: RemoteViews, color: Int, sizeFontWidget: Float) {
         try {
             with(rv) {
@@ -281,28 +251,23 @@ constructor(
             throw t
         }
     }
-
     override fun getLoadingView(): RemoteViews? {
         return null
     }
-
     override fun getViewTypeCount(): Int {
         return 1
     }
-
     override fun getItemId(position: Int): Long {
         try {
             mCursor?.let {
                 if (it.moveToPosition(position)) return it.getLong(0)
             }
             return position.toLong()
-            //return if (mCursor?.moveToPosition(position) ?: false) mCursor.getLong(0) else position.toLong()
         } catch (t: Throwable) {
             Log.e(TAG, null, t)
             throw t
         }
     }
-
     override fun hasStableIds(): Boolean {
         return true
     }

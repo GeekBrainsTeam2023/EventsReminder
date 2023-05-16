@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/create_events_dialogs_linearlayout">
+
+    <TextView
+        android:id="@+id/titleCreateHolidayEvent"
+        style="@style/create_events_dialogs_title"
+        android:text="@string/create_holiday_dialog_title" />
+
+    <EditText
+        android:id="@+id/inputEventNameEditText"
+        style="@style/create_event_dialogs_edittext"
+        android:hint="@string/create_event_dialogs_edittext_hint" />
+
+    <DatePicker
+        android:id="@+id/inputHolidayDatePicker"
+        style="@style/create_event_dialog_date_picker" />
+
+    <TimePicker
+        android:id="@+id/chooseHolidayTimePicker"
+        style="@style/create_event_dialogs_time_picker" />
+
+    <LinearLayout style="@style/create_events_dialogs_btn_linearlayout">
+
+        <Button
+            android:id="@+id/negativeBtnCreateHolidayEvent"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/transparent_btn_background_tint"
+            android:text="@string/dialog_backward_btn_text"
+            android:textSize="@dimen/dialog_btns_textsize" />
+
+        <Button
+            android:id="@+id/positiveBtnCreateHolidayEvent"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/transparent_btn_background_tint"
+            android:text="@string/dialog_forward_btn_text"
+            android:textSize="@dimen/dialog_btns_textsize" />
+    </LinearLayout>
+</LinearLayout>

@@ -7,9 +7,7 @@ class EventsDiffUtil(private val oldList: List<EventData>, private val newList: 
     DiffUtil.Callback() {
     private val payload = Any()
     override fun getOldListSize(): Int = oldList.size
-
     override fun getNewListSize(): Int = newList.size
-
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         return try {
             oldList[oldItemPosition].hashCode() == newList[newItemPosition].hashCode()
@@ -17,7 +15,6 @@ class EventsDiffUtil(private val oldList: List<EventData>, private val newList: 
             false
         }
     }
-
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         return try {
             val oldItem: EventData = oldList[oldItemPosition]
@@ -30,6 +27,5 @@ class EventsDiffUtil(private val oldList: List<EventData>, private val newList: 
             false
         }
     }
-
     override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int) = payload
 }

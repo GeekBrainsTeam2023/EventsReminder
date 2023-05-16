@@ -131,4 +131,54 @@
 <!--        </item>-->
         <item name="android:layout_height">wrap_content</item>
     </style>
+
+    <style name="create_events_dialogs_title">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/create_events_dialog_title_textsize</item>
+        <item name="android:textColor">@color/color_primary</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="create_events_dialogs_linearlayout">
+        <item name="android:padding">@dimen/event_dialogs_inner_padding</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="create_event_dialogs_edittext">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:inputType">textPersonName|textCapSentences</item>
+    </style>
+
+    <style name="create_event_dialog_date_picker">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:datePickerMode">spinner</item>
+        <item name="android:spinnersShown">true</item>
+        <item name="android:calendarViewShown">false</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="create_event_dialogs_time_picker">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:timePickerMode">spinner</item>
+    </style>
+
+    <style name="create_events_dialogs_btn_linearlayout">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="create_event_radio_btn">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/create_event_dialog_radio_btn_textsize</item>
+    </style>
 </resources>

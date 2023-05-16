@@ -10,5 +10,7 @@ data class EventData(
     val date: LocalDate,
     val time: LocalTime,
     val timeNotifications:LocalTime,
-    val name:String
+    val name:String,
+    val sourceId:Long,
+    val sourceType: EventSourceType
 )

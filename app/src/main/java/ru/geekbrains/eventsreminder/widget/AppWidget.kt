@@ -14,29 +14,25 @@ import ru.geekbrains.eventsreminder.presentation.MainActivity
 
 
 class AppWidget : AppWidgetProvider() {
-
     val EXTRA_LABEL = "EVENTS_TEXT"
-
     override fun onUpdate(
         context: Context,
         appWidgetManager: AppWidgetManager,
         appWidgetIds: IntArray
     ) {
         for (appWidgetId in appWidgetIds) {
-
             val widgetView = RemoteViews(
                 context.packageName,
                 R.layout.app_widget
             )
-
             val intent = Intent(context, MyWidgetRemoteViewsService::class.java)
-
             widgetView.setRemoteAdapter(R.id.widgetList, intent)
-
-            // Темплейт pendingIntent с вызовом MainActivity для элементов списка
-            // Обязательно в WigetRemoteViewsFactory.getViewAt нужно вызвать
-            // rv.setOnClickFillInIntent(R.id.itemAppWidget,Intent()) чтобы  клики по элементам
-            // списка работали
+/**
+ * Темплейт pendingIntent с вызовом MainActivity для элементов списка
+ * Обязательно в WigetRemoteViewsFactory.getViewAt нужно вызвать
+ * rv.setOnClickFillInIntent(R.id.itemAppWidget,Intent()), чтобы  клики по элементам
+ * списка работали
+ */
             val clickIntentTemplate = Intent(context, MainActivity::class.java)
             val clickPendingIntentTemplate: PendingIntent = TaskStackBuilder.create(context)
                 .addNextIntentWithParentStack(clickIntentTemplate)
@@ -46,24 +42,21 @@ class AppWidget : AppWidgetProvider() {
             val intentActivity = Intent(context, MainActivity::class.java)
             val pendIntent = PendingIntent.getActivity(context,appWidgetId,intentActivity,PendingIntent.FLAG_IMMUTABLE)
             widgetView.setOnClickPendingIntent(R.id.widgetLayout, pendIntent);
-
             appWidgetManager.updateAppWidget(appWidgetId, widgetView)
         }
     }
-
     override fun onReceive(context: Context?, intent: Intent) {
         val action = intent.action
         if (action == AppWidgetManager.ACTION_APPWIDGET_UPDATE ||
             action == AppWidgetManager.ACTION_APPWIDGET_BIND
         ) {
-            // refresh all your widgets
+            // refresh all widgets
             val mgr = AppWidgetManager.getInstance(context)
             val cn = ComponentName(context!!, AppWidget::class.java)
             mgr.notifyAppWidgetViewDataChanged(mgr.getAppWidgetIds(cn), R.id.widgetList)
         }
         super.onReceive(context, intent)
     }
-
     companion object {
         fun sendRefreshBroadcast(activity: MainActivity) {
             val ids: IntArray = AppWidgetManager.getInstance(activity.application)

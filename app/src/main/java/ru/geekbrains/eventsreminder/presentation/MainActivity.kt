@@ -31,45 +31,38 @@ import javax.inject.Inject
 
 class MainActivity : DaggerAppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-
     var doubleBackToExitPressedOnce = false
-
     private lateinit var navController: NavController
-
     @Inject
     lateinit var settings: SettingsData
 
     companion object {
         const val TAG = "MainActivity"
     }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val isParamsSetRequired =
             !setPreferences(PreferenceManager.getDefaultSharedPreferences(applicationContext))
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
         setContentView(binding.root)
 
         navController = findNavController(R.id.nav_host_fragment_activity_main)
-
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.homeToDashboard, R.id.notifications, R.id.settings
+                R.id.homeToDashboard, R.id.notifications, R.id.settings,
+                R.id.chooseNewEventTypeDialog, R.id.createBirthdayDialog,
+                R.id.createHolidayDialog
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         if (isParamsSetRequired)
             navController.navigate(R.id.settings)
     }
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.overflow_menu, menu)
         return true
     }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
         try {
             NavigationUI.onNavDestinationSelected(item, navController)
@@ -78,7 +71,6 @@ class MainActivity : DaggerAppCompatActivity() {
             Toast.makeText(applicationContext, t.toString(), Toast.LENGTH_SHORT).show()
             false
         }
-
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         try {
@@ -88,7 +80,7 @@ class MainActivity : DaggerAppCompatActivity() {
                 return
             }
             this.doubleBackToExitPressedOnce = true
-            Toast.makeText(this, "Нажмите НАЗАД для выхода", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.toast_msg_double_back_pressure_btn), Toast.LENGTH_SHORT).show()
 
             Handler(Looper.getMainLooper()).postDelayed(
                 { doubleBackToExitPressedOnce = false },
@@ -98,7 +90,6 @@ class MainActivity : DaggerAppCompatActivity() {
             Toast.makeText(applicationContext, t.toString(), Toast.LENGTH_SHORT).show()
         }
     }
-
     private val calendarContactsPermission = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { map ->
@@ -117,17 +108,15 @@ class MainActivity : DaggerAppCompatActivity() {
             rightsToDemand.add(Manifest.permission.READ_CALENDAR)
         if (settings.isDataContact)
             rightsToDemand.add(Manifest.permission.READ_CONTACTS)
-
         if (rightsToDemand.any() && !checkPermission()) {
             calendarContactsPermission.launch(
                 rightsToDemand.toTypedArray()
             )
         } else {
-            Log.d(TAG, "Rights check succeeded")
+            Log.d(TAG, getString(R.string.log_msg_rights_check_succeeded))
             navController.navigate(R.id.homeToDashboard)
         }
     }
-
     fun checkPermission(): Boolean {
         return (!settings.isDataCalendar ||
                 ContextCompat.checkSelfPermission(
@@ -138,7 +127,6 @@ class MainActivity : DaggerAppCompatActivity() {
                             applicationContext, Manifest.permission.READ_CONTACTS
                         ) == PackageManager.PERMISSION_GRANTED)
     }
-
     private fun showAskWhyDialog() {
         val builder = AlertDialog.Builder(this)
         val rightCalendarToDemand = if (settings.isDataCalendar) "календарю" else ""
@@ -146,8 +134,12 @@ class MainActivity : DaggerAppCompatActivity() {
         val rightsToDemand = rightCalendarToDemand +
                 (if (settings.isDataCalendar && settings.isDataContact) " и " else "") +
                 rightContactToDemand
-        builder.setTitle("Предоставьте права")
-            .setMessage("Необходим доступ к $rightsToDemand, пожалуйста, предоставьте Права либо измените Настройки приложения (уберите галочку в источниках данных)")
+        builder.setTitle(getString(R.string.demands_dialog_title_first))
+            .setMessage(buildString {
+        append(getString(R.string.demands_dialog_title_second))
+        append(rightsToDemand)
+        append(getString(R.string.demands_dialog_title_third))
+    })
             .setCancelable(false)
             .setPositiveButton("      права") { dialog, id ->
                 // открываем настройки приложения, чтобы пользователь дал разрешение вручную
@@ -162,13 +154,11 @@ class MainActivity : DaggerAppCompatActivity() {
         val dlg = builder.create()
         dlg.show()
     }
-
     private val getPermissionManually = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) {
         initReminderRights()
     }
-
     /**
      * Применить параметры из настроек
      * @param preferences набор настроек для применения в приложении
@@ -182,21 +172,18 @@ class MainActivity : DaggerAppCompatActivity() {
         try {
             if (preferences.contains(getString(R.string.key_phonebook_datasource_checkbox_preference)))
               ret = true
-
             if (key.isNullOrBlank() || key == getString(R.string.key_phonebook_datasource_checkbox_preference)) {
                 settings.isDataContact = preferences.getBoolean(
                     getString(R.string.key_phonebook_datasource_checkbox_preference),
                     settings.isDataContact
                 )
             }
-
             if (key.isNullOrBlank() || key == getString(R.string.key_calendar_datasource_checkbox_preference)) {
                 settings.isDataCalendar = preferences.getBoolean(
                     getString(R.string.key_calendar_datasource_checkbox_preference),
                     settings.isDataCalendar
                 )
             }
-
             if (key.isNullOrBlank() || key == (getString(R.string.key_show_events_interval_preference))) {
                 settings.daysForShowEvents = preferences.getInt(
                     getString(R.string.key_show_events_interval_preference),
@@ -284,7 +271,6 @@ class MainActivity : DaggerAppCompatActivity() {
                     return ret
                 }
             }
-
             if (key.isNullOrBlank() || key == getString(R.string.key_background_alternating_color_preference)) {
                 settings.alternatingColorWidget = preferences.getInt(
                     getString(R.string.key_background_alternating_color_preference),
@@ -297,7 +283,6 @@ class MainActivity : DaggerAppCompatActivity() {
                     return ret
                 }
             }
-
             if (key.isNullOrBlank() || key == getString(R.string.key_widget_interval_of_events_preference)) {
                 settings.daysForShowEventsWidget = preferences.getInt(getString(R.string.key_widget_interval_of_events_preference),settings.daysForShowEventsWidget)
                 if (!key.isNullOrBlank()) {
@@ -307,7 +292,6 @@ class MainActivity : DaggerAppCompatActivity() {
                     return ret
                 }
             }
-
             if (key.isNullOrBlank() || key == getString(R.string.key_age_checkbox_preference)) {
                 settings.showAge = preferences.getBoolean(getString(R.string.key_age_checkbox_preference),settings.showAge)
                 if (!key.isNullOrBlank()) {
@@ -317,7 +301,6 @@ class MainActivity : DaggerAppCompatActivity() {
                     return ret
                 }
             }
-
             if (key.isNullOrBlank() || key == getString(R.string.key_export_settings_preference)) {
                 //TODO: записать текущие настройки в файл
                 if (!key.isNullOrBlank()) return ret
