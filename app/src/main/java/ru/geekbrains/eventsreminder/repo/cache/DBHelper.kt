@@ -15,8 +15,8 @@ class DbHelper(context: Context?) :
                 Contract.COL_EVENT_PERIOD + " TEXT, " +
                 Contract.COL_BIRTHDAY + " INTEGER, " +
                 Contract.COL_EVENT_DATE + " INTEGER NOT NULL, " +
-                Contract.COL_EVENT_TIME + " INTEGER NOT NULL, " +
-                Contract.COL_TIME_NOTIFICATION + " INTEGER NOT NULL, " +
+                Contract.COL_EVENT_TIME + " INTEGER, " +
+                Contract.COL_TIME_NOTIFICATION + " INTEGER, " +
                 Contract.COL_EVENT_TITLE + " TEXT NOT NULL, " +
                 Contract.COL_EVENT_SOURCE_ID + " INTEGER NOT NULL, " +
                 Contract.COL_EVENT_SOURCE_TYPE + " TEXT NOT NULL " +

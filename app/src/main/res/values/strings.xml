@@ -102,4 +102,5 @@
     <string name="radio_btn_title_simple_event">другое</string>
     <string name="choose_event_type_dialog_cancel_btn_text">отмена</string>
     <string name="choose_event_type_dialog_btn_next_text">далее</string>
+    <string name="checkbox_for_time_picker_text">задать время</string>
 </resources>
