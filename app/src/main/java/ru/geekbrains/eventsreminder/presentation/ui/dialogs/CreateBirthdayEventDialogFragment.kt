@@ -13,6 +13,7 @@ import dagger.android.support.DaggerDialogFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.geekbrains.eventsreminder.databinding.CreateBirthdayEventDialogFragmentBinding
+import ru.geekbrains.eventsreminder.domain.SettingsData
 import ru.geekbrains.eventsreminder.repo.local.LocalRepo
 import ru.geekbrains.eventsreminder.usecases.addBirthDayEventFromLocalEdit
 import javax.inject.Inject
@@ -20,6 +21,8 @@ import javax.inject.Inject
 class CreateBirthdayEventDialogFragment : DaggerDialogFragment() {
     @Inject
     lateinit var localRepo: LocalRepo
+    @Inject
+    lateinit var settings: SettingsData
     private val binding: CreateBirthdayEventDialogFragmentBinding by viewBinding()
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,7 +51,8 @@ class CreateBirthdayEventDialogFragment : DaggerDialogFragment() {
                                 inputNameBirthdayEditText.text.toString(),
                                 inputBirthdayDatePicker.dayOfMonth,
                                 inputBirthdayDatePicker.month + 1,
-                                inputBirthdayDatePicker.year
+                                inputBirthdayDatePicker.year,
+                                settings.minutesForStartNotification
                             )
                         )
                     }

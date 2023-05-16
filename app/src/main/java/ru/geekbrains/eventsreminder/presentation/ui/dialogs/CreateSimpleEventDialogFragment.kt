@@ -15,11 +15,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.geekbrains.eventsreminder.R
 import ru.geekbrains.eventsreminder.databinding.CreateSimpleEventDialogFragmentBinding
+import ru.geekbrains.eventsreminder.domain.SettingsData
 import ru.geekbrains.eventsreminder.usecases.addSimpleEventFromLocalEdit
 
 class CreateSimpleEventDialogFragment: DaggerDialogFragment() {
     @Inject
     lateinit var localRepo: LocalRepo
+    @Inject
+    lateinit var settings: SettingsData
     private val binding: CreateSimpleEventDialogFragmentBinding by viewBinding()
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,6 +35,11 @@ class CreateSimpleEventDialogFragment: DaggerDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(binding) {
+            chooseSimpleEventTimePicker.setIs24HourView(true)
+            simpleDialogIsTimePickerEnabled.setOnCheckedChangeListener { _, isChecked ->
+                if(isChecked) chooseSimpleEventTimePicker.visibility = View.VISIBLE
+                else chooseSimpleEventTimePicker.visibility = View.GONE
+            }
             negativeBtnCreateSimpleEvent.setOnClickListener {
                 findNavController().navigateUp()
             }
@@ -42,6 +50,10 @@ class CreateSimpleEventDialogFragment: DaggerDialogFragment() {
                         getString(R.string.toast_msg_create_holiday_simple_dialog), Toast.LENGTH_SHORT
                     ).show()
                 } else {
+                    val hours = if(simpleDialogIsTimePickerEnabled.isChecked) chooseSimpleEventTimePicker.hour
+                    else null
+                    val minutes = if(simpleDialogIsTimePickerEnabled.isChecked) chooseSimpleEventTimePicker.minute
+                    else null
                     lifecycleScope.launch(Dispatchers.IO) {
                         localRepo.addEvent(
                             addSimpleEventFromLocalEdit(
@@ -49,8 +61,9 @@ class CreateSimpleEventDialogFragment: DaggerDialogFragment() {
                                 inputSimpleEventDatePicker.dayOfMonth,
                                 inputSimpleEventDatePicker.month + 1,
                                 inputSimpleEventDatePicker.year,
-                                chooseSimpleEventTimePicker.hour,
-                                chooseSimpleEventTimePicker.minute
+                                hours,
+                                minutes,
+                                settings.minutesForStartNotification
                             )
                         )
                     }

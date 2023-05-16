@@ -21,8 +21,8 @@ data class LocalEvent(
     val period: PeriodType?,
     val birthday: LocalDate?,
     val date: LocalDate,
-    val time: LocalTime,
-    val timeNotifications: LocalTime,
+    val time: LocalTime?,
+    val timeNotifications: LocalTime?,
     val name: String
 ) {
     @PrimaryKey(autoGenerate = true)
@@ -76,7 +76,7 @@ class LocalDateConverter {
 @Keep
 class LocalTimeConverter {
     @TypeConverter
-    fun localTimeToInt(time: LocalTime) = time.toInt()
+    fun localTimeToInt(time: LocalTime?) = time?.toInt()
     @TypeConverter
-    fun intToLocalTime(int: Int) = int.toLocalTime()
+    fun intToLocalTime(int: Int?) = int?.toLocalTime()
 }

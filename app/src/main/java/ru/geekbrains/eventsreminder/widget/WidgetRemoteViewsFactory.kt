@@ -16,6 +16,7 @@ import android.widget.RemoteViewsService
 import androidx.core.database.getIntOrNull
 import androidx.preference.PreferenceManager
 import ru.geekbrains.eventsreminder.R
+import ru.geekbrains.eventsreminder.domain.EventSourceType
 import ru.geekbrains.eventsreminder.domain.EventType
 import ru.geekbrains.eventsreminder.presentation.ui.toAgeInWordsByDate
 import ru.geekbrains.eventsreminder.presentation.ui.toLocalDate
@@ -131,6 +132,7 @@ constructor(
                 rv.setInt(R.id.itemAppWidget, "setBackgroundColor", altBackColor)
             }
             mCursor?.let {
+                val eventSource = it.getString(it.getColumnIndexOrThrow(Contract.COL_EVENT_SOURCE_TYPE))
                 when (it.getString(it.getColumnIndexOrThrow(Contract.COL_EVENT_TYPE))) {
                     EventType.SIMPLE.toString() -> {
                         setWidgetLineParameters(
@@ -146,7 +148,8 @@ constructor(
                             holidayTextColor,
                             sizeFontWidget
                         )
-                        bindTimeWithEventTimeTextView(false, rv, it)
+                        bindTimeWithEventTimeTextView(isShowingEventTime &&
+                                eventSource==EventSourceType.LOCAL.toString(), rv, it)
                     }
                     EventType.BIRTHDAY.toString() -> {
                         setWidgetLineParameters(
@@ -212,11 +215,11 @@ constructor(
         it: Cursor
     ) {
         try {
-            if (isShowingEventTime) {
+            val time = it.getIntOrNull(it.getColumnIndexOrThrow(Contract.COL_EVENT_TIME))
+            if (isShowingEventTime && time != null) {
                 rv.setTextViewText(
                     R.id.widgetEventTimeTextview,
-                    it.getInt(it.getColumnIndexOrThrow(Contract.COL_EVENT_TIME))
-                        .toLocalTime().format(
+                    time.toLocalTime().format(
                             DateTimeFormatter.ofPattern("HH:mm")
                         )
                 )

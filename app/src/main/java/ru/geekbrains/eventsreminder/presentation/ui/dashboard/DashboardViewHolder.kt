@@ -102,7 +102,7 @@ class DashboardViewHolder (view: View) : RecyclerView.ViewHolder(view), Lifecycl
         )
         dashboardRecyclerViewItemImage.setImageResource(R.drawable.holiday_icon_1)
         dashboardRecyclerViewItemAgeTextview.visibility = GONE
-        if (item.sourceType != EventSourceType.LOCAL)
+        if (item.sourceType != EventSourceType.LOCAL || item.time == null)
             dashboardRecyclerViewItemEventTimeTextview.visibility = GONE
         else
         {
@@ -121,10 +121,15 @@ class DashboardViewHolder (view: View) : RecyclerView.ViewHolder(view), Lifecycl
             )
         )
         dashboardRecyclerViewItemAgeTextview.visibility = GONE
-        dashboardRecyclerViewItemEventTimeTextview.visibility = VISIBLE
         dashboardRecyclerViewItemImage.setImageResource(R.drawable.simple_event_icon)
-        dashboardRecyclerViewItemEventTimeTextview.text =
-            item.time.format(DateTimeFormatter.ofPattern("HH:mm"))
+        if ( item.time == null)
+            dashboardRecyclerViewItemEventTimeTextview.visibility = GONE
+        else
+        {
+            dashboardRecyclerViewItemEventTimeTextview.visibility = VISIBLE
+            dashboardRecyclerViewItemEventTimeTextview.text =
+                item.time.format(DateTimeFormatter.ofPattern("HH:mm"))
+        }
     }
     private fun DashboardRecyclerviewItemBinding.setBirthdayEventSpecifics(
         item: EventData,
