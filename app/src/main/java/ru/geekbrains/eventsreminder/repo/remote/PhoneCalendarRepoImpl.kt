@@ -2,14 +2,12 @@ package ru.geekbrains.eventsreminder.repo.remote
 
 import android.content.ContentUris
 import android.content.Context
-import android.database.Cursor
 import android.icu.util.Calendar
 import android.icu.util.TimeZone
 import android.provider.CalendarContract
-import android.provider.CalendarContract.Calendars
-import android.util.Log
 import androidx.core.database.getLongOrNull
 import androidx.core.database.getStringOrNull
+import ru.geekbrains.eventsreminder.R
 import ru.geekbrains.eventsreminder.domain.EventData
 import ru.geekbrains.eventsreminder.domain.EventType
 import ru.geekbrains.eventsreminder.usecases.addEventFromCalendar
@@ -18,7 +16,6 @@ import javax.inject.Inject
 
 class PhoneCalendarRepoImpl @Inject constructor (
 	val context: Context) : IPhoneCalendarRepo {
-
 	override fun loadEventCalendar(endDay: Int): List<EventData> {
 		val listBirthDayEvents = arrayListOf<EventData>()
 		val startDay = LocalDate.now()
@@ -28,9 +25,7 @@ class PhoneCalendarRepoImpl @Inject constructor (
 		val start = calDate.timeInMillis
 		calDate.add(Calendar.DAY_OF_MONTH, endDay)
 		val end = calDate.timeInMillis
-
 		val order = CalendarContract.Instances.BEGIN + " ASC"
-
 		val eventsUriBuilder = CalendarContract.Instances.CONTENT_URI
 			.buildUpon()
 		ContentUris.appendId(eventsUriBuilder, start)
@@ -51,9 +46,9 @@ class PhoneCalendarRepoImpl @Inject constructor (
 				val description = getStringOrNull(getColumnIndex(CalendarContract.Instances.DESCRIPTION)).orEmpty()
 				var eventType = EventType.SIMPLE
 				val id = getLongOrNull(getColumnIndex(CalendarContract.Instances.EVENT_ID)) ?: 0
-				if (description.length >0 ) {
-					if (description.contains("birthday") ||
-						description.contains("день рождения"))
+				if (description.isNotEmpty()) {
+					if (description.contains(context.getString(R.string.description_contains_birthday_repoimpl)) ||
+						description.contains(context.getString(R.string.description_contains_day_of_birth_repoimpl)))
 						eventType=EventType.BIRTHDAY
 					 else eventType=EventType.HOLIDAY
 				}
@@ -63,5 +58,4 @@ class PhoneCalendarRepoImpl @Inject constructor (
 		}
 		return listBirthDayEvents
 	}
-
 }

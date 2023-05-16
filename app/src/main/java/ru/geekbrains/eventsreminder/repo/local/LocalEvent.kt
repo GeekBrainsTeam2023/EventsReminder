@@ -27,7 +27,6 @@ data class LocalEvent(
 ) {
     @PrimaryKey(autoGenerate = true)
     var _id: Long = 0
-
     fun toEventData() = EventData(
         type,
         period,
@@ -39,7 +38,6 @@ data class LocalEvent(
         _id,
         EventSourceType.LOCAL
     )
-
     companion object {
         fun fromEventData(eventData: EventData) =
             if(eventData.sourceType == EventSourceType.LOCAL) LocalEvent(
@@ -54,39 +52,31 @@ data class LocalEvent(
         else throw InvalidParameterSpecException("EventData.sourceType must be LOCAL")
     }
 }
-
 @Keep
 class EventTypeConverter {
     @TypeConverter
     fun eventTypeToString(eventType: EventType) = eventType.toString()
-
     @TypeConverter
     fun stringToEventType(string: String) = EventType.valueOf(string)
 }
-
 @Keep
 class PeriodTypeConverter {
     @TypeConverter
     fun periodTypeToString(period: PeriodType?) = period?.toString()
-
     @TypeConverter
     fun stringToPeriodType(string: String?) = string?.let { PeriodType.valueOf(it) }
 }
-
 @Keep
 class LocalDateConverter {
     @TypeConverter
     fun localDateToInt(date: LocalDate?) = date?.toInt()
-
     @TypeConverter
     fun intToLocalDate(int: Int?) = int?.toLocalDate()
 }
-
 @Keep
 class LocalTimeConverter {
     @TypeConverter
     fun localTimeToInt(time: LocalTime) = time.toInt()
-
     @TypeConverter
     fun intToLocalTime(int: Int) = int.toLocalTime()
 }

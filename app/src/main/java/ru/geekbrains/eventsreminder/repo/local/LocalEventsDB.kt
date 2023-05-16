@@ -12,5 +12,4 @@ import androidx.room.TypeConverters
     EventTypeConverter::class, PeriodTypeConverter::class)
 abstract class LocalEventsDB : RoomDatabase() {
     abstract fun getLocalEventsDao() : LocalEventsDAO
-
 }

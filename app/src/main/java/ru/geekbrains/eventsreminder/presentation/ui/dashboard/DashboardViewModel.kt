@@ -1,8 +1,5 @@
 package ru.geekbrains.eventsreminder.presentation.ui.dashboard
 
-import android.os.Build
-import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -26,14 +23,12 @@ class DashboardViewModel @Inject constructor(
     val statesLiveData: MutableLiveData<AppState> = MutableLiveData()
     private var allEvents = listOf<EventData>()
     private val filteredEventsList = mutableListOf<EventData>()
-
     private val viewmodelCoroutineScope = CoroutineScope(
         Dispatchers.IO
                 + SupervisorJob()
                 + CoroutineExceptionHandler { _, throwable -> handleError(throwable) }
     )
     var loadEventsListJob: Job? = null
-
     /**
      * Используется для хранения списка из DashboardRecyclerViewAdapter
      * */
@@ -44,7 +39,6 @@ class DashboardViewModel @Inject constructor(
         } catch (_: Throwable) {
         }
     }
-
     override fun onCleared() {
         try {
             super.onCleared()
@@ -53,19 +47,14 @@ class DashboardViewModel @Inject constructor(
             handleError(t)
         }
     }
-
-    @RequiresApi(Build.VERSION_CODES.O)
     fun loadEvents() {
         try {
-
             if (filteredEventsList.any())
                 statesLiveData.postValue(AppState.SuccessState(filteredEventsList.toList()))
             else statesLiveData.postValue(AppState.LoadingState)
             loadEventsListJob?.let { return }
             loadEventsListJob = viewmodelCoroutineScope.launch {
-
                 if (filteredEventsList.isEmpty()){
-                    //delay(5000)
                     val cached = cache.getList()
                     if (cached.any()) statesLiveData.postValue(AppState.SuccessState(cached))
                 }
@@ -80,7 +69,6 @@ class DashboardViewModel @Inject constructor(
                         cache.renew(filteredEventsList)
                         statesLiveData.postValue(AppState.SuccessState(filteredEventsList.toList()))
                     }
-
                     is ResourceState.ErrorState -> handleError(result.error)
                 }
             }
@@ -91,17 +79,13 @@ class DashboardViewModel @Inject constructor(
             handleError(t)
         }
     }
-
-    fun getDatysToShowEventsCount() = settingsData.daysForShowEvents
-
-    @RequiresApi(Build.VERSION_CODES.O)
+    fun getDaysToShowEventsCount() = settingsData.daysForShowEvents
     fun appendFilter() {
         try {
             filteredEventsList.clear()
             val mapToSort = mutableMapOf<LocalDate, MutableList<EventData>>()
             val startDate = LocalDate.now()
             val endDate = startDate.plusDays(settingsData.daysForShowEvents.toLong())
-            //var date = startDate
             allEvents.forEach { event ->
                 if (event.type == EventType.BIRTHDAY)
                     event.birthday?.let {
@@ -110,8 +94,8 @@ class DashboardViewModel @Inject constructor(
                                 && it.withYear(curYear).isBefore(endDate)
                                 || it.withYear(curYear).isEqual(startDate)
                             ) {
-                               mapToSort.getOrPut(it.withYear(curYear),
-                                    { mutableListOf() }).add(
+                               mapToSort.getOrPut(it.withYear(curYear)
+                               ) { mutableListOf() }.add(
                                     EventData(
                                         EventType.BIRTHDAY,
                                         event.period,
@@ -134,27 +118,14 @@ class DashboardViewModel @Inject constructor(
                 )
                     mapToSort.getOrPut(event.date, { mutableListOf() }).add(event)
             }
-//        do {
-//            val currentDayEvents = allEvents.filter {
-//                it.date.dayOfMonth == date.dayOfMonth
-//                        && it.date.month == date.month
-//                        && it.date.year == date.year
-//                        || (it.birthday?.dayOfMonth == date.dayOfMonth
-//                        && it.birthday.month == date.month)
-//            }
-//            if (currentDayEvents.any()) mapToSort.put(date, currentDayEvents.toMutableList())
-//            date = date.plusDays(1L)
-//        } while (date <)
             mapToSort.toSortedMap().forEach {
                 it.value.sortBy(EventData::name)
                 it.value.sortBy(EventData::time)
                 it.value.sortBy(EventData::timeNotifications)
                 filteredEventsList.addAll(it.value)
             }
-
         } catch (t: Throwable) {
             handleError(t)
         }
     }
-
 }

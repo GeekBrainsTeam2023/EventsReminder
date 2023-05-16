@@ -13,8 +13,6 @@ class MyContentProvider : ContentProvider() {
         mDbHelper = DbHelper(context)
         return true
     }
-
-
     override fun query(
         uri: Uri,
         projection: Array<out String>?,
@@ -42,11 +40,9 @@ class MyContentProvider : ContentProvider() {
         }
         return retCursor
     }
-
     override fun getType(uri: Uri): String? {
         return null
     }
-
     override fun insert(uri: Uri, values: ContentValues?): Uri? {
         var returnUri: Uri? = null
         mDbHelper?.let {
@@ -65,10 +61,8 @@ class MyContentProvider : ContentProvider() {
         }
         return returnUri
     }
-
     override fun delete(uri: Uri, selection: String?, selectionArgs: Array<out String>?): Int {
         var res = 0
-
         mDbHelper?.let {
             val db: SQLiteDatabase = it.writableDatabase
             val match = sUriMatcher.match(uri)
@@ -82,7 +76,6 @@ class MyContentProvider : ContentProvider() {
         }
         return res
     }
-
     override fun update(
         uri: Uri,
         values: ContentValues?,
@@ -91,7 +84,6 @@ class MyContentProvider : ContentProvider() {
     ): Int {
         return 0
     }
-
     companion object {
         const val EVENTS_CODE = 100
         val sUriMatcher = buildUriMatcher()

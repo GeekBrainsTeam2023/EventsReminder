@@ -12,17 +12,13 @@ import ru.geekbrains.eventsreminder.domain.PeriodType
 import ru.geekbrains.eventsreminder.presentation.ui.toInt
 import ru.geekbrains.eventsreminder.presentation.ui.toLocalDate
 import ru.geekbrains.eventsreminder.presentation.ui.toLocalTime
-import java.time.LocalDate
-import java.time.LocalTime
 import javax.inject.Inject
 
 class CacheRepoImpl @Inject constructor(val context: Context): CacheRepo {
     private var mCursor: Cursor? = null
-
     override fun getList(): List<EventData> {
         mCursor?.close()
         val eventsList = mutableListOf<EventData>()
-
         mCursor = context.applicationContext.contentResolver.query(
             Contract.PATH_EVENTS_URI,
             null,
@@ -49,13 +45,11 @@ class CacheRepoImpl @Inject constructor(val context: Context): CacheRepo {
         }
         return eventsList
     }
-
     override fun renew(events: List<EventData>){
         context.applicationContext.contentResolver.delete(Contract.PATH_EVENTS_URI,null,null)
         events.forEach{addEventToCache(it)}
     }
-
-    fun addEventToCache(eventData: EventData) {
+    private fun addEventToCache(eventData: EventData) {
         val values = ContentValues()
         values.put(Contract.COL_EVENT_TYPE, eventData.type.toString())
         values.put(Contract.COL_EVENT_PERIOD, eventData.period?.toString())
@@ -68,5 +62,4 @@ class CacheRepoImpl @Inject constructor(val context: Context): CacheRepo {
         values.put(Contract.COL_EVENT_SOURCE_TYPE, eventData.sourceType.toString())
         context.applicationContext.contentResolver.insert(Contract.PATH_EVENTS_URI, values)
     }
-
 }

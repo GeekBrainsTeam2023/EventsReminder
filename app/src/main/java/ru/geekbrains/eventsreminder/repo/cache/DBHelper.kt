@@ -23,13 +23,11 @@ class DbHelper(context: Context?) :
                 ")"
         db.execSQL(SQL_CREATE_TABLE)
     }
-
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         SQL_DROP_TABLE = "DROP TABLE IF EXISTS " + Contract.TABLE_NAME
         db.execSQL(SQL_DROP_TABLE)
         onCreate(db)
     }
-
     companion object {
         private const val DATABASE_VERSION = 1
         private const val DATABASE_NAME = "eventItems.db"

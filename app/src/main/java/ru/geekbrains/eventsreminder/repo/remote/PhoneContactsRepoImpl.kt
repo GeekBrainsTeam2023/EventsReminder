@@ -13,7 +13,6 @@ import javax.inject.Inject
 
 class PhoneContactsRepoImpl @Inject constructor (
 	val context: Context) : PhoneContactsRepo {
-
 	@SuppressLint("Range")
 	override fun loadBirthDayEvents(endDay: Int): List<EventData> {
 		val listBirthDayEvents = arrayListOf<EventData>()
