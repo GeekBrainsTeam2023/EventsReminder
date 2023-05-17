@@ -30,4 +30,5 @@
     <string name="dialog_forward_btn_text">ок</string>
     <string name="create_birthday_dialog_title">День Рождения</string>
     <string name="create_birthday_dialog_edittext_hint">введите имя</string>
+    <string name="checkbox_for_time_picker_text">задать время</string>
 </resources>

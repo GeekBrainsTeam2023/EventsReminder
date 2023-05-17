@@ -19,6 +19,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:hint="@string/create_birthday_dialog_edittext_hint"
+        android:imeOptions="actionDone"
         android:inputType="textPersonName|textCapWords"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -8,8 +8,8 @@ data class EventData(
     val period: PeriodType?,
     val birthday:LocalDate?,
     val date: LocalDate,
-    val time: LocalTime,
-    val timeNotifications:LocalTime,
+    val time: LocalTime?,
+    val timeNotifications:LocalTime?,
     val name:String,
     val sourceId:Long,
     val sourceType: EventSourceType

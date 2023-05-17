@@ -153,6 +153,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center_horizontal</item>
         <item name="android:inputType">textPersonName|textCapSentences</item>
+        <item name="android:imeOptions">actionDone</item>
     </style>
 
     <style name="create_event_dialog_date_picker">
@@ -180,5 +181,13 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/create_event_dialog_radio_btn_textsize</item>
+    </style>
+
+    <style name="dialog_checkbox_to_enable_time_picker">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:textSize">@dimen/dialog_btns_textsize</item>
+        <item name="android:checked">false</item>
     </style>
 </resources>
