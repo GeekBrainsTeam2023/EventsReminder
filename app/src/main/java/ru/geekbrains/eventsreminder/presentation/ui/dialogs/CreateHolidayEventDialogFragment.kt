@@ -3,6 +3,8 @@ package ru.geekbrains.eventsreminder.presentation.ui.dialogs
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
@@ -13,6 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.geekbrains.eventsreminder.R
 import ru.geekbrains.eventsreminder.databinding.CreateHolidayEventDialogFragmentBinding
+import ru.geekbrains.eventsreminder.domain.SettingsData
 import ru.geekbrains.eventsreminder.repo.local.LocalRepo
 import ru.geekbrains.eventsreminder.usecases.addHolidayEventFromLocalEdit
 import javax.inject.Inject
@@ -20,6 +23,8 @@ import javax.inject.Inject
 class CreateHolidayEventDialogFragment: DaggerDialogFragment() {
     @Inject
     lateinit var localRepo: LocalRepo
+    @Inject
+    lateinit var settings: SettingsData
     private val binding: CreateHolidayEventDialogFragmentBinding by viewBinding()
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,6 +37,11 @@ class CreateHolidayEventDialogFragment: DaggerDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(binding){
+            chooseHolidayTimePicker.setIs24HourView(true)
+            isTimePickerEnabled.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) chooseHolidayTimePicker.visibility = VISIBLE
+                else chooseHolidayTimePicker.visibility = GONE
+            }
             negativeBtnCreateHolidayEvent.setOnClickListener{
                 findNavController().navigateUp()
             }
@@ -42,6 +52,10 @@ class CreateHolidayEventDialogFragment: DaggerDialogFragment() {
                         getString(R.string.toast_msg_create_holiday_simple_dialog), Toast.LENGTH_SHORT
                     ).show()
                 } else {
+                    val hours = if (isTimePickerEnabled.isChecked) chooseHolidayTimePicker.hour
+                                else null
+                    val minutes = if (isTimePickerEnabled.isChecked) chooseHolidayTimePicker.minute
+                                else null
                     lifecycleScope.launch(Dispatchers.IO) {
                         localRepo.addEvent(
                             addHolidayEventFromLocalEdit(
@@ -49,8 +63,9 @@ class CreateHolidayEventDialogFragment: DaggerDialogFragment() {
                                 inputHolidayDatePicker.dayOfMonth,
                                 inputHolidayDatePicker.month + 1,
                                 inputHolidayDatePicker.year,
-                                chooseHolidayTimePicker.hour,
-                                chooseHolidayTimePicker.minute
+                                hours,
+                                minutes,
+                                settings.minutesForStartNotification
                             )
                         )
                     }

@@ -53,7 +53,7 @@ app:showSeekBarValue="true"
             app:iconSpaceReserved="false"
             app:showSeekBarValue="true"
             app:min="1"
-            android:max="60"
+            android:max="59"
             app:useSimpleSummaryProvider="true"/>
 
     </PreferenceCategory>

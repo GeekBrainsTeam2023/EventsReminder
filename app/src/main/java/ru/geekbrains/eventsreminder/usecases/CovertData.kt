@@ -16,13 +16,13 @@ fun addBirthDayEventFromContactPhone(name: String, birthDay: String, id: Long): 
         null,
         LocalDate.parse(birthDay),
         getLocalDateFromBirthDay(birthDay),
-        LocalTime.parse("00:00:00"),
-        LocalTime.parse("00:15:00"),
+        null,
+        null,
         name,
         id,
         EventSourceType.CONTACTS
     )
-fun addBirthDayEventFromLocalEdit(name: String, day: Int, month: Int, year: Int?): EventData =
+fun addBirthDayEventFromLocalEdit(name: String, day: Int, month: Int, year: Int?,minutesBeforeNotification : Int?): EventData =
     EventData(
         EventType.BIRTHDAY,
         null,
@@ -33,34 +33,36 @@ fun addBirthDayEventFromLocalEdit(name: String, day: Int, month: Int, year: Int?
             LocalDate.of(LocalDate.now().year, month, day)
         else
             LocalDate.of(LocalDate.now().year + 1, month, day),
-        LocalTime.parse("00:00:00"),
-        LocalTime.parse("00:15:00"),
+        null,
+        minutesBeforeNotification?.let{LocalTime.of(0,minutesBeforeNotification)},
         name,
         0,
         EventSourceType.LOCAL
     )
 fun addHolidayEventFromLocalEdit(name: String, day: Int, month: Int,
-                                 year: Int,hour : Int, minute: Int): EventData =
+                                 year: Int,hour : Int?, minute: Int?,
+                                 minutesBeforeNotification : Int?): EventData =
     EventData(
         EventType.HOLIDAY,
         null,
         null,
             LocalDate.of(year, month, day),
-        LocalTime.of(hour,minute),
-        LocalTime.of(hour,minute).minusMinutes(15),
+        hour?.let{minute?.let{LocalTime.of(hour,minute)}},
+        minutesBeforeNotification?.let{LocalTime.of(0,minutesBeforeNotification)},
         name,
         0,
         EventSourceType.LOCAL
     )
 fun addSimpleEventFromLocalEdit(name: String, day: Int, month: Int,
-                                 year: Int,hour : Int, minute: Int): EventData =
+                                 year: Int,hour : Int?, minute: Int?,
+                                minutesBeforeNotification : Int?): EventData =
     EventData(
         EventType.SIMPLE,
         null,
         null,
         LocalDate.of(year, month, day),
-        LocalTime.of(hour,minute),
-        LocalTime.of(hour,minute).minusMinutes(15),
+        hour?.let{minute?.let{LocalTime.of(hour,minute)}},
+        minutesBeforeNotification?.let{LocalTime.of(0,minutesBeforeNotification)},
         name,
         0,
         EventSourceType.LOCAL
