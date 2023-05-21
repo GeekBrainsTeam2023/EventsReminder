@@ -6,7 +6,7 @@ data class SettingsData(
     var isDataContact: Boolean = true,
     var isDataCalendar: Boolean = true,
     var daysForShowEvents: Int = 365,
-    val minutesForStartNotification: Int = 15,
+    var minutesForStartNotification: Int = 15,
     var showDateEvent: Boolean = true,
     var showTimeEvent: Boolean = true,
     var showAge: Boolean = true,

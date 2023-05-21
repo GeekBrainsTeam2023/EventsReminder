@@ -26,6 +26,9 @@ import dagger.android.support.DaggerAppCompatActivity
 import ru.geekbrains.eventsreminder.R
 import ru.geekbrains.eventsreminder.databinding.ActivityMainBinding
 import ru.geekbrains.eventsreminder.domain.SettingsData
+import ru.geekbrains.eventsreminder.service.NotificationService
+import ru.geekbrains.eventsreminder.usecases.EVENTS_DATA
+import ru.geekbrains.eventsreminder.usecases.MINUTES_FOR_START_NOTIFICATION
 import ru.geekbrains.eventsreminder.widget.AppWidget
 import javax.inject.Inject
 
@@ -58,7 +61,12 @@ class MainActivity : DaggerAppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         if (isParamsSetRequired)
             navController.navigate(R.id.settings)
-    }
+        startService(Intent(this, NotificationService::class.java).apply {
+            putExtra(MINUTES_FOR_START_NOTIFICATION, settings.minutesForStartNotification)
+            }
+        )
+
+}
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.overflow_menu, menu)
         return true
@@ -298,6 +306,16 @@ class MainActivity : DaggerAppCompatActivity() {
                     runOnUiThread {
                         AppWidget.sendRefreshBroadcast(this)
                     }
+                    return ret
+                }
+            }
+            if (key.isNullOrBlank() || key == getString(R.string.key_minutes_before_notification_preference)) {
+                settings.minutesForStartNotification = preferences.getInt(getString(R.string.key_minutes_before_notification_preference),settings.minutesForStartNotification)
+                if (!key.isNullOrBlank()) {
+                    startService(Intent(this, NotificationService::class.java).apply {
+                        putExtra(MINUTES_FOR_START_NOTIFICATION, settings.minutesForStartNotification)
+                    }
+                    )
                     return ret
                 }
             }

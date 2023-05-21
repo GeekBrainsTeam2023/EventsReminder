@@ -80,6 +80,7 @@ class DashboardViewModel @Inject constructor(
         }
     }
     fun getDaysToShowEventsCount() = settingsData.daysForShowEvents
+    fun getMinutesForStartNotification() = settingsData.minutesForStartNotification
     fun appendFilter() {
         try {
             filteredEventsList.clear()

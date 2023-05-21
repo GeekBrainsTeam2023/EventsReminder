@@ -2,6 +2,7 @@ package ru.geekbrains.eventsreminder.presentation.ui.dashboard
 
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -20,6 +21,9 @@ import ru.geekbrains.eventsreminder.di.ViewModelFactory
 import ru.geekbrains.eventsreminder.domain.*
 import ru.geekbrains.eventsreminder.presentation.MainActivity
 import ru.geekbrains.eventsreminder.presentation.ui.RusIntPlural
+import ru.geekbrains.eventsreminder.service.NotificationService
+import ru.geekbrains.eventsreminder.usecases.EVENTS_DATA
+import ru.geekbrains.eventsreminder.usecases.MINUTES_FOR_START_NOTIFICATION
 import ru.geekbrains.eventsreminder.widget.AppWidget
 import javax.inject.Inject
 
@@ -70,6 +74,7 @@ class DashboardFragment : DaggerFragment() {
                         }
                         showEvents(data)
                         updateWidget(data)
+                        updateNotificationService(data)
                     }
                     is AppState.LoadingState -> {
                         //shimmer animation is on fragment load
@@ -131,6 +136,12 @@ class DashboardFragment : DaggerFragment() {
                 AppWidget.sendRefreshBroadcast(requireActivity() as MainActivity)
             }
         }
+    fun updateNotificationService(eventsList: List<EventData>) {
+        getActivity()?.startService(Intent(context, NotificationService::class.java).apply {
+            putExtra(MINUTES_FOR_START_NOTIFICATION, dashboardViewModel.getMinutesForStartNotification())
+            putParcelableArrayListExtra(EVENTS_DATA, ArrayList(eventsList))}
+        )
+    }
     companion object{
         val TAG = "ru.geekbrains.eventsreminder.presentation.ui.dashboard.DashboardFragment"
     }

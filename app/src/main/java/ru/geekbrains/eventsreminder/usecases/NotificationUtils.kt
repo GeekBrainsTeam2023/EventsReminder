@@ -11,9 +11,11 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import ru.geekbrains.eventsreminder.R
 
-
+const val EVENTS_DATA = "EVENT"
+const val MINUTES_FOR_START_NOTIFICATION = "MinutesForStartNotification"
 object NotificationUtils {
     private val CHANNEL_ID = "EventsReminder"
+    private var idNotification = 1
 
     fun createNotificationChannel(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -51,7 +53,7 @@ object NotificationUtils {
             // for ActivityCompat#requestPermissions for more details.
             return
         }
-        NotificationManagerCompat.from(context).notify(1, builder.build())
-
+        NotificationManagerCompat.from(context).notify(idNotification, builder.build())
+        idNotification += 1
     }
 }
