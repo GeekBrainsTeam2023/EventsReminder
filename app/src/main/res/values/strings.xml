@@ -103,4 +103,7 @@
     <string name="choose_event_type_dialog_cancel_btn_text">отмена</string>
     <string name="choose_event_type_dialog_btn_next_text">далее</string>
     <string name="checkbox_for_time_picker_text">задать время</string>
+    <string name="event_type_birthday">день рождения</string>
+    <string name="event_type_holiday">праздник</string>
+    <string name="event_type_simple_event">запланированное событие</string>
 </resources>
