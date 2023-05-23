@@ -19,12 +19,4 @@ class DashboardRecyclerViewAdapter(var events: List<EventData> ) :
         holder.bind(events[position],
             position == 0 || events[position - 1].date != events[position].date)
     }
-    override fun onViewAttachedToWindow(holder: DashboardViewHolder) {
-        super.onViewAttachedToWindow(holder)
-        holder.attachToWindow()
-    }
-    override fun onViewDetachedFromWindow(holder: DashboardViewHolder) {
-        holder.detachFromWindow()
-        super.onViewDetachedFromWindow(holder)
-    }
 }

@@ -10,7 +10,7 @@
         <item name="android:textColor">?android:attr/textColorPrimary</item>
     </style>
 
-    <style name="dashboard_recyclerview_list_of_events">
+    <style name="dashboard_and_myevents_recyclerviews_list_of_events">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_margin">@dimen/recyclerview_list_of_events_layout_margin</item>
         <item name="android:contentDescription">@string/dashboard_recyclerview_content_description
@@ -132,7 +132,7 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
-    <style name="create_events_dialogs_title">
+    <style name="edit_events_dialogs_title">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/create_events_dialog_title_textsize</item>
@@ -140,7 +140,7 @@
         <item name="android:gravity">center_horizontal</item>
     </style>
 
-    <style name="create_events_dialogs_linearlayout">
+    <style name="edit_events_dialogs_linearlayout">
         <item name="android:padding">@dimen/event_dialogs_inner_padding</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -148,7 +148,7 @@
         <item name="android:gravity">center_horizontal</item>
     </style>
 
-    <style name="create_event_dialogs_edittext">
+    <style name="edit_event_dialogs_edittext">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center_horizontal</item>
@@ -156,7 +156,7 @@
         <item name="android:imeOptions">actionDone</item>
     </style>
 
-    <style name="create_event_dialog_date_picker">
+    <style name="edit_event_dialog_date_picker">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:gravity">center_horizontal</item>
         <item name="android:datePickerMode">spinner</item>
@@ -165,13 +165,13 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
-    <style name="create_event_dialogs_time_picker">
+    <style name="edit_event_dialogs_time_picker">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:timePickerMode">spinner</item>
     </style>
 
-    <style name="create_events_dialogs_btn_linearlayout">
+    <style name="edit_events_dialogs_btn_linearlayout">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center_horizontal</item>
@@ -189,5 +189,66 @@
         <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:textSize">@dimen/dialog_btns_textsize</item>
         <item name="android:checked">false</item>
+    </style>
+
+    <style name="textview_dashboard_and_myevents_header">
+        <item name="android:layout_gravity">start</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/light_blue_900</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:layout_margin">@dimen/textview_dashboard_header_layout_margin</item>
+        <item name="android:textSize">@dimen/textview_dashboard_header_textsize</item>
+    </style>
+
+    <style name="clear_all_local_events_button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:backgroundTint">@color/widget_first_line_default_color</item>
+        <item name="android:textColor">@color/timer_alarm_color</item>
+        <item name="android:elevation">@dimen/my_events_buttons_elevation</item>
+    </style>
+
+    <style name="empty_local_events_textview">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">@dimen/empty_local_events_textview_margin</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textSize">@dimen/empty_local_events_textview_text_size</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="my_events_image_buttons">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">@dimen/my_events_image_btns_layout_margin</item>
+        <item name="android:elevation">@dimen/my_events_image_btns_elevation</item>
+        <item name="android:backgroundTint">@color/widget_first_line_default_color</item>
+    </style>
+
+    <style name="my_events_buttons_linear_layout">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:layout_marginBottom">
+            @dimen/my_events_buttons_linear_layout_margin_bottom
+        </item>
+    </style>
+
+    <style name="my_events_and_dashboard_rv_item_image">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_margin">@dimen/dashboard_item_image_layout_margin</item>
+        <item name="android:layout_weight">0.4</item>
+    </style>
+
+    <style name="my_events_and_dashboard_list_titles_linear_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:layout_margin">@dimen/dashboard_events_list_titles_linearlayout_margin
+        </item>
+        <item name="android:padding">@dimen/dashboard_events_list_titles_linearlayout_padding</item>
     </style>
 </resources>

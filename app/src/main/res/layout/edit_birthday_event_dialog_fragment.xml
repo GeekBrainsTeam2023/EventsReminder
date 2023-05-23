@@ -7,7 +7,7 @@
 
     <TextView
         android:id="@+id/titleCreateBirthdayEvent"
-        style="@style/create_events_dialogs_title"
+        style="@style/edit_events_dialogs_title"
         android:text="@string/create_birthday_dialog_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -15,11 +15,8 @@
 
     <EditText
         android:id="@+id/inputNameBirthdayEditText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
         android:hint="@string/create_birthday_dialog_edittext_hint"
-        android:imeOptions="actionDone"
+        style="@style/edit_event_dialogs_edittext"
         android:inputType="textPersonName|textCapWords"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,14 +24,14 @@
 
     <DatePicker
         android:id="@+id/inputBirthdayDatePicker"
-        style="@style/create_event_dialog_date_picker"
+        style="@style/edit_event_dialog_date_picker"
         android:layout_height="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/inputNameBirthdayEditText" />
 
     <LinearLayout
-        style="@style/create_events_dialogs_btn_linearlayout"
+        style="@style/edit_events_dialogs_btn_linearlayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/inputBirthdayDatePicker">
