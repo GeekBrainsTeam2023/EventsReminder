@@ -10,14 +10,22 @@ class LocalRepoImp @Inject constructor(
         localEventsDB
             .getLocalEventsDao()
             .insert(LocalEvent.fromEventData(event))
-    override fun updateEvent(event: EventData) {
-        localEventsDB
-            .getLocalEventsDao()
-            .update(LocalEvent.fromEventData(event))
-    }
+//    override fun updateEvent(event: EventData) {
+//        localEventsDB
+//            .getLocalEventsDao()
+//            .update(LocalEvent.fromEventData(event))
+//    }
     override fun deleteEvent(event: EventData) {
         localEventsDB.getLocalEventsDao()
             .delete(LocalEvent.fromEventData(event))
+    }
+
+//    override fun getEvent(sourceId: Long) =
+//        localEventsDB.getLocalEventsDao()
+//            .getLocalEvent(sourceId).toEventData()
+
+    override fun clear() {
+        localEventsDB.getLocalEventsDao().clear()
     }
     override fun getList(): List<EventData> =
         localEventsDB

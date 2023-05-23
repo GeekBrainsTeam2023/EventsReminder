@@ -22,7 +22,9 @@ fun addBirthDayEventFromContactPhone(name: String, birthDay: String, id: Long): 
         id,
         EventSourceType.CONTACTS
     )
-fun addBirthDayEventFromLocalEdit(name: String, day: Int, month: Int, year: Int?,minutesBeforeNotification : Int?): EventData =
+fun addBirthDayEventFromLocalEdit(name: String, day: Int, month: Int, year: Int?,
+                                  minutesBeforeNotification : Int?,
+                                    sourceId: Long = 0): EventData =
     EventData(
         EventType.BIRTHDAY,
         null,
@@ -36,12 +38,13 @@ fun addBirthDayEventFromLocalEdit(name: String, day: Int, month: Int, year: Int?
         null,
         minutesBeforeNotification?.let{LocalTime.of(0,minutesBeforeNotification)},
         name,
-        0,
+        sourceId,
         EventSourceType.LOCAL
     )
 fun addHolidayEventFromLocalEdit(name: String, day: Int, month: Int,
                                  year: Int,hour : Int?, minute: Int?,
-                                 minutesBeforeNotification : Int?): EventData =
+                                 minutesBeforeNotification : Int?,
+                                    sourceId: Long = 0): EventData =
     EventData(
         EventType.HOLIDAY,
         null,
@@ -50,12 +53,13 @@ fun addHolidayEventFromLocalEdit(name: String, day: Int, month: Int,
         hour?.let{minute?.let{LocalTime.of(hour,minute)}},
         minutesBeforeNotification?.let{LocalTime.of(0,minutesBeforeNotification)},
         name,
-        0,
+        sourceId,
         EventSourceType.LOCAL
     )
 fun addSimpleEventFromLocalEdit(name: String, day: Int, month: Int,
                                  year: Int,hour : Int?, minute: Int?,
-                                minutesBeforeNotification : Int?): EventData =
+                                minutesBeforeNotification : Int?,
+                                sourceId : Long = 0): EventData =
     EventData(
         EventType.SIMPLE,
         null,
@@ -64,7 +68,7 @@ fun addSimpleEventFromLocalEdit(name: String, day: Int, month: Int,
         hour?.let{minute?.let{LocalTime.of(hour,minute)}},
         minutesBeforeNotification?.let{LocalTime.of(0,minutesBeforeNotification)},
         name,
-        0,
+        sourceId,
         EventSourceType.LOCAL
     )
 fun addEventFromCalendar(name: String, startDate: Long, eventType: EventType, id: Long): EventData {

@@ -16,4 +16,4 @@ data class EventData(
     val name:String,
     val sourceId:Long,
     val sourceType: EventSourceType
-):Parcelable
+) : Parcelable

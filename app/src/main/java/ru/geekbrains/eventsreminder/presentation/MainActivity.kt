@@ -27,7 +27,6 @@ import ru.geekbrains.eventsreminder.R
 import ru.geekbrains.eventsreminder.databinding.ActivityMainBinding
 import ru.geekbrains.eventsreminder.domain.SettingsData
 import ru.geekbrains.eventsreminder.service.NotificationService
-import ru.geekbrains.eventsreminder.usecases.EVENTS_DATA
 import ru.geekbrains.eventsreminder.usecases.MINUTES_FOR_START_NOTIFICATION
 import ru.geekbrains.eventsreminder.widget.AppWidget
 import javax.inject.Inject
@@ -53,9 +52,9 @@ class MainActivity : DaggerAppCompatActivity() {
         navController = findNavController(R.id.nav_host_fragment_activity_main)
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.homeToDashboard, R.id.notifications, R.id.settings,
-                R.id.chooseNewEventTypeDialog, R.id.createBirthdayDialog,
-                R.id.createHolidayDialog
+                R.id.homeToDashboard, R.id.myEvents, R.id.settings,
+                R.id.chooseNewEventTypeDialog, R.id.editBirthdayDialog,
+                R.id.editHolidayDialog,R.id.editSimpleEventDialog
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -65,7 +64,6 @@ class MainActivity : DaggerAppCompatActivity() {
             putExtra(MINUTES_FOR_START_NOTIFICATION, settings.minutesForStartNotification)
             }
         )
-
 }
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.overflow_menu, menu)

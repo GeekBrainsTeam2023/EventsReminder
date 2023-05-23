@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-
     app:startDestination="@+id/homeToDashboard">
 
     <fragment
@@ -15,8 +14,8 @@
             android:id="@+id/action_homeToDashboard_to_settings"
             app:destination="@id/settings" />
         <action
-            android:id="@+id/action_homeToDashboard_to_notifications"
-            app:destination="@id/notifications" />
+            android:id="@+id/action_homeToDashboard_to_myEvents"
+            app:destination="@id/myEvents"/>
         <action
             android:id="@+id/action_homeToDashboard_to_chooseNewEventTypeDialog"
             app:destination="@id/chooseNewEventTypeDialog" />
@@ -29,35 +28,80 @@
          />
 
     <fragment
-        android:id="@+id/notifications"
-        android:name="ru.geekbrains.eventsreminder.presentation.ui.notifications.NotificationsFragment"
-        android:label="@string/notifications_fragment_title"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/myEvents"
+        android:name="ru.geekbrains.eventsreminder.presentation.ui.myevents.MyEventsFragment"
+        android:label="@string/my_events_fragment_title"
+        tools:layout="@layout/fragment_my_events" >
+        <action
+            android:id="@+id/action_myEvents_to_editSimpleEventDialog"
+            app:destination="@id/editSimpleEventDialog"
+
+            />
+    </fragment>
 
     <dialog
         android:id="@+id/chooseNewEventTypeDialog"
         android:name="ru.geekbrains.eventsreminder.presentation.ui.dialogs.CreateNewEventDialogFragment"
         tools:layout="@layout/create_new_event_dialog_fragment" >
+
         <action
-            android:id="@+id/action_chooseNewEventTypeDialog_to_createBirthdayDialog"
-            app:destination="@id/createBirthdayDialog" />
+            android:id="@+id/action_chooseNewEventTypeDialog_to_editHolidayDialog"
+            app:destination="@id/editHolidayDialog" />
+
         <action
-            android:id="@+id/action_chooseNewEventTypeDialog_to_createHolidayDialog"
-            app:destination="@id/createHolidayDialog" />
+            android:id="@+id/action_chooseNewEventTypeDialog_to_editSimpleEventDialog"
+            app:destination="@id/editSimpleEventDialog" />
         <action
-            android:id="@+id/action_chooseNewEventTypeDialog_to_createAnotherEventTypeDialog"
-            app:destination="@id/createSimpleEventDialog" />
+            android:id="@+id/action_chooseNewEventTypeDialog_to_editBirthdayDialog"
+            app:destination="@id/editBirthdayDialog" />
     </dialog>
     <dialog
-        android:id="@+id/createBirthdayDialog"
-        android:name="ru.geekbrains.eventsreminder.presentation.ui.dialogs.CreateBirthdayEventDialogFragment"
-        tools:layout="@layout/create_birthday_event_dialog_fragment" />
+        android:id="@+id/editBirthdayDialog"
+        android:name="ru.geekbrains.eventsreminder.presentation.ui.dialogs.EditBirthdayEventDialogFragment"
+        tools:layout="@layout/edit_birthday_event_dialog_fragment" >
+
+        <action
+            android:id="@+id/action_editBirthdayDialog_to_myEvents"
+            app:destination="@id/myEvents"
+            app:popUpTo="@+id/myEvents"
+            app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_editBirthdayDialog_to_homeToDashboard"
+            app:destination="@id/homeToDashboard"
+            app:popUpTo="@+id/homeToDashboard"
+            app:popUpToInclusive="true"
+            />
+
+    </dialog>
     <dialog
-        android:id="@+id/createHolidayDialog"
-        android:name="ru.geekbrains.eventsreminder.presentation.ui.dialogs.CreateHolidayEventDialogFragment"
-        tools:layout="@layout/create_holiday_event_dialog_fragment"/>
+        android:id="@+id/editHolidayDialog"
+        android:name="ru.geekbrains.eventsreminder.presentation.ui.dialogs.EditHolidayEventDialogFragment"
+        tools:layout="@layout/edit_holiday_event_dialog_fragment">
+        <action
+            android:id="@+id/action_editHolidayDialog_to_homeToDashboard"
+            app:destination="@id/homeToDashboard"
+            app:popUpTo="@+id/homeToDashboard"
+            app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_editHolidayDialog_to_myEvents"
+            app:destination="@id/myEvents"
+            app:popUpTo="@+id/myEvents"
+            app:popUpToInclusive="true"/>
+
+    </dialog>
     <dialog
-        android:id="@+id/createSimpleEventDialog"
-        android:name="ru.geekbrains.eventsreminder.presentation.ui.dialogs.CreateSimpleEventDialogFragment"
-        tools:layout="@layout/create_simple_event_dialog_fragment"/>
+        android:id="@+id/editSimpleEventDialog"
+        android:name="ru.geekbrains.eventsreminder.presentation.ui.dialogs.EditSimpleEventDialogFragment"
+        tools:layout="@layout/edit_simple_event_dialog_fragment">
+        <action
+            android:id="@+id/action_editSimpleEventDialog_to_homeToDashboard"
+            app:destination="@id/homeToDashboard"
+            app:popUpTo="@+id/homeToDashboard"
+            app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_editSimpleEventDialog_to_myEvents"
+            app:destination="@id/myEvents"
+            app:popUpTo="@+id/myEvents"
+            app:popUpToInclusive="true"/>
+    </dialog>
 </navigation>

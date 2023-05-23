@@ -4,78 +4,88 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-
     <LinearLayout
-        android:id="@+id/eventsListTitlesLinearLayout"
-        style="@style/my_events_and_dashboard_list_titles_linear_layout"
-        app:layout_constraintBottom_toTopOf="@id/dashboardRecyclerViewCardview"
+        android:id="@+id/myEventsListTitlesLinearLayout"
+        app:layout_constraintBottom_toTopOf="@id/myEventsRecyclerViewCardview"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        style="@style/my_events_and_dashboard_list_titles_linear_layout">
 
         <TextView
-            android:id="@+id/textViewDashboardIntervalOfEvents"
+            android:id="@+id/textViewIntervalOfMyEvents"
             style="@style/textview_dashboard_interval_of_events"
             android:layout_gravity="start"
             tools:text="today 365 events" />
 
         <TextView
-            android:id="@+id/textViewDashboardDateOfEvents"
+            android:id="@+id/textViewMyEventsDateOfEvents"
             style="@style/textview_dashboard_date_of_events"
-            android:text=""
             tools:text="22 may 2023" />
     </LinearLayout>
 
-
     <androidx.cardview.widget.CardView
-        android:id="@+id/dashboardRecyclerViewCardview"
+        android:id="@+id/myEventsRecyclerViewCardview"
         style="@style/dashboard_recyclerview_cardview"
         app:cardCornerRadius="@dimen/dashboard_recyclerview_cardview_corner_radius"
         app:cardElevation="@dimen/dashboard_recyclerview_cardview_card_elevation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/eventsListTitlesLinearLayout">
+        app:layout_constraintTop_toBottomOf="@id/myEventsListTitlesLinearLayout">
 
         <LinearLayout
-            android:id="@+id/dashboardRecyclerViewLinearLayout"
+            android:id="@+id/myEventsRecyclerViewLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/dashboardRecyclerViewItemImage"
+                android:id="@+id/myEventsRecyclerViewItemImage"
                 style="@style/my_events_and_dashboard_rv_item_image" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/dashboardRecyclerViewInternalConstraintLayout"
+                android:id="@+id/myEventsRecyclerViewInternalConstraintLayout"
                 style="@style/dashboard_recyclerview_internal_constraint_layout">
 
                 <TextView
-                    android:id="@+id/dashboardRecyclerViewItemTitleTextview"
+                    android:id="@+id/myEventsRecyclerViewItemTitleTextview"
                     style="@style/dashboard_recyclerview_item_title_textview"
+                    tools:text="name"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="name" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/dashboardRecyclerViewItemEventTimeTextview"
+                    android:id="@+id/myEventsRecyclerViewItemEventTimeTextview"
                     style="@style/dashboard_recyclerview_item_event_time_textview"
+                    tools:text="time"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/dashboardRecyclerViewItemTitleTextview"
-                    tools:text="time" />
+                    app:layout_constraintTop_toBottomOf="@id/myEventsRecyclerViewItemTitleTextview" />
 
                 <TextView
-                    android:id="@+id/dashboardRecyclerViewItemAgeTextview"
+                    android:id="@+id/myEventsRecyclerViewItemAgeTextview"
                     style="@style/dashboard_recyclerview_item_age_textview"
+                    tools:text="birthday"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/dashboardRecyclerViewItemTitleTextview"
-                    tools:text="birthday" />
+                    app:layout_constraintTop_toBottomOf="@id/myEventsRecyclerViewItemTitleTextview" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
-
+    <LinearLayout
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/myEventsRecyclerViewCardview"
+        style="@style/my_events_buttons_linear_layout">
+        <ImageButton
+            android:id="@+id/myEventsEditBtn"
+            android:src="@drawable/icon_edit_my_event_24"
+            style="@style/my_events_image_buttons" />
+        <ImageButton
+            android:id="@+id/myEventsDeleteBtn"
+            style="@style/my_events_image_buttons"
+            android:src="@drawable/icon_delete_my_event_24"
+            />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

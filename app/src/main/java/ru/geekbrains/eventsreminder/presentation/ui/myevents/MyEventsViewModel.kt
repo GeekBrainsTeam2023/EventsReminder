@@ -1,46 +1,46 @@
-package ru.geekbrains.eventsreminder.presentation.ui.dashboard
+package ru.geekbrains.eventsreminder.presentation.ui.myevents
 
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import ru.geekbrains.eventsreminder.domain.AppState
 import ru.geekbrains.eventsreminder.domain.EventData
 import ru.geekbrains.eventsreminder.domain.EventType
 import ru.geekbrains.eventsreminder.domain.ResourceState
-import ru.geekbrains.eventsreminder.domain.SettingsData
 import ru.geekbrains.eventsreminder.repo.Repo
 import ru.geekbrains.eventsreminder.repo.cache.CacheRepo
 import java.time.LocalDate
 import javax.inject.Inject
 
-
-class DashboardViewModel @Inject constructor(
-    val settingsData: SettingsData,
+class MyEventsViewModel @Inject constructor(
     val repo: Repo,
-    val cache: CacheRepo
+    val cache: CacheRepo,
 ) : ViewModel(), LifecycleObserver {
     val statesLiveData: MutableLiveData<AppState> = MutableLiveData()
-    private var allEvents = listOf<EventData>()
-    private val filteredEventsList = mutableListOf<EventData>()
+    val cachedLocalEvents = mutableListOf<EventData>()
     private val viewmodelCoroutineScope = CoroutineScope(
         Dispatchers.IO
                 + SupervisorJob()
                 + CoroutineExceptionHandler { _, throwable -> handleError(throwable) }
     )
-    var eventsListJob: Job? = null
-
+    var localEventsJob: Job? = null
     /**
-     * Используется для хранения списка из DashboardRecyclerViewAdapter
+     * Хранимые события для работы diffUtils
      * */
-    val storedFilteredEvents = mutableListOf<EventData>()
+    val storedEvents = mutableListOf<EventData>()
     fun handleError(error: Throwable) {
         try {
             statesLiveData.postValue(AppState.ErrorState(error))
         } catch (_: Throwable) {
         }
     }
-
     override fun onCleared() {
         try {
             super.onCleared()
@@ -49,67 +49,36 @@ class DashboardViewModel @Inject constructor(
             handleError(t)
         }
     }
-
-    fun loadEvents() {
+    fun loadMyEvents() {
         try {
-            if (filteredEventsList.any())
-                statesLiveData.postValue(AppState.SuccessState(filteredEventsList.toList()))
+            if (cachedLocalEvents.any())
+                statesLiveData.postValue(AppState.SuccessState(cachedLocalEvents.toList()))
             else statesLiveData.postValue(AppState.LoadingState)
-            eventsListJob?.let { return }
-            eventsListJob = viewmodelCoroutineScope.launch {
-                if (filteredEventsList.isEmpty()) {
-                    val cached = cache.getList()
-                    if (cached.any()) statesLiveData.postValue(AppState.SuccessState(cached))
-                }
-                val result = repo.loadData(
-                    settingsData.daysForShowEvents,
-                    settingsData.isDataContact, settingsData.isDataCalendar
-                )
+            localEventsJob?.let { return }
+            localEventsJob = viewmodelCoroutineScope.launch {
+                val result = repo.loadLocalData()
                 when (result) {
                     is ResourceState.SuccessState -> {
-                        allEvents = result.data
-                        appendFilter()
-                        cache.renew(filteredEventsList)
-                        statesLiveData.postValue(AppState.SuccessState(filteredEventsList.toList()))
+                        sortAndCache(result.data)
+                        statesLiveData.postValue(AppState.SuccessState(cachedLocalEvents.toList()))
                     }
-
                     is ResourceState.ErrorState -> handleError(result.error)
                 }
             }
-            eventsListJob?.invokeOnCompletion {
-                eventsListJob = null
+            localEventsJob?.invokeOnCompletion {
+                localEventsJob = null
             }
         } catch (t: Throwable) {
             handleError(t)
         }
     }
-
-    fun addLocalEvent(eventData: EventData) {
+    fun sortAndCache(events: List<EventData>) {
         try {
-            do {
-                eventsListJob?.let { Thread.sleep(1) }
-            } while (eventsListJob != null)
-            eventsListJob = viewmodelCoroutineScope.launch {
-                repo.addLocalEvent(eventData)
-            }
-            eventsListJob?.invokeOnCompletion {
-                eventsListJob = null
-                loadEvents()
-            }
-        } catch (t: Throwable) {
-            handleError(t)
-        }
-    }
-
-    fun getDaysToShowEventsCount() = settingsData.daysForShowEvents
-    fun getMinutesForStartNotification() = settingsData.minutesForStartNotification
-    fun appendFilter() {
-        try {
-            filteredEventsList.clear()
+            cachedLocalEvents.clear()
             val mapToSort = mutableMapOf<LocalDate, MutableList<EventData>>()
             val startDate = LocalDate.now()
-            val endDate = startDate.plusDays(settingsData.daysForShowEvents.toLong())
-            allEvents.forEach { event ->
+            val endDate = startDate.plusDays(365L)
+            events.forEach { event ->
                 if (event.type == EventType.BIRTHDAY)
                     event.birthday?.let {
                         for (curYear in startDate.year..endDate.year) {
@@ -117,8 +86,7 @@ class DashboardViewModel @Inject constructor(
                                 && it.withYear(curYear).isBefore(endDate)
                                 || it.withYear(curYear).isEqual(startDate)
                             ) {
-                                mapToSort.getOrPut(
-                                    it.withYear(curYear)
+                                mapToSort.getOrPut(it.withYear(curYear)
                                 ) { mutableListOf() }.add(
                                     EventData(
                                         EventType.BIRTHDAY,
@@ -136,20 +104,43 @@ class DashboardViewModel @Inject constructor(
                             }
                         }
                     }
-                else if (event.date.isAfter(startDate)
-                    && event.date.isBefore(endDate)
-                    || event.date.isEqual(startDate)
-                )
-                    mapToSort.getOrPut(event.date, { mutableListOf() }).add(event)
+                else mapToSort.getOrPut(event.date, { mutableListOf() }).add(event)
             }
             mapToSort.toSortedMap().forEach {
                 it.value.sortBy(EventData::name)
                 it.value.sortBy(EventData::time)
                 it.value.sortBy(EventData::timeNotifications)
-                filteredEventsList.addAll(it.value)
+                cachedLocalEvents.addAll(it.value)
             }
         } catch (t: Throwable) {
             handleError(t)
         }
+    }
+    fun deleteMyEvent(event: EventData){
+        try {
+            localEventsJob?.let { return }
+            localEventsJob = viewmodelCoroutineScope.launch {
+                repo.deleteLocalEvent(event)
+                cachedLocalEvents.remove(event)
+                statesLiveData.postValue(AppState.SuccessState(cachedLocalEvents.toList()))
+            }
+            localEventsJob?.invokeOnCompletion {
+                localEventsJob = null
+            }
+        }catch(t: Throwable){handleError(t)}
+    }
+
+    fun clearAllLocalEvents(){
+        try {
+            localEventsJob?.let { return }
+            localEventsJob = viewmodelCoroutineScope.launch {
+                repo.clearAllLocalEvents()
+                cachedLocalEvents.clear()
+                statesLiveData.postValue(AppState.SuccessState(cachedLocalEvents.toList()))
+            }
+            localEventsJob?.invokeOnCompletion {
+                localEventsJob = null
+            }
+        }catch(t: Throwable){handleError(t)}
     }
 }

@@ -6,6 +6,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
 import ru.geekbrains.eventsreminder.presentation.ui.dashboard.DashboardViewModel
+import ru.geekbrains.eventsreminder.presentation.ui.myevents.MyEventsViewModel
 
 /*
 * модуль предоставляет доступ к фабрике вьюмодели.
@@ -19,5 +20,9 @@ interface ViewModelFactoryModule {
     @Binds
     @IntoMap
     @ViewModelKey(DashboardViewModel::class)
-    fun bindViewModel(viewModel: DashboardViewModel): ViewModel
+    fun bindDashboardViewModel(viewModel: DashboardViewModel): ViewModel
+    @Binds
+    @IntoMap
+    @ViewModelKey(MyEventsViewModel::class)
+    fun bindMyEventsViewModel(viewModel: MyEventsViewModel): ViewModel
 }

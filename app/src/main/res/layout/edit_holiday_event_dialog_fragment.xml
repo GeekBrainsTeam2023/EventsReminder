@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/create_events_dialogs_linearlayout">
+    style="@style/edit_events_dialogs_linearlayout">
 
     <TextView
-        android:id="@+id/titleCreateAnotherEvent"
-        style="@style/create_events_dialogs_title"
-        android:text="@string/create_simple_event_dialog_title" />
+        android:id="@+id/titleCreateHolidayEvent"
+        style="@style/edit_events_dialogs_title"
+        android:text="@string/create_holiday_dialog_title" />
 
     <EditText
-        android:id="@+id/input_simple_event_name_edit_text"
-        style="@style/create_event_dialogs_edittext"
+        android:id="@+id/inputEventNameEditText"
+        style="@style/edit_event_dialogs_edittext"
         android:hint="@string/create_event_dialogs_edittext_hint" />
 
     <DatePicker
-        android:id="@+id/input_simple_event_date_picker"
-        style="@style/create_event_dialog_date_picker" />
+        android:id="@+id/inputHolidayDatePicker"
+        style="@style/edit_event_dialog_date_picker" />
     <CheckBox
-        android:id="@+id/simpleDialogIsTimePickerEnabled"
+        android:id="@+id/isTimePickerEnabled"
         android:text="@string/checkbox_for_time_picker_text"
         style="@style/dialog_checkbox_to_enable_time_picker" />
     <TimePicker
-        android:id="@+id/choose_simple_event_time_picker"
-        style="@style/create_event_dialogs_time_picker"
+        android:id="@+id/chooseHolidayTimePicker"
+        style="@style/edit_event_dialogs_time_picker"
         android:visibility="gone"/>
 
-    <LinearLayout style="@style/create_events_dialogs_btn_linearlayout">
+    <LinearLayout style="@style/edit_events_dialogs_btn_linearlayout">
 
         <Button
-            android:id="@+id/negative_btn_create_simple_event"
+            android:id="@+id/negativeBtnCreateHolidayEvent"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
             android:textSize="@dimen/dialog_btns_textsize" />
 
         <Button
-            android:id="@+id/positive_btn_create_simple_event"
+            android:id="@+id/positiveBtnCreateHolidayEvent"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

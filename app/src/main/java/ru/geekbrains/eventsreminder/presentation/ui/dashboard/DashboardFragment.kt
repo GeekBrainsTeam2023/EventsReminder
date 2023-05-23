@@ -46,6 +46,7 @@ class DashboardFragment : DaggerFragment() {
         }
         dashboardViewModel.loadEvents()
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.swipeLayout.setOnRefreshListener {
@@ -93,6 +94,7 @@ class DashboardFragment : DaggerFragment() {
     override fun onResume() {
         super.onResume()
         binding.shimmerLayout.startShimmer()
+        dashboardViewModel.loadEvents()
     }
     override fun onPause() {
         super.onPause()
