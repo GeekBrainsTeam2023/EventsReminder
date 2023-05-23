@@ -1,6 +1,7 @@
 package ru.geekbrains.eventsreminder.usecases
 
 import ru.geekbrains.eventsreminder.domain.EventData
+import ru.geekbrains.eventsreminder.domain.EventNotificationData
 import ru.geekbrains.eventsreminder.domain.EventSourceType
 import ru.geekbrains.eventsreminder.domain.EventType
 import java.time.*
@@ -96,4 +97,32 @@ fun deleteDuplicateEvents(eventList: MutableList<EventData>): List<EventData> {
         }
     }
     return eventList.toList()
+}
+
+fun isNewEvent(eventNotificationList: MutableList<EventNotificationData>, event:EventData): Boolean {
+    for (eventNotifi in eventNotificationList){
+        if ((eventNotifi.date == event.date) && (eventNotifi.time == event.time) && (eventNotifi.name == event.name)) return false
+    }
+    return true
+}
+fun addNotificationEventFromEvent(event:EventData):EventNotificationData =
+    EventNotificationData(
+        null,
+        event.type,
+        event.period,
+        event.birthday,
+        event.date,
+        event.time,
+        event.timeNotifications,
+        event.name,
+        event.sourceId,
+        event.sourceType
+    )
+fun addEventsListToNotificationEventsList(eventNotificationList: MutableList<EventNotificationData>, eventList: MutableList<EventData>): MutableList<EventNotificationData> {
+    for (event in eventList) {
+        if (isNewEvent(eventNotificationList,event)) {
+            eventNotificationList.add(addNotificationEventFromEvent(event))
+        }
+    }
+    return eventNotificationList.toMutableList()
 }

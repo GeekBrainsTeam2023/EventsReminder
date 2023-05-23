@@ -3,19 +3,21 @@ package ru.geekbrains.eventsreminder.usecases
 import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import ru.geekbrains.eventsreminder.R
+import ru.geekbrains.eventsreminder.presentation.MainActivity
 
 const val EVENTS_DATA = "EVENT"
 const val MINUTES_FOR_START_NOTIFICATION = "MinutesForStartNotification"
 object NotificationUtils {
     private val CHANNEL_ID = "EventsReminder"
-    private var idNotification = 1
 
     fun createNotificationChannel(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -32,12 +34,16 @@ object NotificationUtils {
             }
         }
     }
-    fun sendNotification(context: Context, title:String,text:String){
-        var builder = NotificationCompat.Builder(context, CHANNEL_ID)
+    fun sendNotification(context: Context, idNotification:Int, title:String,text:String){
+        val resultPendingIntent = PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java),
+            PendingIntent.FLAG_UPDATE_CURRENT)
+        val builder = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notifications_24dp)
             .setContentTitle(title)
             .setContentText(text)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setContentIntent(resultPendingIntent)
+            .setAutoCancel(true)
 
         if (ActivityCompat.checkSelfPermission(
                 context,
@@ -54,6 +60,5 @@ object NotificationUtils {
             return
         }
         NotificationManagerCompat.from(context).notify(idNotification, builder.build())
-        idNotification += 1
     }
 }

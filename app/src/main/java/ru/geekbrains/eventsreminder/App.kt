@@ -21,4 +21,5 @@ class App : DaggerApplication() {
                 .build()
         return eventsReminderComponent
     }
+
 }
