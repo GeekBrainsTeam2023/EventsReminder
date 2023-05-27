@@ -1,10 +1,15 @@
 package ru.geekbrains.eventsreminder.presentation.ui.dashboard
 
+import android.content.Intent
+import android.net.Uri
+import android.os.Bundle
+import android.provider.ContactsContract
 import android.util.Log
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.Toast
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import ru.geekbrains.eventsreminder.R
@@ -13,14 +18,17 @@ import ru.geekbrains.eventsreminder.databinding.DashboardRecyclerviewItemBinding
 import ru.geekbrains.eventsreminder.domain.EventData
 import ru.geekbrains.eventsreminder.domain.EventSourceType
 import ru.geekbrains.eventsreminder.domain.EventType
+import ru.geekbrains.eventsreminder.presentation.MainActivity
+import ru.geekbrains.eventsreminder.presentation.ui.EVENT_ID
 import ru.geekbrains.eventsreminder.presentation.ui.findActivity
 import ru.geekbrains.eventsreminder.presentation.ui.toAgeInWordsByDate
 import ru.geekbrains.eventsreminder.presentation.ui.toDaysSinceNowInWords
 import java.time.format.DateTimeFormatter
 
+
 class DashboardViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val binding: DashboardRecyclerviewItemBinding by viewBinding()
-    private val activity = view.context.findActivity()
+    private val activity = view.context.findActivity() as MainActivity
 
     /**
      * Привязать к вьюхолдеру конкретный EventData
@@ -34,15 +42,84 @@ class DashboardViewHolder(view: View) : RecyclerView.ViewHolder(view) {
                     EventType.BIRTHDAY -> {
                         setBirthdayEventSpecifics(item)
                     }
+
                     EventType.HOLIDAY -> {
                         setHolidayEventSpecifics(item)
                     }
+
                     EventType.SIMPLE -> {
                         setSimpleEventSpecifics(item)
                     }
                 }
                 setCommonEventVisualisation(item, isDataHeader)
+                root.setOnClickListener {
+                    setClickActions(item)
+                }
             }
+        } catch (t: Throwable) {
+            logAndToast(t)
+        }
+    }
+
+    private fun setClickActions(item: EventData) {
+        try {
+            when (item.sourceType) {
+                EventSourceType.LOCAL ->
+                    onLocalItemClicked(item)
+
+                EventSourceType.CONTACTS ->
+                    onContactsItemClicked(item)
+
+                EventSourceType.CALENDAR ->
+                    onCalendarItemClicked(item)
+            }
+        } catch (t: Throwable) {
+            logAndToast(t)
+        }
+    }
+
+    private fun onCalendarItemClicked(item: EventData) {
+        try {
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse(
+                "content://com.android.calendar/events/" + java.lang.String.valueOf(
+                    item.sourceId
+                )
+            )
+            intent.flags = (Intent.FLAG_ACTIVITY_NEW_TASK
+                    or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    or Intent.FLAG_ACTIVITY_NO_HISTORY
+                    or Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET)
+            activity.startActivity(intent)
+        } catch (t: Throwable) {
+            logAndToast(t)
+        }
+    }
+
+    private fun onContactsItemClicked(item: EventData) {
+        try {
+            val intent = Intent(Intent.ACTION_VIEW)
+            val contactUri = Uri.withAppendedPath(
+                ContactsContract.Contacts.CONTENT_URI,
+                java.lang.String.valueOf(item.sourceId)
+            )
+            intent.data = contactUri
+            activity.startActivity(intent)
+        } catch (t: Throwable) {
+            logAndToast(t)
+        }
+    }
+
+    private fun onLocalItemClicked(item: EventData) {
+        try {
+            val bundle = Bundle()
+            bundle.putLong(
+                EVENT_ID,
+                item.sourceId
+            )
+            activity.findNavController(R.id.nav_host_fragment_activity_main)
+                .navigate(R.id.myEvents, bundle)
         } catch (t: Throwable) {
             logAndToast(t)
         }
@@ -151,9 +228,10 @@ class DashboardViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         }
     }
 
-    private fun logAndToast(t:Throwable) = logAndToast(t,this::class.java.toString())
 
-    private fun logAndToast(t: Throwable, TAG:String) {
+    private fun logAndToast(t: Throwable) = logAndToast(t, this::class.java.toString())
+
+    private fun logAndToast(t: Throwable, TAG: String) {
         try {
             Log.e(TAG, "", t)
             Toast.makeText(activity.applicationContext, t.toString(), Toast.LENGTH_LONG).show()

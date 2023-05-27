@@ -16,8 +16,11 @@ import ru.geekbrains.eventsreminder.databinding.FragmentMyEventsBinding
 import ru.geekbrains.eventsreminder.di.ViewModelFactory
 import ru.geekbrains.eventsreminder.domain.AppState
 import ru.geekbrains.eventsreminder.domain.EventData
+import ru.geekbrains.eventsreminder.presentation.ui.EVENT_ID
 import ru.geekbrains.eventsreminder.presentation.ui.RusIntPlural
+import ru.geekbrains.eventsreminder.presentation.ui.SUCCESS_ID_TO_NAVIGATE
 import ru.geekbrains.eventsreminder.presentation.ui.dashboard.EventsDiffUtil
+import ru.geekbrains.eventsreminder.presentation.ui.parcelable
 import javax.inject.Inject
 
 
@@ -55,6 +58,7 @@ class MyEventsFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         try {
+            val idToScroll = arguments?.getLong(EVENT_ID)
             binding.applyMarkupOptions()
             myEventsViewModel.statesLiveData.observe(this.viewLifecycleOwner) { appState ->
                 processAppState(appState)
@@ -154,6 +158,14 @@ class MyEventsFragment : DaggerFragment() {
                     )
                 )
             }
+
+            arguments?.getLong(EVENT_ID)?.let {
+                events.indexOfFirst{event-> event.sourceId == it}.let {
+                if (it > 0 && it < events.count())
+                    binding.RvListOfMyEvents.smoothScrollToPosition(it)
+                }
+            }
+            arguments?.clear()
         } catch (t: Throwable) {
             myEventsViewModel.handleError(t)
         }
