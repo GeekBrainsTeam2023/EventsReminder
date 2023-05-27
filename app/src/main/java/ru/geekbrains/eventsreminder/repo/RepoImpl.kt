@@ -14,6 +14,7 @@ class RepoImpl @Inject constructor(
     val contactsRepo: PhoneContactsRepo,
     val calendarRepo: IPhoneCalendarRepo
 ) : Repo {
+    @Throws(Throwable::class)
     override suspend fun loadData(
         daysForShowEvents: Int,
         isDataContact: Boolean,
@@ -66,6 +67,7 @@ class RepoImpl @Inject constructor(
         return ResourceState.SuccessState(listEvents.toList())
     }
 
+    @Throws(Throwable::class)
     override suspend fun loadLocalData(): ResourceState<List<EventData>> {
         val listEvents = mutableListOf<EventData>()
         try {
@@ -81,6 +83,7 @@ class RepoImpl @Inject constructor(
         return ResourceState.SuccessState(listEvents.toList())
     }
 
+    @Throws(Throwable::class)
     override suspend fun deleteLocalEvent(eventData: EventData) {
         try {
             localRepo.deleteEvent(eventData)
@@ -89,6 +92,7 @@ class RepoImpl @Inject constructor(
         }
     }
 
+    @Throws(Throwable::class)
     override suspend fun addLocalEvent(eventData: EventData) {
         try {
             localRepo.addEvent(eventData)
@@ -97,6 +101,7 @@ class RepoImpl @Inject constructor(
         }
     }
 
+    @Throws(Throwable::class)
     override suspend fun clearAllLocalEvents() {
         try {
             localRepo.clear()

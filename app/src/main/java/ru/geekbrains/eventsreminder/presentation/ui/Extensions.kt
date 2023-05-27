@@ -6,6 +6,9 @@ import android.content.ContextWrapper
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
+import android.util.Log
+import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
 
 tailrec fun Context.findActivity(): Activity {
     if (this is Activity) {
@@ -24,3 +27,4 @@ inline fun <reified T : Parcelable> Bundle.parcelable(key: String): T? = when {
     Build.VERSION.SDK_INT >= 33 -> getParcelable(key, T::class.java)
     else -> @Suppress("DEPRECATION") getParcelable(key) as? T
 }
+

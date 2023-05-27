@@ -108,7 +108,7 @@
     <string name="delete_all_local_events_dialog_title">Удалить все события?</string>
     <string name="delete_local_events_dialog_positive_btn">да</string>
     <string name="delete_local_events_dialog_negative_btn">отмена</string>
-    <string name="delete_local_event_dialog_title">Удалить событие?</string>
+    <string name="delete_local_event_dialog_title">Удалить событие</string>
     <string name="toast_delete_local_event_dialod">Событие удалено</string>
     <string name="event_type_birthday">день рождения</string>
     <string name="event_type_holiday">праздник</string>

@@ -13,6 +13,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
+import android.widget.Toast
 import androidx.core.database.getIntOrNull
 import androidx.preference.PreferenceManager
 import ru.geekbrains.eventsreminder.R
@@ -267,11 +268,20 @@ constructor(
             }
             return position.toLong()
         } catch (t: Throwable) {
-            Log.e(TAG, null, t)
-            throw t
+           logErr(t)
+           throw t
         }
     }
     override fun hasStableIds(): Boolean {
         return true
+    }
+
+    private fun logErr(t:Throwable) = logErr(t,this::class.java.toString())
+
+    private fun logErr(t: Throwable, TAG:String) {
+        try {
+            Log.e(TAG, "", t)
+        } catch (_: Throwable) {
+        }
     }
 }

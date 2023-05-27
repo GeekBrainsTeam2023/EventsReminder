@@ -2,12 +2,10 @@ package ru.geekbrains.eventsreminder.presentation.ui.myevents
 
 import android.app.AlertDialog
 import android.content.Context
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.Toast
-import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -26,9 +24,10 @@ import javax.inject.Inject
 class MyEventsFragment : DaggerFragment() {
     private val binding: FragmentMyEventsBinding by viewBinding()
     private var myEventsAdapter: MyEventsRecyclerViewAdapter? = null
+
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
-    private val myEventsViewmodel by viewModels<MyEventsViewModel>({ this }) { viewModelFactory }
+    private val myEventsViewModel by viewModels<MyEventsViewModel>({ this }) { viewModelFactory }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -37,70 +36,113 @@ class MyEventsFragment : DaggerFragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        myEventsViewmodel.loadMyEvents()
+        try {
+            myEventsViewModel.loadMyEvents()
+        } catch (t: Throwable) {
+            myEventsViewModel.handleError(t)
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        myEventsViewmodel.loadMyEvents()
+        try {
+            myEventsViewModel.loadMyEvents()
+        } catch (t: Throwable) {
+            myEventsViewModel.handleError(t)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if(myEventsViewmodel.cachedLocalEvents.isNotEmpty()){
-            binding.myEventsAreEmptyTextviewText.visibility = View.GONE
-        } else {
-            hideButtonAndHeader()
-        }
-        binding.swipeRefreshLayout.setOnRefreshListener {
-            binding.swipeRefreshLayout.isRefreshing = false
-            myEventsViewmodel.loadMyEvents()
-            Toast.makeText(context,getString(R.string.toast_msg_events_list_renewed), Toast.LENGTH_SHORT).show()
-        }
-        binding.clearAllLocalEventsBtn.setOnClickListener { confirmDeletionOfAllEventsDialog() }
-        myEventsAdapter = MyEventsRecyclerViewAdapter(myEventsViewmodel.storedEvents,myEventsViewmodel)
-        binding.RvListOfMyEvents.adapter = myEventsAdapter
-        binding.RvListOfMyEvents.isSaveEnabled = true
-        myEventsAdapter!!.stateRestorationPolicy =
-            RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
-        myEventsViewmodel.statesLiveData.observe(this.viewLifecycleOwner) { appState ->
-            try {
-                when (appState) {
-                    is AppState.SuccessState<*> -> {
-                        val data = appState.data as List<EventData>
-                        showEvents(data)
-                    }
-                    is AppState.LoadingState -> {
-
-                    }
-                    is AppState.ErrorState -> {
-                        Toast.makeText(context, appState.error.toString(), Toast.LENGTH_LONG).show()
-                        Log.e(TAG, "",appState.error)
-                    }
-                }
-            } catch (t: Throwable) {
-                Toast.makeText(context, t.toString(), Toast.LENGTH_LONG).show()
-                Log.e(TAG, "",t)
+        try {
+            binding.applyMarkupOptions()
+            myEventsViewModel.statesLiveData.observe(this.viewLifecycleOwner) { appState ->
+                processAppState(appState)
             }
+        } catch (t: Throwable) {
+            myEventsViewModel.handleError(t)
+        }
+    }
+
+    private fun FragmentMyEventsBinding.applyMarkupOptions() {
+        try {
+            if (myEventsViewModel.cachedLocalEvents.isNotEmpty()) {
+                myEventsAreEmptyTextviewText.visibility = View.GONE
+            } else {
+                hideButtonAndHeader()
+            }
+            swipeRefreshLayout.setOnRefreshListener {
+                swipeRefreshLayout.isRefreshing = false
+                myEventsViewModel.loadMyEvents()
+                Toast.makeText(
+                    context,
+                    getString(R.string.toast_msg_events_list_renewed),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            clearAllLocalEventsBtn.setOnClickListener { confirmDeletionOfAllEventsDialog() }
+            myEventsAdapter =
+                MyEventsRecyclerViewAdapter(myEventsViewModel.storedEvents, myEventsViewModel)
+            RvListOfMyEvents.adapter = myEventsAdapter
+            RvListOfMyEvents.isSaveEnabled = true
+            myEventsAdapter!!.stateRestorationPolicy =
+                RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+        } catch (t: Throwable) {
+            myEventsViewModel.handleError(t)
+        }
+    }
+
+    private fun processAppState(appState: AppState) {
+        try {
+            when (appState) {
+                is AppState.SuccessState<*> -> {
+                    val data = appState.data as List<EventData>
+                    showEvents(data)
+                }
+
+                is AppState.LoadingState -> {
+
+                }
+
+                is AppState.ErrorState -> {
+                    logAndToast(appState.error)
+                }
+            }
+        } catch (t: Throwable) {
+            myEventsViewModel.handleError(t)
+        }
+    }
+
+    private fun logAndToast(t:Throwable) = logAndToast(t,this::class.java.toString())
+
+    private fun logAndToast(t: Throwable, tag:String?) {
+        try {
+            Log.e(tag, "", t)
+            Toast.makeText(requireContext().applicationContext, t.toString(), Toast.LENGTH_LONG).show()
+        } catch (_: Throwable) {
         }
     }
 
     private fun hideButtonAndHeader() {
-        binding.myEventsAreEmptyTextviewText.visibility = View.VISIBLE
-        binding.textViewMyEventsHeader.visibility = View.GONE
-        binding.clearAllLocalEventsBtn.visibility = View.GONE
+        try {
+            binding.myEventsAreEmptyTextviewText.visibility = View.VISIBLE
+            binding.textViewMyEventsHeader.visibility = View.GONE
+            binding.clearAllLocalEventsBtn.visibility = View.GONE
+        } catch (t: Throwable) {
+            myEventsViewModel.handleError(t)
+        }
     }
 
-    fun showEvents(events: List<EventData>) {
+    private fun showEvents(events: List<EventData>) {
         try {
             val diffResult = DiffUtil.calculateDiff(
                 EventsDiffUtil(
-                    myEventsViewmodel.storedEvents,
+                    myEventsViewModel.storedEvents,
                     events
                 )
             )
-            myEventsViewmodel.storedEvents.clear()
-            myEventsViewmodel.storedEvents.addAll(events)
+            myEventsViewModel.storedEvents.clear()
+            myEventsViewModel.storedEvents.addAll(events)
             myEventsAdapter?.let { diffResult.dispatchUpdatesTo(it) }
             binding.textViewMyEventsHeader.text = buildString {
                 append("всего ")
@@ -113,24 +155,31 @@ class MyEventsFragment : DaggerFragment() {
                 )
             }
         } catch (t: Throwable) {
-            myEventsViewmodel.handleError(t)
+            myEventsViewModel.handleError(t)
         }
     }
+
     private fun confirmDeletionOfAllEventsDialog() {
-        val builder = AlertDialog.Builder(context)
-        builder.setTitle(getString(R.string.delete_all_local_events_dialog_title))
-            .setCancelable(true)
-            .setPositiveButton(getString(R.string.delete_local_events_dialog_positive_btn)) { dialog, id ->
-                myEventsViewmodel.clearAllLocalEvents()
-                hideButtonAndHeader()
-            }
-            .setNegativeButton(getString(R.string.delete_local_events_dialog_negative_btn)) { _, _ ->}
-        val dlg = builder.create()
-        dlg.show()
+        try {
+            val builder = AlertDialog.Builder(context)
+            builder.setTitle(getString(R.string.delete_all_local_events_dialog_title))
+                .setCancelable(true)
+                .setPositiveButton(getString(R.string.delete_local_events_dialog_positive_btn)) { dialog, id ->
+                    try {
+                        myEventsViewModel.clearAllLocalEvents()
+                        hideButtonAndHeader()
+                    } catch (t: Throwable) {
+                        myEventsViewModel.handleError(t)
+                    }
+                }
+                .setNegativeButton(getString(R.string.delete_local_events_dialog_negative_btn)) { _, _ -> }
+            val dlg = builder.create()
+            dlg.show()
+        } catch (t: Throwable) {
+            myEventsViewModel.handleError(t)
+        }
     }
-    companion object{
-        val TAG = "ru.geekbrains.eventsreminder.presentation.ui.myevents.MyEventsFragment"
-    }
+
     override fun onDestroy() {
         myEventsAdapter = null
         super.onDestroy()

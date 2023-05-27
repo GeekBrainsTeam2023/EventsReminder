@@ -25,12 +25,13 @@ class MyEventsViewModel @Inject constructor(
 ) : ViewModel(), LifecycleObserver {
     val statesLiveData: MutableLiveData<AppState> = MutableLiveData()
     val cachedLocalEvents = mutableListOf<EventData>()
-    private val viewmodelCoroutineScope = CoroutineScope(
+    private val viewModelCoroutineScope = CoroutineScope(
         Dispatchers.IO
                 + SupervisorJob()
                 + CoroutineExceptionHandler { _, throwable -> handleError(throwable) }
     )
     var localEventsJob: Job? = null
+
     /**
      * Хранимые события для работы diffUtils
      * */
@@ -41,27 +42,30 @@ class MyEventsViewModel @Inject constructor(
         } catch (_: Throwable) {
         }
     }
+
     override fun onCleared() {
         try {
             super.onCleared()
-            viewmodelCoroutineScope.cancel()
+            viewModelCoroutineScope.cancel()
         } catch (t: Throwable) {
             handleError(t)
         }
     }
+
     fun loadMyEvents() {
         try {
             if (cachedLocalEvents.any())
                 statesLiveData.postValue(AppState.SuccessState(cachedLocalEvents.toList()))
             else statesLiveData.postValue(AppState.LoadingState)
             localEventsJob?.let { return }
-            localEventsJob = viewmodelCoroutineScope.launch {
+            localEventsJob = viewModelCoroutineScope.launch {
                 val result = repo.loadLocalData()
                 when (result) {
                     is ResourceState.SuccessState -> {
-                        sortAndCache(result.data)
+                        addToCache(result.data)
                         statesLiveData.postValue(AppState.SuccessState(cachedLocalEvents.toList()))
                     }
+
                     is ResourceState.ErrorState -> handleError(result.error)
                 }
             }
@@ -72,10 +76,24 @@ class MyEventsViewModel @Inject constructor(
             handleError(t)
         }
     }
-    fun sortAndCache(events: List<EventData>) {
+
+    private fun addToCache(events: List<EventData>) {
         try {
             cachedLocalEvents.clear()
-            val mapToSort = mutableMapOf<LocalDate, MutableList<EventData>>()
+            arrangeByDatesToSortedMap(events).forEach {
+                it.value.sortBy(EventData::name)
+                it.value.sortBy(EventData::time)
+                it.value.sortBy(EventData::timeNotifications)
+                cachedLocalEvents.addAll(it.value)
+            }
+        } catch (t: Throwable) {
+            handleError(t)
+        }
+    }
+
+    private fun arrangeByDatesToSortedMap(events: List<EventData>): Map<LocalDate, MutableList<EventData>> {
+        val mapToSort = mutableMapOf<LocalDate, MutableList<EventData>>()
+        try {
             val startDate = LocalDate.now()
             val endDate = startDate.plusDays(365L)
             events.forEach { event ->
@@ -86,7 +104,8 @@ class MyEventsViewModel @Inject constructor(
                                 && it.withYear(curYear).isBefore(endDate)
                                 || it.withYear(curYear).isEqual(startDate)
                             ) {
-                                mapToSort.getOrPut(it.withYear(curYear)
+                                mapToSort.getOrPut(
+                                    it.withYear(curYear)
                                 ) { mutableListOf() }.add(
                                     EventData(
                                         EventType.BIRTHDAY,
@@ -104,22 +123,18 @@ class MyEventsViewModel @Inject constructor(
                             }
                         }
                     }
-                else mapToSort.getOrPut(event.date, { mutableListOf() }).add(event)
-            }
-            mapToSort.toSortedMap().forEach {
-                it.value.sortBy(EventData::name)
-                it.value.sortBy(EventData::time)
-                it.value.sortBy(EventData::timeNotifications)
-                cachedLocalEvents.addAll(it.value)
+                else mapToSort.getOrPut(event.date) { mutableListOf() }.add(event)
             }
         } catch (t: Throwable) {
             handleError(t)
         }
+        return mapToSort
     }
-    fun deleteMyEvent(event: EventData){
+
+    fun deleteMyEvent(event: EventData) {
         try {
             localEventsJob?.let { return }
-            localEventsJob = viewmodelCoroutineScope.launch {
+            localEventsJob = viewModelCoroutineScope.launch {
                 repo.deleteLocalEvent(event)
                 cachedLocalEvents.remove(event)
                 statesLiveData.postValue(AppState.SuccessState(cachedLocalEvents.toList()))
@@ -127,13 +142,15 @@ class MyEventsViewModel @Inject constructor(
             localEventsJob?.invokeOnCompletion {
                 localEventsJob = null
             }
-        }catch(t: Throwable){handleError(t)}
+        } catch (t: Throwable) {
+            handleError(t)
+        }
     }
 
-    fun clearAllLocalEvents(){
+    fun clearAllLocalEvents() {
         try {
             localEventsJob?.let { return }
-            localEventsJob = viewmodelCoroutineScope.launch {
+            localEventsJob = viewModelCoroutineScope.launch {
                 repo.clearAllLocalEvents()
                 cachedLocalEvents.clear()
                 statesLiveData.postValue(AppState.SuccessState(cachedLocalEvents.toList()))
@@ -141,6 +158,8 @@ class MyEventsViewModel @Inject constructor(
             localEventsJob?.invokeOnCompletion {
                 localEventsJob = null
             }
-        }catch(t: Throwable){handleError(t)}
+        } catch (t: Throwable) {
+            handleError(t)
+        }
     }
 }
