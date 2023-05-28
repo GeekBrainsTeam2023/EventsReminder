@@ -8,7 +8,7 @@ import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceViewHolder
 
 
-class MyPreferenceCategory : PreferenceCategory {
+class MyInnerPreferenceCategory : PreferenceCategory {
     constructor(context: Context) : super(context) {}
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {}
     constructor(

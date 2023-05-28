@@ -5,6 +5,7 @@
     <PreferenceCategory
         app:iconSpaceReserved="false"
         app:title="@string/title_datasource_preference_category">
+
         <CheckBoxPreference
             app:iconSpaceReserved="false"
             app:key="@string/key_phonebook_datasource_checkbox_preference"
@@ -20,17 +21,12 @@
  <SeekBarPreference
     app:key="@string/key_show_events_interval_preference"
     app:title="@string/title_show_event_interval_preference"
-     app:summary="@string/summary_show_event_interval_preference"
+    app:summary="@string/summary_show_event_interval_preference"
     app:iconSpaceReserved="false"
 app:showSeekBarValue="true"
     app:min="1"
     android:max="365"
     app:useSimpleSummaryProvider="true"/>
-<!--    <EditTextPreference-->
-<!--        app:iconSpaceReserved="false"-->
-<!--        app:key="@string/key_show_events_interval_preference"-->
-<!--        app:title="@string/title_show_event_interval_preference"-->
-<!--        app:useSimpleSummaryProvider="true"/>-->
 
     <PreferenceCategory
         app:iconSpaceReserved="false"
@@ -91,7 +87,7 @@ app:showSeekBarValue="true"
     <PreferenceCategory
         app:iconSpaceReserved="false"
         app:title="@string/widget_appearance_settings_preference_category">
-<ru.geekbrains.eventsreminder.presentation.ui.settings.MyPreferenceCategory
+<ru.geekbrains.eventsreminder.presentation.ui.settings.MyInnerPreferenceCategory
     app:iconSpaceReserved="false"
     app:title="@string/font_preference_category_title">
         <ru.geekbrains.eventsreminder.presentation.ui.FontSizeSeekBarPreference
@@ -118,8 +114,8 @@ app:showSeekBarValue="true"
             android:title="@string/title_widget_simple_event_font_color_preference"
             app:iconSpaceReserved="false"
             android:defaultValue="#151414"/>
-</ru.geekbrains.eventsreminder.presentation.ui.settings.MyPreferenceCategory>
-        <ru.geekbrains.eventsreminder.presentation.ui.settings.MyPreferenceCategory
+</ru.geekbrains.eventsreminder.presentation.ui.settings.MyInnerPreferenceCategory>
+        <ru.geekbrains.eventsreminder.presentation.ui.settings.MyInnerPreferenceCategory
             app:iconSpaceReserved="false"
             app:title="@string/background_preference_category_title">
         <com.rarepebble.colorpicker.ColorPreference
@@ -133,7 +129,7 @@ app:showSeekBarValue="true"
             app:title="@string/title_background_alternating_color_preference"
             app:iconSpaceReserved="false"
             android:defaultValue="#DCF3F3"/>
-        </ru.geekbrains.eventsreminder.presentation.ui.settings.MyPreferenceCategory>
+        </ru.geekbrains.eventsreminder.presentation.ui.settings.MyInnerPreferenceCategory>
     </PreferenceCategory>
 
     <Preference

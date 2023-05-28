@@ -11,6 +11,7 @@ import ru.geekbrains.eventsreminder.domain.ResourceState
 import ru.geekbrains.eventsreminder.domain.SettingsData
 import ru.geekbrains.eventsreminder.repo.Repo
 import ru.geekbrains.eventsreminder.repo.cache.CacheRepo
+import java.lang.Integer.max
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -18,11 +19,11 @@ import javax.inject.Inject
 class DashboardViewModel @Inject constructor(
     val settingsData: SettingsData,
     val repo: Repo,
-    val cache: CacheRepo
+    val cacheRepo: CacheRepo
 ) : ViewModel(), LifecycleObserver {
     val statesLiveData: MutableLiveData<AppState> = MutableLiveData()
-    private var allEvents = listOf<EventData>()
-    private val filteredEventsList = mutableListOf<EventData>()
+    private var allEventsFromRepo = listOf<EventData>()
+    private val cachedEventsList = mutableListOf<EventData>()
     private val viewModelCoroutineScope = CoroutineScope(
         Dispatchers.IO
                 + SupervisorJob()
@@ -50,28 +51,48 @@ class DashboardViewModel @Inject constructor(
         }
     }
 
+    private fun List<EventData>.filterToDashboard() =
+        try {
+            takeWhile { eventData ->
+                eventData.date <= LocalDate.now()
+                    .plusDays(settingsData.daysForShowEvents.toLong())
+            }
+        }catch (t:Throwable){
+            handleError(t)
+            listOf()
+        }
+
     fun loadEvents() {
         try {
-            if (filteredEventsList.any())
-                statesLiveData.postValue(AppState.SuccessState(filteredEventsList.toList()))
+            if (cachedEventsList.any())
+                statesLiveData.postValue(AppState.SuccessState(cachedEventsList.filterToDashboard()))
             else statesLiveData.postValue(AppState.LoadingState)
             eventsListJob?.let { return }
             eventsListJob = viewModelCoroutineScope.launch {
-                if (filteredEventsList.isEmpty()) {
-                    val cached = cache.getList()
-                    if (cached.any()) statesLiveData.postValue(AppState.SuccessState(cached))
+                val daysToPutInCahce =
+                    max(settingsData.daysForShowEvents, settingsData.daysForShowEventsWidget)
+                if (cachedEventsList.isEmpty()) {
+                    val cached = cacheRepo.getList()
+                    if (cached.any())
+                        statesLiveData.postValue(AppState.SuccessState(cached.filterToDashboard()))
                 }
+
                 val result = repo.loadData(
-                    settingsData.daysForShowEvents,
+                    daysToPutInCahce,
                     settingsData.isDataContact, settingsData.isDataCalendar
                 )
                 when (result) {
                     is ResourceState.SuccessState -> {
-                        allEvents = result.data
-                        appendFilter()
-                        cache.renew(filteredEventsList)
-                        statesLiveData.postValue(AppState.SuccessState(filteredEventsList.toList()))
+                        allEventsFromRepo = result.data
+                        applyFilterToAllEventsFromRepo(daysToPutInCahce)
+                        cacheRepo.renew(cachedEventsList)
+                        statesLiveData.postValue(
+                            AppState.SuccessState(
+                                cachedEventsList.filterToDashboard()
+                            )
+                        )
                     }
+
                     is ResourceState.ErrorState -> handleError(result.error)
                 }
             }
@@ -102,20 +123,20 @@ class DashboardViewModel @Inject constructor(
 
     fun getDaysToShowEventsCount() = settingsData.daysForShowEvents
     fun getMinutesForStartNotification() = settingsData.minutesForStartNotification
-    private fun appendFilter() {
+    private fun applyFilterToAllEventsFromRepo(daysToPutInCache: Int) {
         try {
-            filteredEventsList.clear()
+            cachedEventsList.clear()
             val mapToSort = mutableMapOf<LocalDate, MutableList<EventData>>()
             val startDate = LocalDate.now()
-            val endDate = startDate.plusDays(settingsData.daysForShowEvents.toLong())
-            allEvents.forEach { event ->
+            val endDate = startDate.plusDays(daysToPutInCache.toLong())
+            allEventsFromRepo.forEach { event ->
                 processEvent(event, startDate, endDate, mapToSort)
             }
             mapToSort.toSortedMap().forEach {
                 it.value.sortBy(EventData::name)
                 it.value.sortBy(EventData::time)
                 it.value.sortBy(EventData::timeNotifications)
-                filteredEventsList.addAll(it.value)
+                cachedEventsList.addAll(it.value)
             }
         } catch (t: Throwable) {
             handleError(t)
