@@ -18,9 +18,7 @@ import ru.geekbrains.eventsreminder.domain.AppState
 import ru.geekbrains.eventsreminder.domain.EventData
 import ru.geekbrains.eventsreminder.presentation.ui.EVENT_ID
 import ru.geekbrains.eventsreminder.presentation.ui.RusIntPlural
-import ru.geekbrains.eventsreminder.presentation.ui.SUCCESS_ID_TO_NAVIGATE
 import ru.geekbrains.eventsreminder.presentation.ui.dashboard.EventsDiffUtil
-import ru.geekbrains.eventsreminder.presentation.ui.parcelable
 import javax.inject.Inject
 
 

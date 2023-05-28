@@ -60,7 +60,6 @@ class CacheRepoImpl @Inject constructor(val context: Context) : CacheRepo {
                     } catch (t: Throwable) {
                         logAndToast(t)
                     }
-                    return eventsList
                 }
             }
         } catch (t: Throwable) {

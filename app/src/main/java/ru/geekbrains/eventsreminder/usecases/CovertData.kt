@@ -6,72 +6,96 @@ import ru.geekbrains.eventsreminder.domain.EventSourceType
 import ru.geekbrains.eventsreminder.domain.EventType
 import java.time.*
 
-fun getLocalDateFromBirthDay(birthDay: String): LocalDate = LocalDate.of(
-    LocalDate.now().year,
-    LocalDate.parse(birthDay).monthValue,
-    LocalDate.parse(birthDay).dayOfMonth
-)
-fun addBirthDayEventFromContactPhone(name: String, birthDay: String, id: Long): EventData =
-    EventData(
+fun getCelebrationDateForBirthDay(birthDay: LocalDate) =
+    with(LocalDate.now()) {
+        if (birthDay.withYear(year) < this)
+            LocalDate.of(year + 1, birthDay.month, birthDay.dayOfMonth)
+        else
+            LocalDate.of(year, birthDay.month, birthDay.dayOfMonth)
+    }
+
+fun extractBirthday(text: String): LocalDate {
+    //2017-05-23
+    // "--05-27" - пример строки дня рождения без года
+    val numbers = text.split('-', '/', '.').filter { s -> s != "" }
+    return LocalDate.of(
+        if (numbers.size == 3)
+            numbers[0].toInt()
+        else 9999,
+        numbers[numbers.size - 2].toInt(),
+        numbers[numbers.size - 1].toInt()
+    )
+}
+
+fun addBirthDayEventFromContactPhone(name: String, birthDay: LocalDate, id: Long): EventData {
+    return EventData(
         EventType.BIRTHDAY,
         null,
-        LocalDate.parse(birthDay),
-        getLocalDateFromBirthDay(birthDay),
+        birthDay,
+        getCelebrationDateForBirthDay(birthDay),
         null,
         null,
         name,
         id,
         EventSourceType.CONTACTS
     )
-fun addBirthDayEventFromLocalEdit(name: String, day: Int, month: Int, year: Int?,
-                                  minutesBeforeNotification : Int?,
-                                    sourceId: Long = 0): EventData =
-    EventData(
-        EventType.BIRTHDAY,
-        null,
-        LocalDate.of(year ?: 0, month, day),
-        if (LocalDate.now().month.value < month ||
-            (LocalDate.now().month.value == month && LocalDate.now().dayOfMonth <= day)
+}
+
+fun addBirthDayEventFromLocalEdit(
+    name: String, day: Int, month: Int, year: Int?,
+    minutesBeforeNotification: Int?,
+    sourceId: Long = 0
+): EventData =
+    with(LocalDate.of(year ?: 9999, month, day)) {
+        EventData(
+            EventType.BIRTHDAY,
+            null,
+            this,
+            getCelebrationDateForBirthDay(this),
+            null,
+            minutesBeforeNotification?.let { LocalTime.of(0, minutesBeforeNotification) },
+            name,
+            sourceId,
+            EventSourceType.LOCAL
         )
-            LocalDate.of(LocalDate.now().year, month, day)
-        else
-            LocalDate.of(LocalDate.now().year + 1, month, day),
-        null,
-        minutesBeforeNotification?.let{LocalTime.of(0,minutesBeforeNotification)},
-        name,
-        sourceId,
-        EventSourceType.LOCAL
-    )
-fun addHolidayEventFromLocalEdit(name: String, day: Int, month: Int,
-                                 year: Int,hour : Int?, minute: Int?,
-                                 minutesBeforeNotification : Int?,
-                                    sourceId: Long = 0): EventData =
+    }
+
+fun addHolidayEventFromLocalEdit(
+    name: String, day: Int, month: Int,
+    year: Int, hour: Int?, minute: Int?,
+    minutesBeforeNotification: Int?,
+    sourceId: Long = 0
+): EventData =
     EventData(
         EventType.HOLIDAY,
         null,
         null,
-            LocalDate.of(year, month, day),
-        hour?.let{minute?.let{LocalTime.of(hour,minute)}},
-        minutesBeforeNotification?.let{LocalTime.of(0,minutesBeforeNotification)},
+        LocalDate.of(year, month, day),
+        hour?.let { minute?.let { LocalTime.of(hour, minute) } },
+        minutesBeforeNotification?.let { LocalTime.of(0, minutesBeforeNotification) },
         name,
         sourceId,
         EventSourceType.LOCAL
     )
-fun addSimpleEventFromLocalEdit(name: String, day: Int, month: Int,
-                                 year: Int,hour : Int?, minute: Int?,
-                                minutesBeforeNotification : Int?,
-                                sourceId : Long = 0): EventData =
+
+fun addSimpleEventFromLocalEdit(
+    name: String, day: Int, month: Int,
+    year: Int, hour: Int?, minute: Int?,
+    minutesBeforeNotification: Int?,
+    sourceId: Long = 0
+): EventData =
     EventData(
         EventType.SIMPLE,
         null,
         null,
         LocalDate.of(year, month, day),
-        hour?.let{minute?.let{LocalTime.of(hour,minute)}},
-        minutesBeforeNotification?.let{LocalTime.of(0,minutesBeforeNotification)},
+        hour?.let { minute?.let { LocalTime.of(hour, minute) } },
+        minutesBeforeNotification?.let { LocalTime.of(0, minutesBeforeNotification) },
         name,
         sourceId,
         EventSourceType.LOCAL
     )
+
 fun addEventFromCalendar(name: String, startDate: Long, eventType: EventType, id: Long): EventData {
     val date =
         LocalDateTime.ofInstant(Instant.ofEpochSecond(startDate / 1000), ZoneId.systemDefault())
@@ -87,6 +111,7 @@ fun addEventFromCalendar(name: String, startDate: Long, eventType: EventType, id
         EventSourceType.CALENDAR
     )
 }
+
 fun deleteDuplicateEvents(eventList: MutableList<EventData>): List<EventData> {
     for (i in 0..eventList.size - 2) {
         if (eventList[i].type == EventType.BIRTHDAY) {
@@ -103,13 +128,17 @@ fun deleteDuplicateEvents(eventList: MutableList<EventData>): List<EventData> {
     return eventList.toList()
 }
 
-fun isNewEvent(eventNotificationList: MutableList<EventNotificationData>, event:EventData): Boolean {
-    for (eventNotifi in eventNotificationList){
+fun isNewEvent(
+    eventNotificationList: MutableList<EventNotificationData>,
+    event: EventData
+): Boolean {
+    for (eventNotifi in eventNotificationList) {
         if ((eventNotifi.date == event.date) && (eventNotifi.time == event.time) && (eventNotifi.name == event.name)) return false
     }
     return true
 }
-fun addNotificationEventFromEvent(event:EventData):EventNotificationData =
+
+fun addNotificationEventFromEvent(event: EventData): EventNotificationData =
     EventNotificationData(
         null,
         event.type,
@@ -122,9 +151,13 @@ fun addNotificationEventFromEvent(event:EventData):EventNotificationData =
         event.sourceId,
         event.sourceType
     )
-fun addEventsListToNotificationEventsList(eventNotificationList: MutableList<EventNotificationData>, eventList: MutableList<EventData>): MutableList<EventNotificationData> {
+
+fun addEventsListToNotificationEventsList(
+    eventNotificationList: MutableList<EventNotificationData>,
+    eventList: MutableList<EventData>
+): MutableList<EventNotificationData> {
     for (event in eventList) {
-        if (isNewEvent(eventNotificationList,event)) {
+        if (isNewEvent(eventNotificationList, event)) {
             eventNotificationList.add(addNotificationEventFromEvent(event))
         }
     }

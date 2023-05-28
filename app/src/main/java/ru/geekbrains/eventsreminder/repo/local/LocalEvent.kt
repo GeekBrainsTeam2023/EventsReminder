@@ -39,6 +39,7 @@ data class LocalEvent(
         EventSourceType.LOCAL
     )
     companion object {
+        @Throws(InvalidParameterSpecException::class)
         fun fromEventData(eventData: EventData) =
             if(eventData.sourceType == EventSourceType.LOCAL) LocalEvent(
             eventData.type,
