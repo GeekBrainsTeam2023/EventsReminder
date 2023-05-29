@@ -251,4 +251,24 @@
         </item>
         <item name="android:padding">@dimen/dashboard_events_list_titles_linearlayout_padding</item>
     </style>
+
+    <style name="title_for_inner_preference_category">
+        <item name="android:paddingTop">@dimen/title_for_preference_textview_padding</item>
+        <item name="android:paddingStart">@dimen/title_for_preference_textview_padding</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/title_for_preference_textview_textsize</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/color_primary_dark</item>
+    </style>
+
+    <style name="title_for_preference_category">
+        <item name="android:paddingTop">@dimen/title_for_preference_textview_padding</item>
+        <item name="android:paddingStart">@dimen/title_for_preference_textview_padding</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/title_for_preference_textview_textsize</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/color_secondary</item>
+    </style>
 </resources>

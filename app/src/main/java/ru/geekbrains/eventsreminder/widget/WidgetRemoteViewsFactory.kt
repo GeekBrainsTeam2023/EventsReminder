@@ -35,7 +35,7 @@ constructor(
     RemoteViewsService.RemoteViewsFactory {
     private var mCursor: Cursor? = null
     companion object {
-        val TAG = "ru.geekbrains.eventsreminder.widget.WidgetRemoteViewsFactory"
+        const val TAG = "ru.geekbrains.eventsreminder.widget.WidgetRemoteViewsFactory"
     }
     override fun onCreate() {}
     override fun onDataSetChanged() {
@@ -267,11 +267,20 @@ constructor(
             }
             return position.toLong()
         } catch (t: Throwable) {
-            Log.e(TAG, null, t)
-            throw t
+           logErr(t)
+           throw t
         }
     }
     override fun hasStableIds(): Boolean {
         return true
+    }
+
+    private fun logErr(t:Throwable) = logErr(t,this::class.java.toString())
+
+    private fun logErr(t: Throwable, TAG:String) {
+        try {
+            Log.e(TAG, "", t)
+        } catch (_: Throwable) {
+        }
     }
 }

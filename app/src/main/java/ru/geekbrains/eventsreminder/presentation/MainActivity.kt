@@ -33,50 +33,67 @@ import javax.inject.Inject
 
 class MainActivity : DaggerAppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    var doubleBackToExitPressedOnce = false
+    private var doubleBackToExitPressedOnce = false
     private lateinit var navController: NavController
+
     @Inject
     lateinit var settings: SettingsData
 
     companion object {
         const val TAG = "MainActivity"
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val isParamsSetRequired =
-            !setPreferences(PreferenceManager.getDefaultSharedPreferences(applicationContext))
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        setContentView(binding.root)
+        try {
+             val isParamsSetRequired =
+                !setPreferences(PreferenceManager.getDefaultSharedPreferences(applicationContext))
+            binding = ActivityMainBinding.inflate(layoutInflater)
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            setContentView(binding.root)
 
-        navController = findNavController(R.id.nav_host_fragment_activity_main)
-        val appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.homeToDashboard, R.id.myEvents, R.id.settings,
-                R.id.chooseNewEventTypeDialog, R.id.editBirthdayDialog,
-                R.id.editHolidayDialog,R.id.editSimpleEventDialog
-            )
-        )
-        setupActionBarWithNavController(navController, appBarConfiguration)
-        if (isParamsSetRequired)
-            navController.navigate(R.id.settings)
-        startService(Intent(this, NotificationService::class.java).apply {
-            putExtra(MINUTES_FOR_START_NOTIFICATION, settings.minutesForStartNotification)
+            initNavController()
+            if (isParamsSetRequired)
+                navController.navigate(R.id.settings)
+            startService(Intent(this, NotificationService::class.java).apply {
+                putExtra(MINUTES_FOR_START_NOTIFICATION, settings.minutesForStartNotification)
             }
-        )
-}
+            )
+        } catch (t: Throwable) {
+            logAndToast(t)
+        }
+    }
+
+    private fun initNavController() {
+        try {
+            navController = findNavController(R.id.nav_host_fragment_activity_main)
+            val appBarConfiguration = AppBarConfiguration(
+                setOf(
+                    R.id.homeToDashboard, R.id.myEvents, R.id.settings,
+                    R.id.chooseNewEventTypeDialog, R.id.editBirthdayDialog,
+                    R.id.editHolidayDialog, R.id.editSimpleEventDialog
+                )
+            )
+            setupActionBarWithNavController(navController, appBarConfiguration)
+        } catch (t: Throwable) {
+            logAndToast(t)
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.overflow_menu, menu)
         return true
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
         try {
             NavigationUI.onNavDestinationSelected(item, navController)
             super.onOptionsItemSelected(item)
         } catch (t: Throwable) {
-            Toast.makeText(applicationContext, t.toString(), Toast.LENGTH_SHORT).show()
+            logAndToast(t)
             false
         }
+
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         try {
@@ -86,85 +103,124 @@ class MainActivity : DaggerAppCompatActivity() {
                 return
             }
             this.doubleBackToExitPressedOnce = true
-            Toast.makeText(this, getString(R.string.toast_msg_double_back_pressure_btn), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this,
+                getString(R.string.toast_msg_double_back_pressure_btn),
+                Toast.LENGTH_SHORT
+            ).show()
 
             Handler(Looper.getMainLooper()).postDelayed(
                 { doubleBackToExitPressedOnce = false },
                 2000
             )
         } catch (t: Throwable) {
-            Toast.makeText(applicationContext, t.toString(), Toast.LENGTH_SHORT).show()
+            logAndToast(t)
         }
     }
+
     private val calendarContactsPermission = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { map ->
-        if (
-            (!settings.isDataCalendar ||
-                    map[Manifest.permission.READ_CALENDAR] == true) &&
-            (!settings.isDataContact ||
-                    map[Manifest.permission.READ_CONTACTS] == true)
-        )
-            initReminderRights()
-        else showAskWhyDialog()
-    }
-    fun initReminderRights() {
-        val rightsToDemand = mutableListOf<String>()
-        if (settings.isDataCalendar)
-            rightsToDemand.add(Manifest.permission.READ_CALENDAR)
-        if (settings.isDataContact)
-            rightsToDemand.add(Manifest.permission.READ_CONTACTS)
-        if (rightsToDemand.any() && !checkPermission()) {
-            calendarContactsPermission.launch(
-                rightsToDemand.toTypedArray()
+        try {
+            if (
+                (!settings.isDataCalendar ||
+                        map[Manifest.permission.READ_CALENDAR] == true) &&
+                (!settings.isDataContact ||
+                        map[Manifest.permission.READ_CONTACTS] == true)
             )
-        } else {
-            Log.d(TAG, getString(R.string.log_msg_rights_check_succeeded))
-            navController.navigate(R.id.homeToDashboard)
+                initReminderRights()
+            else showAskWhyDialog()
+        } catch (t: Throwable) {
+            logAndToast(t)
         }
     }
+
+    fun initReminderRights() {
+        try {
+            val rightsToDemand = mutableListOf<String>()
+            if (settings.isDataCalendar)
+                rightsToDemand.add(Manifest.permission.READ_CALENDAR)
+            if (settings.isDataContact)
+                rightsToDemand.add(Manifest.permission.READ_CONTACTS)
+            if (rightsToDemand.any() && !checkPermission()) {
+                calendarContactsPermission.launch(
+                    rightsToDemand.toTypedArray()
+                )
+            } else {
+                Log.d(TAG, getString(R.string.log_msg_rights_check_succeeded))
+                navController.navigate(R.id.homeToDashboard)
+            }
+        } catch (t: Throwable) {
+            logAndToast(t)
+        }
+    }
+
     fun checkPermission(): Boolean {
-        return (!settings.isDataCalendar ||
-                ContextCompat.checkSelfPermission(
-                    applicationContext, Manifest.permission.READ_CALENDAR
-                ) == PackageManager.PERMISSION_GRANTED) && (
-                !settings.isDataContact ||
-                        ContextCompat.checkSelfPermission(
-                            applicationContext, Manifest.permission.READ_CONTACTS
-                        ) == PackageManager.PERMISSION_GRANTED)
+        return try {
+            (!settings.isDataCalendar ||
+                    ContextCompat.checkSelfPermission(
+                        applicationContext, Manifest.permission.READ_CALENDAR
+                    ) == PackageManager.PERMISSION_GRANTED) && (
+                    !settings.isDataContact ||
+                            ContextCompat.checkSelfPermission(
+                                applicationContext, Manifest.permission.READ_CONTACTS
+                            ) == PackageManager.PERMISSION_GRANTED)
+        } catch (t: Throwable) {
+            logAndToast(t)
+            false
+        }
     }
+
     private fun showAskWhyDialog() {
-        val builder = AlertDialog.Builder(this)
-        val rightCalendarToDemand = if (settings.isDataCalendar) "календарю" else ""
-        val rightContactToDemand = if (settings.isDataContact) "контактам" else ""
-        val rightsToDemand = rightCalendarToDemand +
-                (if (settings.isDataCalendar && settings.isDataContact) " и " else "") +
-                rightContactToDemand
-        builder.setTitle(getString(R.string.demands_dialog_title_first))
-            .setMessage(buildString {
-        append(getString(R.string.demands_dialog_title_second))
-        append(rightsToDemand)
-        append(getString(R.string.demands_dialog_title_third))
-    })
-            .setCancelable(false)
-            .setPositiveButton("      права") { dialog, id ->
-                // открываем настройки приложения, чтобы пользователь дал разрешение вручную
-                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                val uri = Uri.fromParts("package", this.packageName, null)
-                intent.data = uri
-                getPermissionManually.launch(intent)
-            }
-            .setNegativeButton("настройки     ") { dialog, id ->
-                navController.navigate(R.id.settings)
-            }
-        val dlg = builder.create()
-        dlg.show()
+        try {
+            val builder = AlertDialog.Builder(this)
+            val rightCalendarToDemand = if (settings.isDataCalendar) "календарю" else ""
+            val rightContactToDemand = if (settings.isDataContact) "контактам" else ""
+            val rightsToDemand = rightCalendarToDemand +
+                    (if (settings.isDataCalendar && settings.isDataContact) " и " else "") +
+                    rightContactToDemand
+            builder.setTitle(getString(R.string.demands_dialog_title_first))
+                .setMessage(buildString {
+                    append(getString(R.string.demands_dialog_title_second))
+                    append(rightsToDemand)
+                    append(getString(R.string.demands_dialog_title_third))
+                })
+                .setCancelable(false)
+                .setPositiveButton("      права") { _, _ ->
+                    try {
+                        // открываем настройки приложения, чтобы пользователь дал разрешение вручную
+                        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                        val uri = Uri.fromParts("package", this.packageName, null)
+                        intent.data = uri
+                        getPermissionManually.launch(intent)
+                    } catch (t: Throwable) {
+                        logAndToast(t)
+                    }
+                }
+                .setNegativeButton("настройки     ") { _, _ ->
+                    try {
+                        navController.navigate(R.id.settings)
+                    } catch (t: Throwable) {
+                        logAndToast(t)
+                    }
+                }
+            val dlg = builder.create()
+            dlg.show()
+        } catch (t: Throwable) {
+            logAndToast(t)
+        }
     }
+
     private val getPermissionManually = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) {
-        initReminderRights()
+        try {
+            initReminderRights()
+        } catch (t: Throwable) {
+            logAndToast(t)
+        }
     }
+
     /**
      * Применить параметры из настроек
      * @param preferences набор настроек для применения в приложении
@@ -177,7 +233,8 @@ class MainActivity : DaggerAppCompatActivity() {
         var ret = false
         try {
             if (preferences.contains(getString(R.string.key_phonebook_datasource_checkbox_preference)))
-              ret = true
+                ret =
+                    true // Если хотябы один параметр инициализирован то взводим флаг применения параметров
             if (key.isNullOrBlank() || key == getString(R.string.key_phonebook_datasource_checkbox_preference)) {
                 settings.isDataContact = preferences.getBoolean(
                     getString(R.string.key_phonebook_datasource_checkbox_preference),
@@ -208,8 +265,11 @@ class MainActivity : DaggerAppCompatActivity() {
                     return ret
                 }
             }
-            if(key.isNullOrBlank() || key == getString(R.string.key_event_time_checkbox_preference)){
-                settings.showTimeEvent = preferences.getBoolean(getString(R.string.key_event_time_checkbox_preference),settings.showTimeEvent)
+            if (key.isNullOrBlank() || key == getString(R.string.key_event_time_checkbox_preference)) {
+                settings.showTimeEvent = preferences.getBoolean(
+                    getString(R.string.key_event_time_checkbox_preference),
+                    settings.showTimeEvent
+                )
                 if (!key.isNullOrBlank()) {
                     runOnUiThread {
                         AppWidget.sendRefreshBroadcast(this)
@@ -290,7 +350,10 @@ class MainActivity : DaggerAppCompatActivity() {
                 }
             }
             if (key.isNullOrBlank() || key == getString(R.string.key_widget_interval_of_events_preference)) {
-                settings.daysForShowEventsWidget = preferences.getInt(getString(R.string.key_widget_interval_of_events_preference),settings.daysForShowEventsWidget)
+                settings.daysForShowEventsWidget = preferences.getInt(
+                    getString(R.string.key_widget_interval_of_events_preference),
+                    settings.daysForShowEventsWidget
+                )
                 if (!key.isNullOrBlank()) {
                     runOnUiThread {
                         AppWidget.sendRefreshBroadcast(this)
@@ -299,7 +362,10 @@ class MainActivity : DaggerAppCompatActivity() {
                 }
             }
             if (key.isNullOrBlank() || key == getString(R.string.key_age_checkbox_preference)) {
-                settings.showAge = preferences.getBoolean(getString(R.string.key_age_checkbox_preference),settings.showAge)
+                settings.showAge = preferences.getBoolean(
+                    getString(R.string.key_age_checkbox_preference),
+                    settings.showAge
+                )
                 if (!key.isNullOrBlank()) {
                     runOnUiThread {
                         AppWidget.sendRefreshBroadcast(this)
@@ -308,10 +374,16 @@ class MainActivity : DaggerAppCompatActivity() {
                 }
             }
             if (key.isNullOrBlank() || key == getString(R.string.key_minutes_before_notification_preference)) {
-                settings.minutesForStartNotification = preferences.getInt(getString(R.string.key_minutes_before_notification_preference),settings.minutesForStartNotification)
+                settings.minutesForStartNotification = preferences.getInt(
+                    getString(R.string.key_minutes_before_notification_preference),
+                    settings.minutesForStartNotification
+                )
                 if (!key.isNullOrBlank()) {
                     startService(Intent(this, NotificationService::class.java).apply {
-                        putExtra(MINUTES_FOR_START_NOTIFICATION, settings.minutesForStartNotification)
+                        putExtra(
+                            MINUTES_FOR_START_NOTIFICATION,
+                            settings.minutesForStartNotification
+                        )
                     }
                     )
                     return ret
@@ -326,9 +398,19 @@ class MainActivity : DaggerAppCompatActivity() {
                 if (key.isNullOrBlank()) return ret
             }
         } catch (t: Throwable) {
-            Toast.makeText(this, t.toString(), Toast.LENGTH_SHORT).show()
+            logAndToast(t)
             return false
         }
         return ret
+    }
+
+    private fun logAndToast(t:Throwable) = logAndToast(t,this::class.java.toString())
+
+    private fun logAndToast(t: Throwable, TAG:String) {
+        try {
+            Log.e(TAG, "", t)
+            Toast.makeText(applicationContext, t.toString(), Toast.LENGTH_LONG).show()
+        } catch (_: Throwable) {
+        }
     }
 }

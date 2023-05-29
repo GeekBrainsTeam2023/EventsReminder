@@ -8,16 +8,13 @@ import ru.geekbrains.eventsreminder.widget.WidgetRemoteViewsFactory
 import javax.inject.Inject
 import javax.inject.Singleton
 
-
 @Module
 class WidgetModule
     @Inject
     constructor(val context:Context) {
     @Singleton
     @Provides
-    fun provideMyWidgetRemoteViewsService() =
-        MyWidgetRemoteViewsService()
-
+    fun provideMyWidgetRemoteViewsService() = MyWidgetRemoteViewsService()
     @Singleton
     @Provides
     fun provideWidgetRemoteViewsFactory() = WidgetRemoteViewsFactory(context)

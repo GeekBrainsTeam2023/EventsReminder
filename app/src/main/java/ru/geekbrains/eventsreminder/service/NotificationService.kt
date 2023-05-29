@@ -1,24 +1,11 @@
 package ru.geekbrains.eventsreminder.service
 
 import android.app.Service
-import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.IBinder
-import android.util.Log
-import androidx.fragment.app.viewModels
-import dagger.android.AndroidInjector
-import dagger.android.DaggerService
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasAndroidInjector
-
-import ru.geekbrains.eventsreminder.di.ViewModelFactory
 import ru.geekbrains.eventsreminder.domain.EventData
 import ru.geekbrains.eventsreminder.domain.EventNotificationData
-import ru.geekbrains.eventsreminder.domain.SettingsData
-import ru.geekbrains.eventsreminder.presentation.ui.dashboard.DashboardViewModel
-import ru.geekbrains.eventsreminder.repo.Repo
-import ru.geekbrains.eventsreminder.repo.cache.CacheRepo
 import ru.geekbrains.eventsreminder.usecases.EVENTS_DATA
 import ru.geekbrains.eventsreminder.usecases.MINUTES_FOR_START_NOTIFICATION
 import ru.geekbrains.eventsreminder.usecases.NotificationUtils
@@ -26,7 +13,6 @@ import ru.geekbrains.eventsreminder.usecases.addEventsListToNotificationEventsLi
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.LocalTime
-import javax.inject.Inject
 import kotlin.math.abs
 
 class NotificationService

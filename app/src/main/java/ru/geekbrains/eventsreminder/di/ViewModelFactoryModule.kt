@@ -13,10 +13,8 @@ import ru.geekbrains.eventsreminder.presentation.ui.myevents.MyEventsViewModel
 * */
 @Module
 interface ViewModelFactoryModule {
-
     @Binds
     fun bindsViewModelFactory(viewModelFactory: ViewModelFactory): ViewModelProvider.Factory
-
     @Binds
     @IntoMap
     @ViewModelKey(DashboardViewModel::class)

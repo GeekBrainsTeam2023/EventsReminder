@@ -43,4 +43,6 @@
     <dimen name="my_events_image_btns_layout_margin">2dp</dimen>
     <dimen name="my_events_image_btns_elevation">7dp</dimen>
     <dimen name="my_events_buttons_linear_layout_margin_bottom">5dp</dimen>
+    <dimen name="title_for_preference_textview_padding">8dp</dimen>
+    <dimen name="title_for_preference_textview_textsize">16sp</dimen>
 </resources>

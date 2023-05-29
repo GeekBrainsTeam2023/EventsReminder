@@ -9,9 +9,7 @@ class App : DaggerApplication() {
     companion object {
         lateinit var eventsReminderComponent: EventsReminderComponent
     }
-    override fun onCreate() {
-        super.onCreate()
-    }
+
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
         eventsReminderComponent =
             ru.geekbrains.eventsreminder.di.DaggerEventsReminderComponent

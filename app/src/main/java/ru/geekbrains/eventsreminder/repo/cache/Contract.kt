@@ -16,9 +16,9 @@ object Contract : BaseColumns {
     const val COL_EVENT_TITLE = "event_title"
     const val COL_EVENT_SOURCE_ID = "event_source_id"
     const val COL_EVENT_SOURCE_TYPE = "event_source_type"
-    const val SCHEMA = "content://"
+    private const val SCHEMA = "content://"
     const val AUTHORITY = "ru.geekbrains.eventsreminder.widget"
-    val BASE_CONTENT_URI: Uri = Uri.parse(SCHEMA + AUTHORITY)
+    private val BASE_CONTENT_URI: Uri = Uri.parse(SCHEMA + AUTHORITY)
     const val PATH_EVENTS = TABLE_NAME
     val PATH_EVENTS_URI: Uri = BASE_CONTENT_URI.buildUpon().appendPath(PATH_EVENTS).build()
 }

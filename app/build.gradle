@@ -4,6 +4,11 @@ plugins {
     id 'kotlin-parcelize'
     id 'kotlin-kapt'
 }
+
+def versionMajor = 0
+def versionMinor = 1
+def versionPatch = 0
+
 android {
     namespace 'ru.geekbrains.eventsreminder'
     compileSdk 33
@@ -12,16 +17,23 @@ android {
         applicationId "ru.geekbrains.eventsreminder"
         minSdk 26
         targetSdk 33
-        versionCode 1
-        versionName "1.0"
-
+        versionCode versionMajor * 10000 + versionMinor * 100 + versionPatch
+        versionName "${versionMajor}.${versionMinor}.${versionPatch}"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
             minifyEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            resValue "string", "app_version",
+                    "${defaultConfig.versionName}"
+        }
+        debug{
+            versionNameSuffix ".debug"
+            resValue "string", "app_version",
+                    "${defaultConfig.versionName}${versionNameSuffix}"
         }
     }
     compileOptions {
