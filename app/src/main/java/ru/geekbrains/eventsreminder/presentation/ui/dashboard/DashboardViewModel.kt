@@ -65,9 +65,9 @@ class DashboardViewModel @Inject constructor(
     fun loadEvents() {
         try {
             if (cachedEventsList.any())
-                statesLiveData.postValue(AppState.SuccessState(cachedEventsList.filterToDashboard()))
-            else statesLiveData.postValue(AppState.LoadingState)
-            eventsListJob?.let { return }
+                statesLiveData.value = AppState.SuccessState(cachedEventsList.filterToDashboard())
+            else statesLiveData.value = AppState.LoadingState
+            eventsListJob?.let{ return }
             eventsListJob = viewModelCoroutineScope.launch {
                 val daysToPutInCahce =
                     max(settingsData.daysForShowEvents, settingsData.daysForShowEventsWidget)

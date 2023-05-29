@@ -31,6 +31,9 @@
             <include layout="@layout/shimmer_viewholder" />
             <include layout="@layout/shimmer_viewholder" />
             <include layout="@layout/shimmer_viewholder" />
+            <include layout="@layout/shimmer_viewholder" />
+            <include layout="@layout/shimmer_viewholder" />
+            <include layout="@layout/shimmer_viewholder" />
 
         </LinearLayout>
     </com.facebook.shimmer.ShimmerFrameLayout>

@@ -20,16 +20,15 @@
             android:id="@+id/textViewDashboardIntervalOfEvents"
             style="@style/textview_dashboard_interval_of_events"
             android:layout_gravity="start"
-            android:background="@color/shimmer_placeholder"
-            tools:text="today in6 kytr" />
+            android:background="@drawable/shape_rectangle_for_shimmer"
+            tools:text="today 365 events" />
 
         <TextView
             android:id="@+id/textViewDashboardDateOfEvents"
             style="@style/textview_dashboard_date_of_events"
-            android:background="@color/shimmer_placeholder"
+            android:background="@drawable/shape_rectangle_for_shimmer"
             tools:text="22 may 2023" />
     </LinearLayout>
-
 
     <androidx.cardview.widget.CardView
         android:id="@+id/dashboardRecyclerViewCardview"
@@ -40,54 +39,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/eventsListTitlesLinearLayout">
 
-        <LinearLayout
-            android:id="@+id/dashboardRecyclerViewLinearLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/dashboardRecyclerViewItemImage"
-                android:background="@color/shimmer_placeholder"
-                android:layout_width="@dimen/dashboard_item_image_width"
-                android:layout_height="@dimen/dashboard_item_image_height"
-                android:layout_gravity="center"
-                android:layout_margin="@dimen/dashboard_item_image_layout_margin"
-                android:layout_weight="0.4" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/dashboardRecyclerViewInternalConstraintLayout"
-                style="@style/dashboard_recyclerview_internal_constraint_layout">
-
                 <TextView
                     android:id="@+id/dashboardRecyclerViewItemTitleTextview"
+                    android:layout_width="match_parent"
                     style="@style/dashboard_recyclerview_item_title_textview"
-                    android:background="@color/shimmer_placeholder"
+                    android:background="@drawable/shape_rectangle_for_shimmer"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/dashboardRecyclerViewItemEventTimeTextview"
-                    style="@style/dashboard_recyclerview_item_event_time_textview"
-                    tools:text="10:22"
-                    android:background="@color/shimmer_placeholder"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/dashboardRecyclerViewItemTitleTextview" />
-
-                <TextView
-                    android:id="@+id/dashboardRecyclerViewItemAgeTextview"
-                    style="@style/dashboard_recyclerview_item_age_textview"
-                    tools:text="исполнится 32 года"
-                    android:background="@color/shimmer_placeholder"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/dashboardRecyclerViewItemTitleTextview" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </LinearLayout>
     </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
