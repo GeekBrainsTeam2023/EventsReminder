@@ -21,12 +21,12 @@ class CreateNewEventDialogFragment : DaggerDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        try {
+        return try {
             dialog?.window?.setBackgroundDrawableResource(R.drawable.dialog_round_corner_background)
-            return inflater.inflate(R.layout.create_new_event_dialog_fragment, container, false)
+            inflater.inflate(R.layout.create_new_event_dialog_fragment, container, false)
         } catch (t: Throwable) {
             logAndToast(t)
-            return null
+            null
         }
     }
 
@@ -93,9 +93,9 @@ class CreateNewEventDialogFragment : DaggerDialogFragment() {
             logAndToast(t)
         }
     }
-    protected fun logAndToast(t:Throwable) = logAndToast(t,this::class.java.toString())
+    private fun logAndToast(t:Throwable) = logAndToast(t,this::class.java.toString())
 
-    protected fun logAndToast(t: Throwable, tag:String?) {
+    private fun logAndToast(t: Throwable, tag:String?) {
         try {
             Log.e(tag, "", t)
             Toast.makeText(requireContext().applicationContext, t.toString(), Toast.LENGTH_LONG).show()

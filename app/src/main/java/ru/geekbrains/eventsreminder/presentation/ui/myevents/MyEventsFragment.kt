@@ -23,175 +23,175 @@ import javax.inject.Inject
 
 
 class MyEventsFragment : DaggerFragment() {
-    private val binding: FragmentMyEventsBinding by viewBinding()
-    private var myEventsAdapter: MyEventsRecyclerViewAdapter? = null
+	private val binding: FragmentMyEventsBinding by viewBinding()
+	private var myEventsAdapter: MyEventsRecyclerViewAdapter? = null
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelFactory
-    private val myEventsViewModel by viewModels<MyEventsViewModel>({ this }) { viewModelFactory }
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View = inflater.inflate(R.layout.fragment_my_events, container, false)
+	@Inject
+	lateinit var viewModelFactory: ViewModelFactory
+	private val myEventsViewModel by viewModels<MyEventsViewModel>({ this }) { viewModelFactory }
+	override fun onCreateView(
+		inflater: LayoutInflater,
+		container: ViewGroup?,
+		savedInstanceState: Bundle?
+	): View = inflater.inflate(R.layout.fragment_my_events, container, false)
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        try {
-            myEventsViewModel.loadMyEvents()
-        } catch (t: Throwable) {
-            myEventsViewModel.handleError(t)
-        }
-    }
+	override fun onAttach(context: Context) {
+		super.onAttach(context)
+		try {
+			myEventsViewModel.loadMyEvents()
+		} catch (t: Throwable) {
+			myEventsViewModel.handleError(t)
+		}
+	}
 
-    override fun onResume() {
-        super.onResume()
-        try {
-            myEventsViewModel.loadMyEvents()
-        } catch (t: Throwable) {
-            myEventsViewModel.handleError(t)
-        }
-    }
+	override fun onResume() {
+		super.onResume()
+		try {
+			myEventsViewModel.loadMyEvents()
+		} catch (t: Throwable) {
+			myEventsViewModel.handleError(t)
+		}
+	}
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        try {
-            val idToScroll = arguments?.getLong(EVENT_ID)
-            binding.applyMarkupOptions()
-            myEventsViewModel.statesLiveData.observe(this.viewLifecycleOwner) { appState ->
-                processAppState(appState)
-            }
-        } catch (t: Throwable) {
-            myEventsViewModel.handleError(t)
-        }
-    }
+	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+		super.onViewCreated(view, savedInstanceState)
+		try {
+			val idToScroll = arguments?.getLong(EVENT_ID)
+			binding.applyMarkupOptions()
+			myEventsViewModel.statesLiveData.observe(this.viewLifecycleOwner) { appState ->
+				processAppState(appState)
+			}
+		} catch (t: Throwable) {
+			myEventsViewModel.handleError(t)
+		}
+	}
 
-    private fun FragmentMyEventsBinding.applyMarkupOptions() {
-        try {
-            if (myEventsViewModel.cachedLocalEvents.isNotEmpty()) {
-                myEventsAreEmptyTextviewText.visibility = View.GONE
-            } else {
-                hideButtonAndHeader()
-            }
-            swipeRefreshLayout.setOnRefreshListener {
-                swipeRefreshLayout.isRefreshing = false
-                myEventsViewModel.loadMyEvents()
-                Toast.makeText(
-                    context,
-                    getString(R.string.toast_msg_events_list_renewed),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-            clearAllLocalEventsBtn.setOnClickListener { confirmDeletionOfAllEventsDialog() }
-            myEventsAdapter =
-                MyEventsRecyclerViewAdapter(myEventsViewModel.storedEvents, myEventsViewModel)
-            RvListOfMyEvents.adapter = myEventsAdapter
-            RvListOfMyEvents.isSaveEnabled = true
-            myEventsAdapter!!.stateRestorationPolicy =
-                RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
-        } catch (t: Throwable) {
-            myEventsViewModel.handleError(t)
-        }
-    }
+	private fun FragmentMyEventsBinding.applyMarkupOptions() {
+		try {
+			if (myEventsViewModel.cachedLocalEvents.isNotEmpty()) {
+				myEventsAreEmptyTextviewText.visibility = View.GONE
+			} else {
+				hideButtonAndHeader()
+			}
+			swipeRefreshLayout.setOnRefreshListener {
+				swipeRefreshLayout.isRefreshing = false
+				myEventsViewModel.loadMyEvents()
+				Toast.makeText(
+					context,
+					getString(R.string.toast_msg_events_list_renewed),
+					Toast.LENGTH_SHORT
+				).show()
+			}
+			clearAllLocalEventsBtn.setOnClickListener { confirmDeletionOfAllEventsDialog() }
+			myEventsAdapter =
+				MyEventsRecyclerViewAdapter(myEventsViewModel.storedEvents, myEventsViewModel)
+			RvListOfMyEvents.adapter = myEventsAdapter
+			RvListOfMyEvents.isSaveEnabled = true
+			myEventsAdapter!!.stateRestorationPolicy =
+				RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+		} catch (t: Throwable) {
+			myEventsViewModel.handleError(t)
+		}
+	}
 
-    private fun processAppState(appState: AppState) {
-        try {
-            when (appState) {
-                is AppState.SuccessState<*> -> {
-                    val data = appState.data as List<EventData>
-                    showEvents(data)
-                }
+	private fun processAppState(appState: AppState) {
+		try {
+			when (appState) {
+				is AppState.SuccessState<*> -> {
+					val data = appState.data as List<EventData>
+					showEvents(data)
+				}
 
-                is AppState.LoadingState -> {
+				is AppState.LoadingState -> {
 
-                }
+				}
 
-                is AppState.ErrorState -> {
-                    logAndToast(appState.error)
-                }
-            }
-        } catch (t: Throwable) {
-            myEventsViewModel.handleError(t)
-        }
-    }
+				is AppState.ErrorState -> {
+					logAndToast(appState.error)
+				}
+			}
+		} catch (t: Throwable) {
+			myEventsViewModel.handleError(t)
+		}
+	}
 
-    private fun logAndToast(t:Throwable) = logAndToast(t,this::class.java.toString())
+	private fun logAndToast(t: Throwable) = logAndToast(t, this::class.java.toString())
 
-    private fun logAndToast(t: Throwable, tag:String?) {
-        try {
-            Log.e(tag, "", t)
-            Toast.makeText(requireContext().applicationContext, t.toString(), Toast.LENGTH_LONG).show()
-        } catch (_: Throwable) {
-        }
-    }
+	private fun logAndToast(t: Throwable, tag: String?) {
+		try {
+			Log.e(tag, "", t)
+			Toast.makeText(requireContext().applicationContext, t.toString(), Toast.LENGTH_LONG).show()
+		} catch (_: Throwable) {
+		}
+	}
 
-    private fun hideButtonAndHeader() {
-        try {
-            binding.myEventsAreEmptyTextviewText.visibility = View.VISIBLE
-            binding.textViewMyEventsHeader.visibility = View.GONE
-            binding.clearAllLocalEventsBtn.visibility = View.GONE
-        } catch (t: Throwable) {
-            myEventsViewModel.handleError(t)
-        }
-    }
+	private fun hideButtonAndHeader() {
+		try {
+			binding.myEventsAreEmptyTextviewText.visibility = View.VISIBLE
+			binding.textViewMyEventsHeader.visibility = View.GONE
+			binding.clearAllLocalEventsBtn.visibility = View.GONE
+		} catch (t: Throwable) {
+			myEventsViewModel.handleError(t)
+		}
+	}
 
-    private fun showEvents(events: List<EventData>) {
-        try {
-            val diffResult = DiffUtil.calculateDiff(
-                EventsDiffUtil(
-                    myEventsViewModel.storedEvents,
-                    events
-                )
-            )
-            myEventsViewModel.storedEvents.clear()
-            myEventsViewModel.storedEvents.addAll(events)
-            myEventsAdapter?.let { diffResult.dispatchUpdatesTo(it) }
-            binding.textViewMyEventsHeader.text = buildString {
-                append("всего ")
-                append(
-                    RusIntPlural(
-                        "событ",
-                        events.count(),
-                        "ие", "ия", "ий"
-                    )
-                )
-            }
+	private fun showEvents(events: List<EventData>) {
+		try {
+			val diffResult = DiffUtil.calculateDiff(
+				EventsDiffUtil(
+					myEventsViewModel.storedEvents,
+					events
+				)
+			)
+			myEventsViewModel.storedEvents.clear()
+			myEventsViewModel.storedEvents.addAll(events)
+			myEventsAdapter?.let { diffResult.dispatchUpdatesTo(it) }
+			binding.textViewMyEventsHeader.text = buildString {
+				append("всего ")
+				append(
+					RusIntPlural(
+						"событ",
+						events.count(),
+						"ие", "ия", "ий"
+					)
+				)
+			}
 
-            arguments?.getLong(EVENT_ID)?.let {
-                events.indexOfFirst{event-> event.sourceId == it}.let {
-                if (it > 0 && it < events.count())
-                    binding.RvListOfMyEvents.smoothScrollToPosition(it)
-                }
-            }
-            arguments?.clear()
-        } catch (t: Throwable) {
-            myEventsViewModel.handleError(t)
-        }
-    }
+			arguments?.getLong(EVENT_ID)?.let {
+				events.indexOfFirst { event -> event.sourceId == it }.let {
+					if (it > 0 && it < events.count())
+						binding.RvListOfMyEvents.smoothScrollToPosition(it)
+				}
+			}
+			arguments?.clear()
+		} catch (t: Throwable) {
+			myEventsViewModel.handleError(t)
+		}
+	}
 
-    private fun confirmDeletionOfAllEventsDialog() {
-        try {
-            val builder = AlertDialog.Builder(context)
-            builder.setTitle(getString(R.string.delete_all_local_events_dialog_title))
-                .setCancelable(true)
-                .setPositiveButton(getString(R.string.delete_local_events_dialog_positive_btn)) { dialog, id ->
-                    try {
-                        myEventsViewModel.clearAllLocalEvents()
-                        hideButtonAndHeader()
-                    } catch (t: Throwable) {
-                        myEventsViewModel.handleError(t)
-                    }
-                }
-                .setNegativeButton(getString(R.string.delete_local_events_dialog_negative_btn)) { _, _ -> }
-            val dlg = builder.create()
-            dlg.show()
-        } catch (t: Throwable) {
-            myEventsViewModel.handleError(t)
-        }
-    }
+	private fun confirmDeletionOfAllEventsDialog() {
+		try {
+			val builder = AlertDialog.Builder(context)
+			builder.setTitle(getString(R.string.delete_all_local_events_dialog_title))
+				.setCancelable(true)
+				.setPositiveButton(getString(R.string.delete_local_events_dialog_positive_btn)) { _, _ ->
+					try {
+						myEventsViewModel.clearAllLocalEvents()
+						hideButtonAndHeader()
+					} catch (t: Throwable) {
+						myEventsViewModel.handleError(t)
+					}
+				}
+				.setNegativeButton(getString(R.string.delete_local_events_dialog_negative_btn)) { _, _ -> }
+			val dlg = builder.create()
+			dlg.show()
+		} catch (t: Throwable) {
+			myEventsViewModel.handleError(t)
+		}
+	}
 
-    override fun onDestroy() {
-        myEventsAdapter = null
-        super.onDestroy()
-    }
+	override fun onDestroy() {
+		myEventsAdapter = null
+		super.onDestroy()
+	}
 }

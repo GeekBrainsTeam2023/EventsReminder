@@ -9,16 +9,15 @@ class EventsDiffUtil(private val oldList: List<EventData>, private val newList: 
     private val payload = Any()
     override fun getOldListSize(): Int = oldList.size
     override fun getNewListSize(): Int = newList.size
-    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return try {
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
+        try {
             oldList[oldItemPosition].hashCode() == newList[newItemPosition].hashCode()
         } catch (t: Throwable) {
             logErr(t)
             false
         }
-    }
-    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return try {
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
+        try {
             val oldItem: EventData = oldList[oldItemPosition]
             val newItem: EventData = newList[newItemPosition]
             oldItem.name == newItem.name &&
@@ -29,7 +28,6 @@ class EventsDiffUtil(private val oldList: List<EventData>, private val newList: 
             logErr(t)
             false
         }
-    }
     override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int) = payload
 
     private fun logErr(t:Throwable) = logErr(t,this::class.java.toString())

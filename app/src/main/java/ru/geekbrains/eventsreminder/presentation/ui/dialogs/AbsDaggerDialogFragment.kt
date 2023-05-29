@@ -19,7 +19,7 @@ abstract class AbsDaggerDialogFragment: DaggerDialogFragment() {
     protected val dashboardViewModel by viewModels<DashboardViewModel>({ this }) { viewModelFactory }
     @Inject
     lateinit var settings: SettingsData
-    protected var successIdToNavigate : Int? = null
+    private var successIdToNavigate : Int? = null
     var eventData: EventData? = null
     protected fun processBundleArguments() {
         try{

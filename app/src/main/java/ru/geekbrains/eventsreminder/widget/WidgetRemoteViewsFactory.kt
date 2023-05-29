@@ -13,7 +13,6 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
-import android.widget.Toast
 import androidx.core.database.getIntOrNull
 import androidx.preference.PreferenceManager
 import ru.geekbrains.eventsreminder.R
@@ -36,7 +35,7 @@ constructor(
     RemoteViewsService.RemoteViewsFactory {
     private var mCursor: Cursor? = null
     companion object {
-        val TAG = "ru.geekbrains.eventsreminder.widget.WidgetRemoteViewsFactory"
+        const val TAG = "ru.geekbrains.eventsreminder.widget.WidgetRemoteViewsFactory"
     }
     override fun onCreate() {}
     override fun onDataSetChanged() {

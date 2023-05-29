@@ -33,7 +33,7 @@ import javax.inject.Inject
 
 class MainActivity : DaggerAppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    var doubleBackToExitPressedOnce = false
+    private var doubleBackToExitPressedOnce = false
     private lateinit var navController: NavController
 
     @Inject
@@ -186,7 +186,7 @@ class MainActivity : DaggerAppCompatActivity() {
                     append(getString(R.string.demands_dialog_title_third))
                 })
                 .setCancelable(false)
-                .setPositiveButton("      права") { dialog, id ->
+                .setPositiveButton("      права") { _, _ ->
                     try {
                         // открываем настройки приложения, чтобы пользователь дал разрешение вручную
                         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
@@ -197,7 +197,7 @@ class MainActivity : DaggerAppCompatActivity() {
                         logAndToast(t)
                     }
                 }
-                .setNegativeButton("настройки     ") { dialog, id ->
+                .setNegativeButton("настройки     ") { _, _ ->
                     try {
                         navController.navigate(R.id.settings)
                     } catch (t: Throwable) {

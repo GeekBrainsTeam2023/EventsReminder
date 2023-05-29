@@ -13,10 +13,11 @@ data class RusIntPlural(
     override fun toString(): String {
         val suffix =
         if ((number / 10) % 10 != 1) {
-            val num = number % 10
-            if (num == 1) singleEnding
-            else if (num > 1 && num < 5)  twoToFourEnding
-            else fiveToTenEnding
+            when (number % 10) {
+                1 -> singleEnding
+                in 2..4 -> twoToFourEnding
+                else -> fiveToTenEnding
+            }
         } else fiveToTenEnding
         return "$number $name$suffix"
     }
