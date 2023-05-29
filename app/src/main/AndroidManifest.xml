@@ -24,7 +24,6 @@
         <service
             android:name=".service.NotificationService"
             android:exported="false" />
-
         <activity
             android:name=".presentation.MainActivity"
             android:exported="true"
@@ -53,6 +52,7 @@
         </receiver>
         <receiver
             android:name=".service.BootUpReceiver"
+            android:enabled="true"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
