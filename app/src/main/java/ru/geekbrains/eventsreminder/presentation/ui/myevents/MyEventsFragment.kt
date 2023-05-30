@@ -57,7 +57,6 @@ class MyEventsFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         try {
-            val idToScroll = arguments?.getLong(EVENT_ID)
             binding.applyMarkupOptions()
             myEventsViewModel.statesLiveData.observe(this.viewLifecycleOwner) { appState ->
                 processAppState(appState)
@@ -70,7 +69,7 @@ class MyEventsFragment : DaggerFragment() {
     private fun FragmentMyEventsBinding.applyMarkupOptions() {
         try {
             if (myEventsViewModel.cachedLocalEvents.isNotEmpty()) {
-                myEventsAreEmptyTextviewText.visibility = View.GONE
+                showButtonAndHeader()
             } else {
                 hideButtonAndHeader()
             }
@@ -137,8 +136,20 @@ class MyEventsFragment : DaggerFragment() {
         }
     }
 
+    private fun showButtonAndHeader() {
+        try {
+            binding.myEventsAreEmptyTextviewText.visibility = View.GONE
+            binding.textViewMyEventsHeader.visibility = View.VISIBLE
+            binding.clearAllLocalEventsBtn.visibility = View.VISIBLE
+        } catch (t: Throwable) {
+            myEventsViewModel.handleError(t)
+        }
+    }
+
     private fun showEvents(events: List<EventData>) {
         try {
+            if (events.any()) showButtonAndHeader()
+            else hideButtonAndHeader()
             val diffResult = DiffUtil.calculateDiff(
                 EventsDiffUtil(
                     myEventsViewModel.storedEvents,
