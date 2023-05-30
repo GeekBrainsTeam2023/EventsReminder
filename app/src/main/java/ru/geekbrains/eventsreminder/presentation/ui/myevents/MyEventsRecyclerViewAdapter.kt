@@ -11,6 +11,7 @@ class MyEventsRecyclerViewAdapter(
     private var myEvents: List<EventData>,
     private val viewModel: MyEventsViewModel
 ) : RecyclerView.Adapter<MyEventsViewHolder>() {
+	var selectedPos = RecyclerView.NO_POSITION
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyEventsViewHolder =
 		MyEventsViewHolder(
 			LayoutInflater.from(parent.context)
@@ -23,8 +24,11 @@ class MyEventsRecyclerViewAdapter(
 		try {
 			holder.bind(
 				myEvents[position],
-				position == 0 || myEvents[position - 1].date != myEvents[position].date, viewModel
+				position == 0 || myEvents[position - 1].date != myEvents[position].date,
+				selectedPos == position,
+				viewModel
 			)
+
 		} catch (t: Throwable) {
 			Log.e(this::class.java.toString(), "", t)
 		}

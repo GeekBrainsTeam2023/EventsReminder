@@ -26,6 +26,7 @@ class MyEventsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 	fun bind(
 		item: EventData,
 		isDataHeader: Boolean,
+		isSelected : Boolean,
 		viewModel: MyEventsViewModel,
 	) {
 		try {
@@ -46,6 +47,7 @@ class MyEventsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 						outputError(t)
 					}
 				}
+				myEventsRecyclerViewCardview.isSelected=isSelected
 			}
 		} catch (t: Throwable) {
 			outputError(t)
