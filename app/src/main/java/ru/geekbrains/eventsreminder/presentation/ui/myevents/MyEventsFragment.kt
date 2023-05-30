@@ -26,7 +26,7 @@ import javax.inject.Inject
 class MyEventsFragment : DaggerFragment() {
     private val binding: FragmentMyEventsBinding by viewBinding()
     private var myEventsAdapter: MyEventsRecyclerViewAdapter? = null
-
+    private val layoutManager = CenterLayoutManager(context)
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     private val myEventsViewModel by viewModels<MyEventsViewModel>({ this }) { viewModelFactory }
@@ -88,6 +88,7 @@ class MyEventsFragment : DaggerFragment() {
                 MyEventsRecyclerViewAdapter(myEventsViewModel.storedEvents, myEventsViewModel)
             RvListOfMyEvents.adapter = myEventsAdapter
             RvListOfMyEvents.isSaveEnabled = true
+            RvListOfMyEvents.setLayoutManager(layoutManager)
             myEventsAdapter!!.stateRestorationPolicy =
                 RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
         } catch (t: Throwable) {
@@ -159,9 +160,18 @@ class MyEventsFragment : DaggerFragment() {
             }
 
             arguments?.getLong(EVENT_ID)?.let {
-                events.indexOfFirst{event-> event.sourceId == it}.let {
-                if (it > 0 && it < events.count())
-                    callAfterRedrawViewTree {  binding.RvListOfMyEvents.smoothScrollToPosition(it)}
+                events.indexOfFirst{event-> event.sourceId == it}.let {pos->
+                if (pos >= 0 && pos < events.count())
+                    callAfterRedrawViewTree {
+                        with(binding.RvListOfMyEvents) {
+                            smoothScrollToPosition(pos)
+                            myEventsAdapter?.let{
+                                it.notifyItemChanged(pos)
+                                it.selectedPos = pos
+                                it.notifyItemChanged(pos)
+                           }
+                        }
+                    }
                 }
             }
             arguments?.clear()

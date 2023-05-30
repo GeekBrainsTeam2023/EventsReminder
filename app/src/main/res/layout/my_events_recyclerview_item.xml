@@ -26,6 +26,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/myEventsRecyclerViewCardview"
         style="@style/dashboard_recyclerview_cardview"
+
         app:cardCornerRadius="@dimen/dashboard_recyclerview_cardview_corner_radius"
         app:cardElevation="@dimen/dashboard_recyclerview_cardview_card_elevation"
         app:layout_constraintEnd_toEndOf="parent"
@@ -36,7 +37,8 @@
             android:id="@+id/myEventsRecyclerViewLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:background="@drawable/selector">
 
             <ImageView
                 android:id="@+id/myEventsRecyclerViewItemImage"
