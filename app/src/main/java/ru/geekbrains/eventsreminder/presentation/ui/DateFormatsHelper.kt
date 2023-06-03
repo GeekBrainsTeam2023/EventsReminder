@@ -1,5 +1,6 @@
 package ru.geekbrains.eventsreminder.presentation.ui
 
+import java.lang.Math.abs
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.temporal.ChronoUnit
@@ -8,15 +9,17 @@ import java.time.temporal.ChronoUnit
  * Перевести в словесное описание дней с сегоднешнего дня ("Сегодня", "Завтра", "Через 3 дня")
  * */
     fun LocalDate.toDaysSinceNowInWords() =
-        when (ChronoUnit.DAYS.between(LocalDate.now(), this).toInt()) {
-            0 -> "Сегодня"
-            1 -> "Завтра"
-            2 -> "Послезавтра"
-            else -> "Через " + RusIntPlural(
-                "д",
-                ChronoUnit.DAYS.between(LocalDate.now(), this).toInt(),
-                "ень", "ня", "ней"
-            ).toString()
+        ChronoUnit.DAYS.between(LocalDate.now(), this).toInt().let{
+            when (it) {
+                0 -> "Сегодня"
+                1 -> "Завтра"
+                2 -> "Послезавтра"
+                else ->(if (it > 2) "+ " else " -") + RusIntPlural(
+                    "д",
+                    kotlin.math.abs(it),
+                    "ень", "ня", "ней"
+                ).toString()
+            }
         }
 /**
  * Считая текущую дату днём рождения, вывести в словесной форме возраст к заданной дате

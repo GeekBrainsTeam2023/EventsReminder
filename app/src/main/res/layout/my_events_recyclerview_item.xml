@@ -4,12 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+
     <LinearLayout
         android:id="@+id/myEventsListTitlesLinearLayout"
-        app:layout_constraintBottom_toTopOf="@id/myEventsRecyclerViewCardview"
+        style="@style/my_events_and_dashboard_list_titles_linear_layout"
+        app:layout_constraintBottom_toTopOf="@id/myEventsDivider"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        style="@style/my_events_and_dashboard_list_titles_linear_layout">
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/textViewIntervalOfMyEvents"
@@ -23,71 +24,77 @@
             tools:text="22 may 2023" />
     </LinearLayout>
 
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/myEventsDivider"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        app:dividerColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@id/myEventsRecyclerViewCardview"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/myEventsListTitlesLinearLayout" />
+
     <androidx.cardview.widget.CardView
         android:id="@+id/myEventsRecyclerViewCardview"
         style="@style/dashboard_recyclerview_cardview"
-
         app:cardCornerRadius="@dimen/dashboard_recyclerview_cardview_corner_radius"
         app:cardElevation="@dimen/dashboard_recyclerview_cardview_card_elevation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/myEventsListTitlesLinearLayout">
+        app:layout_constraintTop_toBottomOf="@id/myEventsDivider">
 
         <LinearLayout
-            android:id="@+id/myEventsRecyclerViewLinearLayout"
+            android:id="@+id/myEventsRecyclerViewInternalLinearLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:background="@drawable/selector">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/myEventsRecyclerViewItemImage"
-                style="@style/my_events_and_dashboard_rv_item_image" />
+                style="@style/my_events_and_dashboard_rv_item_image"
+ />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/myEventsRecyclerViewInternalConstraintLayout"
-                style="@style/dashboard_recyclerview_internal_constraint_layout">
+            <TextView
+                android:id="@+id/myEventsRecyclerViewItemTitleTextview"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:gravity="center_horizontal"
+                android:textSize="17sp"
+                tools:text="name" />
 
-                <TextView
-                    android:id="@+id/myEventsRecyclerViewItemTitleTextview"
-                    style="@style/dashboard_recyclerview_item_title_textview"
-                    tools:text="name"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/myEventsRecyclerViewItemEventTimeTextview"
-                    style="@style/dashboard_recyclerview_item_event_time_textview"
-                    tools:text="time"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/myEventsRecyclerViewItemTitleTextview" />
+            <RelativeLayout
+                android:id="@+id/myEventsAgeTimeLinearLayout"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/myEventsRecyclerViewItemAgeTextview"
                     style="@style/dashboard_recyclerview_item_age_textview"
                     tools:text="birthday"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/myEventsRecyclerViewItemTitleTextview" />
+                    android:layout_alignParentTop="true"/>
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@+id/myEventsRecyclerViewItemEventTimeTextview"
+                    style="@style/dashboard_recyclerview_item_event_time_textview"
+                    android:layout_alignParentBottom="true"
+                    tools:text="time" />
 
+            </RelativeLayout>
         </LinearLayout>
+
     </androidx.cardview.widget.CardView>
-    <LinearLayout
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/myEventsRecyclerViewCardview"
-        style="@style/my_events_buttons_linear_layout">
-        <ImageButton
-            android:id="@+id/myEventsEditBtn"
-            android:src="@drawable/icon_edit_my_event_24"
-            style="@style/my_events_image_buttons" />
-        <ImageButton
-            android:id="@+id/myEventsDeleteBtn"
-            style="@style/my_events_image_buttons"
-            android:src="@drawable/icon_delete_my_event_24"
-            />
-    </LinearLayout>
+
+
+<!--    <LinearLayout-->
+<!--        style="@style/my_events_buttons_linear_layout"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+
+
+<!--        <ImageButton-->
+<!--            android:id="@+id/myEventsDeleteBtn"-->
+<!--            style="@style/my_events_image_buttons"-->
+<!--            android:src="@drawable/icon_delete_my_event_24" />-->
+<!--    </LinearLayout>-->
 </androidx.constraintlayout.widget.ConstraintLayout>
