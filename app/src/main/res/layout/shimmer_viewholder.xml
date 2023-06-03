@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_margin="@dimen/dashboard_events_list_titles_linearlayout_margin"
-        android:padding="@dimen/dashboard_events_list_titles_linearlayout_padding"
+        android:padding="@dimen/shimmer_linear_layout_padding"
         app:layout_constraintBottom_toTopOf="@id/dashboardRecyclerViewCardview"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">

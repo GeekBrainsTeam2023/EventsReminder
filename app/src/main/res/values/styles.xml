@@ -12,7 +12,7 @@
 
     <style name="dashboard_and_myevents_recyclerviews_list_of_events">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_margin">@dimen/recyclerview_list_of_events_layout_margin</item>
+<!--        <item name="android:layout_margin">@dimen/recyclerview_list_of_events_layout_margin</item>-->
         <item name="android:contentDescription">@string/dashboard_recyclerview_content_description
         </item>
     </style>
@@ -35,19 +35,16 @@
         <item name="android:textAlignment">viewStart</item>
 <!--        <item name="android:textColor">@color/light_blue_900</item>-->
         <item name="android:textSize">@dimen/textview_dashboard_interval_of_events_textsize</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="dashboard_recyclerview_cardview">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginStart">
-            @dimen/dashboard_recyclerview_cardview_margin_start
-        </item>
-        <item name="android:layout_marginTop">@dimen/dashboard_recyclerview_cardview_margin_top
-        </item>
-        <item name="android:layout_marginBottom">2dp</item>
-
-        <item name="android:padding">@dimen/dashboard_recyclerview_cardview_padding</item>
+<!--        <item name="android:layout_marginStart">-->
+<!--            @dimen/dashboard_recyclerview_cardview_margin_start-->
+<!--        </item>-->
+        <item name="android:paddingBottom">@dimen/dashboard_recyclerview_cardview_padding</item>
     </style>
 
     <style name="dashboard_recyclerview_internal_constraint_layout">
@@ -57,17 +54,19 @@
     </style>
 
     <style name="dashboard_recyclerview_item_title_textview">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:gravity">center_horizontal</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center</item>
+
         <item name="android:textSize">@dimen/dashboard_recyclerview_item_title_textview_textsize
         </item>
     </style>
 
     <style name="dashboard_recyclerview_item_event_time_textview">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:gravity">start</item>
+        <item name="android:gravity">end</item>
+
         <item name="android:paddingStart">
             @dimen/dashboard_recyclerview_item_event_date_textview_padding_start
         </item>
@@ -129,6 +128,7 @@
         <item name="android:textStyle">bold</item>
 <!--        <item name="android:layout_margin">@dimen/textview_dashboard_date_of_events_layout_margin-->
 <!--        </item>-->
+        <item name="android:textColor">@color/white</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
 
@@ -221,7 +221,7 @@
     <style name="my_events_image_buttons">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_margin">@dimen/my_events_image_btns_layout_margin</item>
+<!--        <item name="android:layout_margin">@dimen/my_events_image_btns_layout_margin</item>-->
         <item name="android:elevation">@dimen/my_events_image_btns_elevation</item>
         <item name="android:backgroundTint">@color/widget_first_line_default_color</item>
     </style>
@@ -230,9 +230,9 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:orientation">horizontal</item>
-        <item name="android:layout_marginBottom">
-            @dimen/my_events_buttons_linear_layout_margin_bottom
-        </item>
+<!--        <item name="android:layout_marginBottom">-->
+<!--            @dimen/my_events_buttons_linear_layout_margin_bottom-->
+<!--        </item>-->
     </style>
 
     <style name="my_events_and_dashboard_rv_item_image">
@@ -240,16 +240,16 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:layout_margin">@dimen/dashboard_item_image_layout_margin</item>
-        <item name="android:layout_weight">0.4</item>
+        <item name="android:layout_weight">0.2</item>
     </style>
 
     <style name="my_events_and_dashboard_list_titles_linear_layout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:orientation">horizontal</item>
-        <item name="android:layout_margin">@dimen/dashboard_events_list_titles_linearlayout_margin
-        </item>
-        <item name="android:padding">@dimen/dashboard_events_list_titles_linearlayout_padding</item>
+        <item name="android:background">@color/color_primary_dark</item>
+<!--        <item name="android:layout_margin">@dimen/dashboard_events_list_titles_linearlayout_margin-->
+<!--        </item>-->
     </style>
 
     <style name="title_for_inner_preference_category">

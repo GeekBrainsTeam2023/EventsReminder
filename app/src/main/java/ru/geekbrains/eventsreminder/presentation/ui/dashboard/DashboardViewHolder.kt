@@ -7,6 +7,7 @@ import android.provider.ContactsContract
 import android.util.Log
 import android.view.View
 import android.view.View.GONE
+import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.widget.Toast
 import androidx.navigation.findNavController
@@ -163,9 +164,9 @@ class DashboardViewHolder(view: View) : RecyclerView.ViewHolder(view) {
                 dashboardRecyclerViewItemImage.setImageResource(R.drawable.local_holiday_icon)
             else
                 dashboardRecyclerViewItemImage.setImageResource(R.drawable.holiday_icon_1)
-            dashboardRecyclerViewItemAgeTextview.visibility = GONE
+            dashboardRecyclerViewItemAgeTextview.visibility = INVISIBLE
             if (item.sourceType != EventSourceType.LOCAL || item.time == null)
-                dashboardRecyclerViewItemEventTimeTextview.visibility = GONE
+                dashboardRecyclerViewItemEventTimeTextview.visibility = INVISIBLE
             else {
                 dashboardRecyclerViewItemEventTimeTextview.visibility = VISIBLE
                 dashboardRecyclerViewItemEventTimeTextview.text =
@@ -186,13 +187,13 @@ class DashboardViewHolder(view: View) : RecyclerView.ViewHolder(view) {
                     activity.theme
                 )
             )
-            dashboardRecyclerViewItemAgeTextview.visibility = GONE
+            dashboardRecyclerViewItemAgeTextview.visibility = INVISIBLE
             if (item.sourceType == EventSourceType.LOCAL)
                 dashboardRecyclerViewItemImage.setImageResource(R.drawable.local_simple_event_icon)
             else
                 dashboardRecyclerViewItemImage.setImageResource(R.drawable.simple_event_icon)
             if (item.time == null)
-                dashboardRecyclerViewItemEventTimeTextview.visibility = GONE
+                dashboardRecyclerViewItemEventTimeTextview.visibility = INVISIBLE
             else {
                 dashboardRecyclerViewItemEventTimeTextview.visibility = VISIBLE
                 dashboardRecyclerViewItemEventTimeTextview.text =
@@ -221,8 +222,8 @@ class DashboardViewHolder(view: View) : RecyclerView.ViewHolder(view) {
                 dashboardRecyclerViewItemAgeTextview.text =
                     item.birthday.toAgeInWordsByDate(item.date)
                 dashboardRecyclerViewItemAgeTextview.visibility = VISIBLE
-            } else dashboardRecyclerViewItemAgeTextview.visibility = GONE
-            dashboardRecyclerViewItemEventTimeTextview.visibility = GONE
+            } else dashboardRecyclerViewItemAgeTextview.visibility = INVISIBLE
+            dashboardRecyclerViewItemEventTimeTextview.visibility = INVISIBLE
         } catch (t: Throwable) {
             logAndToast(t)
         }
