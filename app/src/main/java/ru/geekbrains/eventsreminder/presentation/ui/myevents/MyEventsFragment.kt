@@ -31,7 +31,6 @@ class MyEventsFragment : DaggerFragment() {
     private val binding: FragmentMyEventsBinding by viewBinding()
     private var myEventsAdapter: MyEventsRecyclerViewAdapter? = null
     private var itemTouchHelper: ItemTouchHelper? = null
-    private val layoutManager = CenterLayoutManager(context)
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     private val myEventsViewModel by viewModels<MyEventsViewModel>({ this }) { viewModelFactory }
@@ -45,6 +44,7 @@ class MyEventsFragment : DaggerFragment() {
         super.onAttach(context)
         try {
             myEventsViewModel.loadMyEvents()
+            binding.RvListOfMyEvents.layoutManager = CenterLayoutManager(context)
         } catch (t: Throwable) {
             myEventsViewModel.handleError(t)
         }
@@ -95,7 +95,7 @@ class MyEventsFragment : DaggerFragment() {
             itemTouchHelper!!.attachToRecyclerView(RvListOfMyEvents)
             RvListOfMyEvents.adapter = myEventsAdapter
             RvListOfMyEvents.isSaveEnabled = true
-            RvListOfMyEvents.setLayoutManager(layoutManager)
+
             myEventsAdapter!!.stateRestorationPolicy =
                 RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
         } catch (t: Throwable) {
@@ -170,15 +170,7 @@ class MyEventsFragment : DaggerFragment() {
         try {
             if (events.any()) showButtonAndHeader()
             else hideButtonAndHeader()
-            myEventsAdapter?.let {
-//                if (it.itemCount > events.count()) with(binding) {
-//                    RvListOfMyEvents.setAdapter(null);
-//                    RvListOfMyEvents.setLayoutManager(null);
-//                    RvListOfMyEvents.setAdapter(it);
-//                    RvListOfMyEvents.setLayoutManager(layoutManager);
-//                    it.notifyDataSetChanged()
-//                }
-            }
+
             val diffResult = DiffUtil.calculateDiff(
                 EventsDiffUtil(
                     myEventsViewModel.storedEvents,
@@ -244,6 +236,7 @@ class MyEventsFragment : DaggerFragment() {
             myEventsViewModel.handleError(t)
         }
     }
+
 
     override fun onDestroy() {
         myEventsAdapter = null
