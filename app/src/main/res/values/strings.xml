@@ -1,8 +1,5 @@
 <resources>
     <string name="app_name">Events Reminder</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
     <string name="dashboard_fragment_title">Список событий</string>
     <string name="menu_item_home_to_dashboard_title">список событий</string>
     <string name="menu_item_settings_title">настройки</string>
@@ -93,11 +90,11 @@
     <string name="create_event_dialog_choose_title">выберите тип события</string>
     <string name="create_simple_event_dialog_title">Другое событие</string>
     <string name="create_holiday_dialog_title">Праздник</string>
-    <string name="create_event_dialogs_edittext_hint">введите название события</string>
+    <string name="create_simple_event_dialog_edittext_hint">описание события</string>
     <string name="dialog_backward_btn_text">назад</string>
     <string name="dialog_forward_btn_text">ок</string>
     <string name="create_birthday_dialog_title">День Рождения</string>
-    <string name="create_birthday_dialog_edittext_hint">введите имя</string>
+    <string name="create_birthday_dialog_edittext_hint">кто именинник</string>
     <string name="radio_btn_title_birthday">день рождения</string>
     <string name="radio_btn_title_holiday">праздник</string>
     <string name="radio_btn_title_simple_event">другое</string>
@@ -114,4 +111,6 @@
     <string name="event_type_holiday">праздник</string>
     <string name="event_type_simple_event">запланированное событие</string>
     <string name="empty_local_events_textview_text">событий пока нет</string>
+    <string name="edit_holiday_dialog_edittext_hint">название праздника</string>
+    <string name="birthday_dialog_checkbox_text">без года рождения</string>
 </resources>

@@ -10,19 +10,19 @@
     <EditText
         android:id="@+id/input_simple_event_name_edit_text"
         style="@style/edit_event_dialogs_edittext"
-        android:hint="@string/create_event_dialogs_edittext_hint" />
+        android:hint="@string/create_simple_event_dialog_edittext_hint" />
 
     <DatePicker
         android:id="@+id/input_simple_event_date_picker"
+        android:theme="@style/date_picker"
         style="@style/edit_event_dialog_date_picker" />
     <CheckBox
         android:id="@+id/simpleDialogIsTimePickerEnabled"
         android:text="@string/checkbox_for_time_picker_text"
         style="@style/dialog_checkbox_to_enable_time_picker" />
-    <TimePicker
-        android:id="@+id/choose_simple_event_time_picker"
-        style="@style/edit_event_dialogs_time_picker"
-        android:visibility="gone"/>
+    <TextView
+        android:id="@+id/inputSimpleEventTime"
+        style="@style/input_event_time_textview" />
 
     <LinearLayout style="@style/edit_events_dialogs_btn_linearlayout">
 

@@ -1,6 +1,5 @@
 package ru.geekbrains.eventsreminder.presentation.ui.myevents
 
-import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -13,11 +12,12 @@ import ru.geekbrains.eventsreminder.databinding.MyEventsRecyclerviewItemBinding
 import ru.geekbrains.eventsreminder.domain.EventData
 import ru.geekbrains.eventsreminder.domain.EventSourceType
 import ru.geekbrains.eventsreminder.domain.EventType
-import ru.geekbrains.eventsreminder.presentation.ui.SUCCESS_ID_TO_NAVIGATE
+import ru.geekbrains.eventsreminder.presentation.ui.SOURCE_ID_TO_NAVIGATE
 import ru.geekbrains.eventsreminder.presentation.ui.findActivity
 import ru.geekbrains.eventsreminder.presentation.ui.toAgeInWordsByDate
 import ru.geekbrains.eventsreminder.presentation.ui.toDaysSinceNowInWords
 import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 class MyEventsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 	private val binding: MyEventsRecyclerviewItemBinding by viewBinding()
@@ -57,7 +57,7 @@ class MyEventsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 			when (item.type) {
 				EventType.BIRTHDAY -> {
 					bundle.putInt(
-						SUCCESS_ID_TO_NAVIGATE,
+						SOURCE_ID_TO_NAVIGATE,
 						R.id.action_editBirthdayDialog_to_myEvents
 					)
 					activity.findNavController(R.id.nav_host_fragment_activity_main)
@@ -65,14 +65,14 @@ class MyEventsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 				}
 
 				EventType.HOLIDAY -> {
-					bundle.putInt(SUCCESS_ID_TO_NAVIGATE, R.id.action_editHolidayDialog_to_myEvents)
+					bundle.putInt(SOURCE_ID_TO_NAVIGATE, R.id.action_editHolidayDialog_to_myEvents)
 					activity.findNavController(R.id.nav_host_fragment_activity_main)
 						.navigate(R.id.editHolidayDialog, bundle)
 				}
 
 				EventType.SIMPLE -> {
 					bundle.putInt(
-						SUCCESS_ID_TO_NAVIGATE,
+						SOURCE_ID_TO_NAVIGATE,
 						R.id.action_editSimpleEventDialog_to_myEvents
 					)
 					activity.findNavController(R.id.nav_host_fragment_activity_main)
@@ -121,7 +121,7 @@ class MyEventsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 				if (isDataHeader) {
 					View.VISIBLE.also {
 						textViewMyEventsDateOfEvents.text = item.date.format(
-							DateTimeFormatter.ofPattern("dd-MM-yyyy")
+							DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL)
 						)
 					}
 				} else View.GONE

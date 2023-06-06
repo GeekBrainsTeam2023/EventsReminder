@@ -25,6 +25,7 @@ import ru.geekbrains.eventsreminder.presentation.ui.findActivity
 import ru.geekbrains.eventsreminder.presentation.ui.toAgeInWordsByDate
 import ru.geekbrains.eventsreminder.presentation.ui.toDaysSinceNowInWords
 import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 
 class DashboardViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -143,7 +144,7 @@ class DashboardViewHolder(view: View) : RecyclerView.ViewHolder(view) {
                 if (isDataHeader) {
                     VISIBLE.also {
                         textViewDashboardDateOfEvents.text = item.date.format(
-                            DateTimeFormatter.ofPattern("dd-MM-yyyy")
+                            DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL)
                         )
                     }
                 } else GONE
