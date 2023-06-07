@@ -21,6 +21,7 @@ import ru.geekbrains.eventsreminder.di.ViewModelFactory
 import ru.geekbrains.eventsreminder.domain.*
 import ru.geekbrains.eventsreminder.presentation.MainActivity
 import ru.geekbrains.eventsreminder.presentation.ui.RusIntPlural
+import ru.geekbrains.eventsreminder.presentation.ui.SOURCE_ID_TO_NAVIGATE
 import ru.geekbrains.eventsreminder.service.NotificationService
 import ru.geekbrains.eventsreminder.usecases.EVENTS_DATA
 import ru.geekbrains.eventsreminder.usecases.MINUTES_FOR_START_NOTIFICATION
@@ -57,17 +58,7 @@ class DashboardFragment : DaggerFragment() {
 		super.onViewCreated(view, savedInstanceState)
 		try {
 			binding.swipeLayout.setOnRefreshListener {
-				try {
-					binding.swipeLayout.isRefreshing = false
-					dashboardViewModel.loadEvents()
-					Toast.makeText(
-						context,
-						getString(R.string.toast_msg_events_list_renewed),
-						Toast.LENGTH_SHORT
-					).show()
-				} catch (t: Throwable) {
-					dashboardViewModel.handleError(t)
-				}
+				onSwipeRefreshCalled()
 			}
 			dashboardAdapter = DashboardRecyclerViewAdapter(dashboardViewModel.storedFilteredEvents)
 			binding.recyclerViewListOfEvents.adapter = dashboardAdapter
@@ -76,41 +67,65 @@ class DashboardFragment : DaggerFragment() {
 				RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
 			val addEventFab = binding.dashboardFabAddEvent
 			addEventFab.setOnClickListener {
-				try {
-					findNavController().navigate(R.id.chooseNewEventTypeDialog)
-				} catch (t: Throwable) {
-					dashboardViewModel.handleError(t)
-				}
+				onFabClicked()
 			}
 			dashboardViewModel.statesLiveData.observe(this.viewLifecycleOwner) { appState ->
-				try {
-					when (appState) {
-						is AppState.SuccessState<*> -> {
-							val data = appState.data as List<EventData>
-							if (binding.shimmerLayout.isShimmerVisible) {
-								binding.shimmerLayout.hideShimmer()
-								binding.shimmerLayout.visibility = GONE
-								binding.recyclerViewListOfEvents.visibility = VISIBLE
-							}
-							showEvents(data)
-							updateWidget()
-							updateNotificationService(data)
-						}
-
-						is AppState.LoadingState -> {
-							//shimmer animation is on fragment load
-						}
-
-						is AppState.ErrorState -> {
-							logAndToast(appState.error)
-						}
-					}
-				} catch (t: Throwable) {
-					logAndToast(t)
-				}
+				processAppState(appState)
 			}
 		} catch (t: Throwable) {
 			dashboardViewModel.handleError(t)
+		}
+	}
+
+	private fun onFabClicked() {
+		try {
+			val bundle = Bundle()
+			bundle.putInt(SOURCE_ID_TO_NAVIGATE, R.id.homeToDashboard)
+			findNavController().navigate(R.id.chooseNewEventTypeDialog, bundle)
+		} catch (t: Throwable) {
+			dashboardViewModel.handleError(t)
+		}
+	}
+
+	private fun onSwipeRefreshCalled() {
+		try {
+			binding.swipeLayout.isRefreshing = false
+			dashboardViewModel.loadEvents()
+			Toast.makeText(
+				context,
+				getString(R.string.toast_msg_events_list_renewed),
+				Toast.LENGTH_SHORT
+			).show()
+		} catch (t: Throwable) {
+			dashboardViewModel.handleError(t)
+		}
+	}
+
+	private fun processAppState(appState: AppState) {
+		try {
+			when (appState) {
+				is AppState.SuccessState<*> -> {
+					val data = appState.data as List<EventData>
+					if (binding.shimmerLayout.isShimmerVisible) {
+						binding.shimmerLayout.hideShimmer()
+						binding.shimmerLayout.visibility = GONE
+						binding.recyclerViewListOfEvents.visibility = VISIBLE
+					}
+					showEvents(data)
+					updateWidget()
+					updateNotificationService(data)
+				}
+
+				is AppState.LoadingState -> {
+					//shimmer animation is on fragment load
+				}
+
+				is AppState.ErrorState -> {
+					logAndToast(appState.error)
+				}
+			}
+		} catch (t: Throwable) {
+			logAndToast(t)
 		}
 	}
 

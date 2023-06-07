@@ -1,5 +1,6 @@
 package ru.geekbrains.eventsreminder.presentation.ui.myevents
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
@@ -7,7 +8,9 @@ import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.android.support.DaggerFragment
@@ -16,17 +19,21 @@ import ru.geekbrains.eventsreminder.databinding.FragmentMyEventsBinding
 import ru.geekbrains.eventsreminder.di.ViewModelFactory
 import ru.geekbrains.eventsreminder.domain.AppState
 import ru.geekbrains.eventsreminder.domain.EventData
+import ru.geekbrains.eventsreminder.presentation.MainActivity
 import ru.geekbrains.eventsreminder.presentation.ui.EVENT_ID
 import ru.geekbrains.eventsreminder.presentation.ui.RusIntPlural
+import ru.geekbrains.eventsreminder.presentation.ui.SOURCE_ID_TO_NAVIGATE
 import ru.geekbrains.eventsreminder.presentation.ui.callAfterRedrawViewTree
 import ru.geekbrains.eventsreminder.presentation.ui.dashboard.EventsDiffUtil
+import ru.geekbrains.eventsreminder.widget.AppWidget
 import javax.inject.Inject
 
 
 class MyEventsFragment : DaggerFragment() {
     private val binding: FragmentMyEventsBinding by viewBinding()
     private var myEventsAdapter: MyEventsRecyclerViewAdapter? = null
-    private val layoutManager = CenterLayoutManager(context)
+    private var itemTouchHelper: ItemTouchHelper? = null
+
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     private val myEventsViewModel by viewModels<MyEventsViewModel>({ this }) { viewModelFactory }
@@ -40,6 +47,7 @@ class MyEventsFragment : DaggerFragment() {
         super.onAttach(context)
         try {
             myEventsViewModel.loadMyEvents()
+
         } catch (t: Throwable) {
             myEventsViewModel.handleError(t)
         }
@@ -58,6 +66,16 @@ class MyEventsFragment : DaggerFragment() {
         super.onViewCreated(view, savedInstanceState)
         try {
             binding.applyMarkupOptions()
+            val addEventFab = binding.myEventsFabAddEvent
+            addEventFab.setOnClickListener {
+                try {
+                    val bundle = Bundle()
+                    bundle.putInt(SOURCE_ID_TO_NAVIGATE, R.id.myEvents)
+                    findNavController().navigate(R.id.chooseNewEventTypeDialog, bundle)
+                } catch (t: Throwable) {
+                    myEventsViewModel.handleError(t)
+                }
+            }
             myEventsViewModel.statesLiveData.observe(this.viewLifecycleOwner) { appState ->
                 processAppState(appState)
             }
@@ -84,12 +102,17 @@ class MyEventsFragment : DaggerFragment() {
             }
             clearAllLocalEventsBtn.setOnClickListener { confirmDeletionOfAllEventsDialog() }
             myEventsAdapter =
-                MyEventsRecyclerViewAdapter(myEventsViewModel.storedEvents, myEventsViewModel)
+                MyEventsRecyclerViewAdapter(
+                    myEventsViewModel.storedEvents,
+                    myEventsViewModel, requireContext()
+                )
+            itemTouchHelper = ItemTouchHelper(ItemTouchHelperCallback(myEventsAdapter!!))
+            itemTouchHelper!!.attachToRecyclerView(RvListOfMyEvents)
             RvListOfMyEvents.adapter = myEventsAdapter
             RvListOfMyEvents.isSaveEnabled = true
-            RvListOfMyEvents.setLayoutManager(layoutManager)
             myEventsAdapter!!.stateRestorationPolicy =
                 RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+            RvListOfMyEvents.layoutManager = CenterLayoutManager(context)
         } catch (t: Throwable) {
             myEventsViewModel.handleError(t)
         }
@@ -101,6 +124,7 @@ class MyEventsFragment : DaggerFragment() {
                 is AppState.SuccessState<*> -> {
                     val data = appState.data as List<EventData>
                     showEvents(data)
+                    updateWidget()
                 }
 
                 is AppState.LoadingState -> {
@@ -116,12 +140,23 @@ class MyEventsFragment : DaggerFragment() {
         }
     }
 
-    private fun logAndToast(t:Throwable) = logAndToast(t,this::class.java.toString())
+    private fun updateWidget() {
+        try {
+            requireActivity().runOnUiThread {
+                AppWidget.sendRefreshBroadcast(requireActivity() as MainActivity)
+            }
+        } catch (t: Throwable) {
+            myEventsViewModel.handleError(t)
+        }
+    }
 
-    private fun logAndToast(t: Throwable, tag:String?) {
+    private fun logAndToast(t: Throwable) = logAndToast(t, this::class.java.toString())
+
+    private fun logAndToast(t: Throwable, tag: String?) {
         try {
             Log.e(tag, "", t)
-            Toast.makeText(requireContext().applicationContext, t.toString(), Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext().applicationContext, t.toString(), Toast.LENGTH_LONG)
+                .show()
         } catch (_: Throwable) {
         }
     }
@@ -146,10 +181,12 @@ class MyEventsFragment : DaggerFragment() {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun showEvents(events: List<EventData>) {
         try {
             if (events.any()) showButtonAndHeader()
             else hideButtonAndHeader()
+
             val diffResult = DiffUtil.calculateDiff(
                 EventsDiffUtil(
                     myEventsViewModel.storedEvents,
@@ -158,7 +195,10 @@ class MyEventsFragment : DaggerFragment() {
             )
             myEventsViewModel.storedEvents.clear()
             myEventsViewModel.storedEvents.addAll(events)
-            myEventsAdapter?.let { diffResult.dispatchUpdatesTo(it) }
+            myEventsAdapter?.let {
+
+                diffResult.dispatchUpdatesTo(it)
+            }
             binding.textViewMyEventsHeader.text = buildString {
                 append("всего ")
                 append(
@@ -170,25 +210,35 @@ class MyEventsFragment : DaggerFragment() {
                 )
             }
 
+            callAfterRedrawViewTree {
+                onceScrollToEvent(events)
+            }
+
+        } catch (t: Throwable) {
+            myEventsViewModel.handleError(t)
+        }
+    }
+
+    private fun onceScrollToEvent(events: List<EventData>) {
+        try {
             arguments?.getLong(EVENT_ID)?.let {
-                events.indexOfFirst{event-> event.sourceId == it}.let {pos->
-                if (pos >= 0 && pos < events.count())
-                    callAfterRedrawViewTree {
+                events.indexOfFirst { event -> event.sourceId == it }.let { pos ->
+                    if (pos >= 0 && pos < events.count()) {
                         with(binding.RvListOfMyEvents) {
                             smoothScrollToPosition(pos)
-                            myEventsAdapter?.let{
+                            myEventsAdapter?.let {
                                 it.notifyItemChanged(pos)
                                 it.selectedPos = pos
                                 it.notifyItemChanged(pos)
-                           }
+                            }
                         }
                     }
                 }
             }
-            arguments?.clear()
         } catch (t: Throwable) {
             myEventsViewModel.handleError(t)
         }
+        arguments?.clear()
     }
 
     private fun confirmDeletionOfAllEventsDialog() {
@@ -199,6 +249,7 @@ class MyEventsFragment : DaggerFragment() {
                 .setPositiveButton(getString(R.string.delete_local_events_dialog_positive_btn)) { dialog, id ->
                     try {
                         myEventsViewModel.clearAllLocalEvents()
+                        updateWidget()
                         hideButtonAndHeader()
                     } catch (t: Throwable) {
                         myEventsViewModel.handleError(t)

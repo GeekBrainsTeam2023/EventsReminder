@@ -9,6 +9,7 @@ import ru.geekbrains.eventsreminder.domain.EventData
 import ru.geekbrains.eventsreminder.domain.EventType
 import ru.geekbrains.eventsreminder.domain.ResourceState
 import ru.geekbrains.eventsreminder.domain.SettingsData
+import ru.geekbrains.eventsreminder.presentation.ui.safeWithYear
 import ru.geekbrains.eventsreminder.repo.Repo
 import ru.geekbrains.eventsreminder.repo.cache.CacheRepo
 import java.lang.Integer.max
@@ -170,18 +171,18 @@ class DashboardViewModel @Inject constructor(
 		try {
 			event.birthday?.let {
 				for (curYear in startDate.year..endDate.year) {
-					if (it.withYear(curYear).isAfter(startDate)
-						&& it.withYear(curYear).isBefore(endDate)
-						|| it.withYear(curYear).isEqual(startDate)
+					if (it.safeWithYear(curYear).isAfter(startDate)
+						&& it.safeWithYear(curYear).isBefore(endDate)
+						|| it.safeWithYear(curYear).isEqual(startDate)
 					) {
 						mapToSort.getOrPut(
-							it.withYear(curYear)
+							it.safeWithYear(curYear)
 						) { mutableListOf() }.add(
 							EventData(
 								EventType.BIRTHDAY,
 								event.period,
 								event.birthday,
-								it.withYear(curYear),
+								it.safeWithYear(curYear),
 								event.time,
 								event.timeNotifications,
 								event.name,

@@ -11,7 +11,7 @@ import ru.geekbrains.eventsreminder.R
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.android.support.DaggerDialogFragment
 import ru.geekbrains.eventsreminder.databinding.CreateNewEventDialogFragmentBinding
-import ru.geekbrains.eventsreminder.presentation.ui.SUCCESS_ID_TO_NAVIGATE
+import ru.geekbrains.eventsreminder.presentation.ui.SOURCE_ID_TO_NAVIGATE
 
 
 class CreateNewEventDialogFragment : DaggerDialogFragment() {
@@ -35,64 +35,61 @@ class CreateNewEventDialogFragment : DaggerDialogFragment() {
         try {
             binding.negativeBtnChooseNewEventType.setOnClickListener {
                 try {
-                    findNavController().navigate(R.id.homeToDashboard)
+                    findNavController().navigateUp()
                 } catch (t: Throwable) {
                     logAndToast(t)
                 }
             }
             binding.positiveBtnChooseNewEventType.setOnClickListener {
-                try {
-                    val bundle = Bundle()
-                    when (binding.radioGroupChooseNewEventType.checkedRadioButtonId) {
-                        R.id.radiobtnBirthday -> {
-                            bundle.putInt(
-                                SUCCESS_ID_TO_NAVIGATE,
-                                R.id.action_editBirthdayDialog_to_homeToDashboard
-                            )
-                            findNavController().navigate(
-                                R.id.action_chooseNewEventTypeDialog_to_editBirthdayDialog,
-                                bundle
-                            )
-                        }
+                onPositiveBtnClicked()
+            }
+        } catch (t: Throwable) {
+            logAndToast(t)
+        }
+    }
 
-                        R.id.radiobtnHoliday -> {
-                            bundle.putInt(
-                                SUCCESS_ID_TO_NAVIGATE,
-                                R.id.action_editHolidayDialog_to_homeToDashboard
-                            )
-                            findNavController().navigate(
-                                R.id.action_chooseNewEventTypeDialog_to_editHolidayDialog,
-                                bundle
-                            )
-                        }
+    private fun onPositiveBtnClicked() {
+        try {
+            val bundle = Bundle()
+            bundle.putInt(
+                SOURCE_ID_TO_NAVIGATE,
+                arguments?.getInt(SOURCE_ID_TO_NAVIGATE) ?: R.id.homeToDashboard
+            )
+            when (binding.radioGroupChooseNewEventType.checkedRadioButtonId) {
+                R.id.radiobtnBirthday -> {
+                    findNavController().navigate(
+                        R.id.action_chooseNewEventTypeDialog_to_editBirthdayDialog,
+                        bundle
+                    )
+                }
 
-                        R.id.radiobtnAnotherType -> {
-                            bundle.putInt(
-                                SUCCESS_ID_TO_NAVIGATE,
-                                R.id.action_editSimpleEventDialog_to_homeToDashboard
-                            )
-                            findNavController().navigate(
-                                R.id.action_chooseNewEventTypeDialog_to_editSimpleEventDialog,
-                                bundle
-                            )
-                        }
+                R.id.radiobtnHoliday -> {
+                    findNavController().navigate(
+                        R.id.action_chooseNewEventTypeDialog_to_editHolidayDialog,
+                        bundle
+                    )
+                }
 
-                        else -> {
-                            Toast.makeText(
-                                context,
-                                getString(R.string.toast_msg_create_event_dialog),
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    }
-                } catch (t: Throwable) {
-                    logAndToast(t)
+                R.id.radiobtnAnotherType -> {
+                    findNavController().navigate(
+                        R.id.action_chooseNewEventTypeDialog_to_editSimpleEventDialog,
+                        bundle
+                    )
+                }
+
+                else -> {
+                    Toast.makeText(
+                        context,
+                        getString(R.string.toast_msg_create_event_dialog),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         } catch (t: Throwable) {
             logAndToast(t)
         }
     }
+
     private fun logAndToast(t:Throwable) = logAndToast(t,this::class.java.toString())
 
     private fun logAndToast(t: Throwable, tag:String?) {

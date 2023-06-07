@@ -110,7 +110,10 @@ class MainActivity : DaggerAppCompatActivity() {
             ).show()
 
             Handler(Looper.getMainLooper()).postDelayed(
-                { doubleBackToExitPressedOnce = false },
+                {
+                    try{doubleBackToExitPressedOnce = false}
+                    catch (_:Throwable){}
+                },
                 2000
             )
         } catch (t: Throwable) {

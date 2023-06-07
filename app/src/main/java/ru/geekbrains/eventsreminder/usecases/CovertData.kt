@@ -4,11 +4,13 @@ import ru.geekbrains.eventsreminder.domain.EventData
 import ru.geekbrains.eventsreminder.domain.EventNotificationData
 import ru.geekbrains.eventsreminder.domain.EventSourceType
 import ru.geekbrains.eventsreminder.domain.EventType
+import ru.geekbrains.eventsreminder.presentation.ui.MAX_YEAR
+import ru.geekbrains.eventsreminder.presentation.ui.safeWithYear
 import java.time.*
 
 fun getCelebrationDateForBirthDay(birthDay: LocalDate) =
 	with(LocalDate.now()) {
-		if (birthDay.withYear(year) < this)
+		if (birthDay.safeWithYear(year) < this)
 			LocalDate.of(year + 1, birthDay.month, birthDay.dayOfMonth)
 		else
 			LocalDate.of(year, birthDay.month, birthDay.dayOfMonth)
@@ -21,7 +23,7 @@ fun extractBirthday(text: String): LocalDate {
 	return LocalDate.of(
 		if (numbers.size == 3)
 			numbers[0].toInt()
-		else 9999,
+		else MAX_YEAR,
 		numbers[numbers.size - 2].toInt(),
 		numbers[numbers.size - 1].toInt()
 	)
@@ -46,7 +48,7 @@ fun addBirthDayEventFromLocalEdit(
 	minutesBeforeNotification: Int?,
 	sourceId: Long = 0
 ): EventData =
-	with(LocalDate.of(year ?: 9999, month, day)) {
+	with(LocalDate.of(year ?: MAX_YEAR, month, day)) {
 		EventData(
 			EventType.BIRTHDAY,
 			null,

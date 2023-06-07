@@ -1,6 +1,5 @@
 package ru.geekbrains.eventsreminder.presentation.ui.myevents
 
-import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -13,16 +12,18 @@ import ru.geekbrains.eventsreminder.databinding.MyEventsRecyclerviewItemBinding
 import ru.geekbrains.eventsreminder.domain.EventData
 import ru.geekbrains.eventsreminder.domain.EventSourceType
 import ru.geekbrains.eventsreminder.domain.EventType
-import ru.geekbrains.eventsreminder.presentation.ui.SUCCESS_ID_TO_NAVIGATE
+import ru.geekbrains.eventsreminder.presentation.ui.SOURCE_ID_TO_NAVIGATE
 import ru.geekbrains.eventsreminder.presentation.ui.findActivity
 import ru.geekbrains.eventsreminder.presentation.ui.toAgeInWordsByDate
 import ru.geekbrains.eventsreminder.presentation.ui.toDaysSinceNowInWords
 import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 class MyEventsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 	private val binding: MyEventsRecyclerviewItemBinding by viewBinding()
 	private val activity = view.context.findActivity()
-
+	lateinit var mViewModel: MyEventsViewModel
+	lateinit var mItem : EventData
 	fun bind(
 		item: EventData,
 		isDataHeader: Boolean,
@@ -30,19 +31,14 @@ class MyEventsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 		viewModel: MyEventsViewModel,
 	) {
 		try {
+			mItem = item
+			mViewModel = viewModel
 			with(binding) {
 				setEventSpecificMarkup(item)
 				setCommonEventVisualisation(item, isDataHeader)
-				myEventsEditBtn.setOnClickListener {
+					itemView.setOnClickListener {
 					try {
 						openEditDialog(item)
-					} catch (t: Throwable) {
-						outputError(t)
-					}
-				}
-				myEventsDeleteBtn.setOnClickListener {
-					try {
-						confirmDeletionOfLocalEventDialog(viewModel, item)
 					} catch (t: Throwable) {
 						outputError(t)
 					}
@@ -61,7 +57,7 @@ class MyEventsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 			when (item.type) {
 				EventType.BIRTHDAY -> {
 					bundle.putInt(
-						SUCCESS_ID_TO_NAVIGATE,
+						SOURCE_ID_TO_NAVIGATE,
 						R.id.action_editBirthdayDialog_to_myEvents
 					)
 					activity.findNavController(R.id.nav_host_fragment_activity_main)
@@ -69,14 +65,14 @@ class MyEventsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 				}
 
 				EventType.HOLIDAY -> {
-					bundle.putInt(SUCCESS_ID_TO_NAVIGATE, R.id.action_editHolidayDialog_to_myEvents)
+					bundle.putInt(SOURCE_ID_TO_NAVIGATE, R.id.action_editHolidayDialog_to_myEvents)
 					activity.findNavController(R.id.nav_host_fragment_activity_main)
 						.navigate(R.id.editHolidayDialog, bundle)
 				}
 
 				EventType.SIMPLE -> {
 					bundle.putInt(
-						SUCCESS_ID_TO_NAVIGATE,
+						SOURCE_ID_TO_NAVIGATE,
 						R.id.action_editSimpleEventDialog_to_myEvents
 					)
 					activity.findNavController(R.id.nav_host_fragment_activity_main)
@@ -125,7 +121,7 @@ class MyEventsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 				if (isDataHeader) {
 					View.VISIBLE.also {
 						textViewMyEventsDateOfEvents.text = item.date.format(
-							DateTimeFormatter.ofPattern("dd-MM-yyyy")
+							DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL)
 						)
 					}
 				} else View.GONE
@@ -143,9 +139,9 @@ class MyEventsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 				)
 			)
 			myEventsRecyclerViewItemImage.setImageResource(R.drawable.local_holiday_icon)
-			myEventsRecyclerViewItemAgeTextview.visibility = View.GONE
+			myEventsRecyclerViewItemAgeTextview.visibility = View.INVISIBLE
 			if (item.sourceType != EventSourceType.LOCAL || item.time == null)
-				myEventsRecyclerViewItemEventTimeTextview.visibility = View.GONE
+				myEventsRecyclerViewItemEventTimeTextview.visibility = View.INVISIBLE
 			else {
 				myEventsRecyclerViewItemEventTimeTextview.visibility = View.VISIBLE
 				myEventsRecyclerViewItemEventTimeTextview.text =
@@ -166,10 +162,10 @@ class MyEventsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 					activity.theme
 				)
 			)
-			myEventsRecyclerViewItemAgeTextview.visibility = View.GONE
+			myEventsRecyclerViewItemAgeTextview.visibility = View.INVISIBLE
 			myEventsRecyclerViewItemImage.setImageResource(R.drawable.local_simple_event_icon)
 			if (item.time == null)
-				myEventsRecyclerViewItemEventTimeTextview.visibility = View.GONE
+				myEventsRecyclerViewItemEventTimeTextview.visibility = View.INVISIBLE
 			else {
 				myEventsRecyclerViewItemEventTimeTextview.visibility = View.VISIBLE
 				myEventsRecyclerViewItemEventTimeTextview.text =
@@ -195,33 +191,8 @@ class MyEventsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 				myEventsRecyclerViewItemAgeTextview.text =
 					item.birthday.toAgeInWordsByDate(item.date)
 				myEventsRecyclerViewItemAgeTextview.visibility = View.VISIBLE
-			} else myEventsRecyclerViewItemAgeTextview.visibility = View.GONE
-			myEventsRecyclerViewItemEventTimeTextview.visibility = View.GONE
-		} catch (t: Throwable) {
-			outputError(t)
-		}
-	}
-
-	private fun confirmDeletionOfLocalEventDialog(viewModel: MyEventsViewModel, item: EventData) {
-		try {
-			val builder = AlertDialog.Builder(activity)
-			builder.setTitle(activity.getString(R.string.delete_local_event_dialog_title) + " " + "\"${item.name}\"" + "?")
-				.setCancelable(true)
-				.setPositiveButton(activity.getString(R.string.delete_local_events_dialog_positive_btn)) { _, _ ->
-					try {
-						viewModel.deleteMyEvent(item)
-						Toast.makeText(
-							activity.applicationContext,
-							activity.getString(R.string.toast_delete_local_event_dialod),
-							Toast.LENGTH_SHORT
-						).show()
-					} catch (t: Throwable) {
-						outputError(t)
-					}
-				}
-				.setNegativeButton(activity.getString(R.string.delete_local_events_dialog_negative_btn)) { _, _ -> }
-			val dlg = builder.create()
-			dlg.show()
+			} else myEventsRecyclerViewItemAgeTextview.visibility = View.INVISIBLE
+			myEventsRecyclerViewItemEventTimeTextview.visibility = View.INVISIBLE
 		} catch (t: Throwable) {
 			outputError(t)
 		}

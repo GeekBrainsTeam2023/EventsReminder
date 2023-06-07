@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.ViewTreeObserver
 import androidx.fragment.app.Fragment
 
+
 tailrec fun Context.findActivity(): Activity {
     if (this is Activity) {
         return this
@@ -52,4 +53,5 @@ fun Fragment.callAfterRedrawViewTree(func2Call: () -> Unit) {
         })
     }
 }
+
 
