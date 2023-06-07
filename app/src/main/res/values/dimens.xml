@@ -9,7 +9,7 @@ http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
     -->
     <dimen name="widget_margin">0dp</dimen>
     <dimen name="appwidget_listview_divider_height">1dp</dimen>
-    <dimen name="textview_dashboard_interval_of_events_layout_margin">5dp</dimen>
+    <dimen name="textview_dashboard_interval_of_events_layout_margin_start">4dp</dimen>
     <dimen name="textview_dashboard_interval_of_events_textsize">16sp</dimen>
     <dimen name="dashboard_recyclerview_cardview_margin_start">2dp</dimen>
     <dimen name="dashboard_recyclerview_cardview_margin_top">2dp</dimen>
@@ -46,10 +46,11 @@ http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
     <dimen name="rv_list_of_my_events_padding_bottom">100dp</dimen>
     <dimen name="empty_local_events_textview_text_size">30sp</dimen>
     <dimen name="empty_local_events_textview_margin">8dp</dimen>
-    <dimen name="my_events_image_btns_layout_margin">2dp</dimen>
-    <dimen name="my_events_image_btns_elevation">7dp</dimen>
-    <dimen name="my_events_buttons_linear_layout_margin_bottom">5dp</dimen>
+<!--    <dimen name="my_events_image_btns_layout_margin">2dp</dimen>-->
+<!--    <dimen name="my_events_image_btns_elevation">7dp</dimen>-->
+<!--    <dimen name="my_events_buttons_linear_layout_margin_bottom">5dp</dimen>-->
     <dimen name="title_for_preference_textview_padding">8dp</dimen>
     <dimen name="title_for_preference_textview_textsize">16sp</dimen>
     <dimen name="shimmer_linear_layout_padding">5dp</dimen>
+    <dimen name="input_event_time_textview_textsize">16sp</dimen>
 </resources>

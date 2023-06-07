@@ -4,6 +4,7 @@ package ru.geekbrains.eventsreminder.repo
 import ru.geekbrains.eventsreminder.domain.EventData
 import ru.geekbrains.eventsreminder.domain.EventType
 import ru.geekbrains.eventsreminder.domain.ResourceState
+import ru.geekbrains.eventsreminder.presentation.ui.safeWithYear
 import ru.geekbrains.eventsreminder.repo.local.LocalRepo
 import ru.geekbrains.eventsreminder.repo.remote.IPhoneCalendarRepo
 import ru.geekbrains.eventsreminder.repo.remote.PhoneContactsRepo
@@ -38,7 +39,7 @@ class RepoImpl @Inject constructor(
 				listEvents.addAll(
 					calendarRepo.loadEventCalendar(daysForShowEvents).filter { calendarEvent ->
 						!(calendarEvent.type == EventType.BIRTHDAY && listEvents.any { contactEvent ->
-							contactEvent.birthday?.withYear(0) == calendarEvent.birthday?.withYear(0) &&
+							contactEvent.birthday?.safeWithYear(0) == calendarEvent.birthday?.safeWithYear(0) &&
 									contactEvent.type == EventType.BIRTHDAY &&
 									calendarEvent.name.contains(
 										contactEvent.name + " – "

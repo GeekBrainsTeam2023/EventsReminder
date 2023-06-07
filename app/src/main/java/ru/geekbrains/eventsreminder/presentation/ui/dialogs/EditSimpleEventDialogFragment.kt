@@ -39,15 +39,7 @@ class EditSimpleEventDialogFragment : AbsDaggerDialogFragment() {
 					applyExistingEventData(it)
 					sourceId = it.sourceId
 				}
-				chooseSimpleEventTimePicker.setIs24HourView(true)
-				simpleDialogIsTimePickerEnabled.setOnCheckedChangeListener { _, isChecked ->
-					try {
-						if (isChecked) chooseSimpleEventTimePicker.visibility = View.VISIBLE
-						else chooseSimpleEventTimePicker.visibility = View.GONE
-					} catch (t: Throwable) {
-						logAndToast(t)
-					}
-				}
+				setTimePickerListeners(inputSimpleEventTime,requireContext(),simpleDialogIsTimePickerEnabled)
 				negativeBtnCreateSimpleEvent.setOnClickListener {
 					try {
 						findNavController().navigateUp()
@@ -56,20 +48,7 @@ class EditSimpleEventDialogFragment : AbsDaggerDialogFragment() {
 					}
 				}
 				positiveBtnCreateSimpleEvent.setOnClickListener {
-					try {
-						if (inputSimpleEventNameEditText.text.trim().isEmpty()) {
-							Toast.makeText(
-								requireContext(),
-								getString(R.string.toast_msg_create_holiday_simple_dialog),
-								Toast.LENGTH_SHORT
-							).show()
-						} else {
-							saveEvent(sourceId)
-							navigateOnSuccess()
-						}
-					} catch (t: Throwable) {
-						logAndToast(t)
-					}
+					onPositiveBtnClicked(sourceId)
 				}
 			}
 		} catch (t: Throwable) {
@@ -77,16 +56,40 @@ class EditSimpleEventDialogFragment : AbsDaggerDialogFragment() {
 		}
 	}
 
+	private fun EditSimpleEventDialogFragmentBinding.onPositiveBtnClicked(
+		sourceId: Long
+	) {
+		try {
+			if (inputSimpleEventNameEditText.text.trim().isEmpty()) {
+				Toast.makeText(
+					requireContext(),
+					getString(R.string.toast_msg_create_holiday_simple_dialog),
+					Toast.LENGTH_SHORT
+				).show()
+			} else {
+				saveEvent(sourceId)
+				navigateOnSuccess()
+			}
+		} catch (t: Throwable) {
+			logAndToast(t)
+		}
+	}
+
+	override fun getSuccessIdToNavigate(sourceNavigationId: Int) =
+		when (sourceNavigationId){
+			R.id.myEvents -> R.id.action_editSimpleEventDialog_to_myEvents
+			R.id.homeToDashboard -> R.id.action_editSimpleEventDialog_to_homeToDashboard
+			else -> sourceNavigationId
+		}
+
 	private fun EditSimpleEventDialogFragmentBinding.saveEvent(
 		sourceId: Long
 	) {
 		try {
-			val hours =
-				if (simpleDialogIsTimePickerEnabled.isChecked) chooseSimpleEventTimePicker.hour
-				else null
-			val minutes =
-				if (simpleDialogIsTimePickerEnabled.isChecked) chooseSimpleEventTimePicker.minute
-				else null
+				if (!simpleDialogIsTimePickerEnabled.isChecked) {
+					hours = null
+					minutes = null
+				}
 			dashboardViewModel.addLocalEvent(
 				addSimpleEventFromLocalEdit(
 					inputSimpleEventNameEditText.text.toString(),
@@ -112,10 +115,14 @@ class EditSimpleEventDialogFragment : AbsDaggerDialogFragment() {
 				eventData.date.dayOfMonth, null
 			)
 			eventData.time?.let {
-				chooseSimpleEventTimePicker.hour = it.hour
-				chooseSimpleEventTimePicker.minute = it.minute
 				simpleDialogIsTimePickerEnabled.isChecked = true
-				chooseSimpleEventTimePicker.visibility = View.VISIBLE
+				hours = it.hour
+				minutes = it.minute
+				inputSimpleEventTime.text = buildString {
+					append("%02d".format(hours))
+					append(":%02d".format(minutes))
+				}
+				inputSimpleEventTime.visibility = View.VISIBLE
 			}
 		} catch (t: Throwable) {
 			logAndToast(t)

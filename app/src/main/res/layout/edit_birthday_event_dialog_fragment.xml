@@ -22,19 +22,41 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/titleCreateBirthdayEvent" />
 
+    <CheckBox
+        android:id="@+id/noYearCheckbox"
+        android:text="@string/birthday_dialog_checkbox_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/inputNameBirthdayEditText"
+        style="@style/no_birth_year_checkbox" />
+
     <DatePicker
-        android:id="@+id/inputBirthdayDatePicker"
+        android:id="@+id/inputBirthdayCalendarPicker"
+        android:theme="@style/date_picker"
         style="@style/edit_event_dialog_date_picker"
         android:layout_height="0dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/inputNameBirthdayEditText" />
+        app:layout_constraintTop_toBottomOf="@id/noYearCheckbox" />
+
+    <DatePicker
+        android:id="@+id/inputBirthdaySpinnerPicker"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:datePickerMode="spinner"
+        android:spinnersShown="true"
+        android:calendarViewShown="false"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/inputBirthdayCalendarPicker" />
 
     <LinearLayout
         style="@style/edit_events_dialogs_btn_linearlayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/inputBirthdayDatePicker">
+        app:layout_constraintTop_toBottomOf="@id/inputBirthdaySpinnerPicker">
 
         <Button
             android:id="@+id/negativeBtnCreateBirthdayEvent"

@@ -12,6 +12,8 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <!-- DatePickerDialog-->
+        <item name="android:datePickerDialogTheme">@style/date_picker</item>
     </style>
 
     <style name="Theme.EventsReminder.AppWidgetContainerParent" parent="@android:style/Theme.DeviceDefault">
@@ -28,4 +30,5 @@
         <!-- Apply padding to avoid the content of the widget colliding with the rounded corners -->
         <item name="appWidgetPadding">16dp</item>
     </style>
+
 </resources>
