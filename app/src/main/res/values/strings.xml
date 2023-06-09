@@ -62,16 +62,16 @@
     <string name="add_widget">Add widget</string>
     <string name="app_widget_description">This is an app widget description</string>
     <string name="widget_item_preview_first_title">День Труда</string>
-    <string name="widget_item_preview_first_date">01-05-2023</string>
+    <string name="widget_item_preview_first_date">(01.05.2023)</string>
     <string name="widget_item_preview_first_time">03:00</string>
     <string name="widget_second_item_preview_title">Александр Сергеевич Пушкин</string>
-    <string name="widget_second_item_preview_date">06-06-1799</string>
+    <string name="widget_second_item_preview_date">(06.06.1799)</string>
     <string name="widget_second_item_preview_age">224 года</string>
     <string name="widget_third_item_preview_title">Иван Федорович Крузенштерн</string>
-    <string name="widget_third_item_preview_date">19-11-1770</string>
+    <string name="widget_third_item_preview_date">(19.11.1770)</string>
     <string name="widget_third_item_preview_age">253 года</string>
     <string name="widget_forth_item_preview_title">Запуск салюта!</string>
-    <string name="widget_forth_item_preview_date">01-01-2024</string>
+    <string name="widget_forth_item_preview_date">(01.01.2024)</string>
     <string name="widget_forth_item_preview_time">03:00</string>
     <string name="widget_fontsize_toast">\"размер шрифта виджета \"</string>
     <string name="toast_text_for_settings_fragment_failed_to_get_preferences">failed to get preferences</string>
@@ -113,4 +113,5 @@
     <string name="empty_local_events_textview_text">событий пока нет</string>
     <string name="edit_holiday_dialog_edittext_hint">название праздника</string>
     <string name="birthday_dialog_checkbox_text">без года рождения</string>
+    <string name="fifth_widget_preview_item_date">(01.05.2024)</string>
 </resources>

@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/widgetPreviewLinearLayout"
     android:orientation="vertical">
 
     <LinearLayout
@@ -11,21 +12,10 @@
         android:layout_height="wrap_content"
         android:background="@color/widget_first_line_default_color"
         android:orientation="horizontal">
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="3dp"
-            android:layout_weight="1"
-            android:maxLines="1"
-            android:text="@string/widget_item_preview_first_title"
-            android:textColor="@color/purple_700"
-            android:textSize="13sp"
-            android:textStyle="normal" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/firstPreviewItemDate"
             android:layout_margin="3dp"
             android:layout_weight="0"
             android:maxLines="1"
@@ -33,14 +23,14 @@
             android:textColor="@color/purple_700"
             android:textSize="13sp"
             android:textStyle="normal" />
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/firstPreviewItemTitle"
             android:layout_margin="3dp"
-            android:layout_weight="0"
+            android:layout_weight="1"
             android:maxLines="1"
-            android:text="@string/widget_item_preview_first_time"
+            android:text="@string/widget_item_preview_first_title"
             android:textColor="@color/purple_700"
             android:textSize="13sp"
             android:textStyle="normal" />
@@ -52,10 +42,21 @@
         android:layout_height="wrap_content"
         android:background="@color/widget_second_line_default_color"
         android:orientation="horizontal">
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/secondPreviewItemDate"
+            android:layout_margin="3dp"
+            android:layout_weight="0"
+            android:maxLines="1"
+            android:text="@string/widget_second_item_preview_date"
+            android:textColor="@color/light_blue_900"
+            android:textSize="13sp"
+            android:textStyle="normal" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/secondPreviewItemTitle"
             android:layout_margin="3dp"
             android:layout_weight="1"
             android:maxLines="1"
@@ -67,17 +68,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="3dp"
-            android:layout_weight="0"
-            android:maxLines="1"
-            android:text="@string/widget_second_item_preview_date"
-            android:textColor="@color/light_blue_900"
-            android:textSize="13sp"
-            android:textStyle="normal" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/secondPreviewItemAge"
             android:layout_margin="3dp"
             android:layout_weight="0"
             android:maxLines="1"
@@ -96,10 +87,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/secondItemPreviewLinearLayout">
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/thirdPreviewItemDate"
+            android:layout_margin="3dp"
+            android:layout_weight="0"
+            android:maxLines="1"
+            android:text="@string/widget_third_item_preview_date"
+            android:textColor="@color/light_blue_900"
+            android:textSize="13sp"
+            android:textStyle="normal" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/thirdPreviewItemTitle"
             android:layout_margin="3dp"
             android:layout_weight="1"
             android:maxLines="1"
@@ -111,17 +113,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="3dp"
-            android:layout_weight="0"
-            android:maxLines="1"
-            android:text="@string/widget_third_item_preview_date"
-            android:textColor="@color/light_blue_900"
-            android:textSize="13sp"
-            android:textStyle="normal" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/thirdPreviewItemAge"
             android:layout_margin="3dp"
             android:layout_weight="0"
             android:maxLines="1"
@@ -140,21 +132,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/thirdItemPreviewLinearLayout">
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="3dp"
-            android:layout_weight="1"
-            android:maxLines="1"
-            android:text="@string/widget_forth_item_preview_title"
-            android:textColor="@color/widget_simple_event_default_font_color"
-            android:textSize="13sp"
-            android:textStyle="normal" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/forthPreviewItemDate"
             android:layout_margin="3dp"
             android:layout_weight="0"
             android:maxLines="1"
@@ -162,15 +143,55 @@
             android:textColor="@color/widget_simple_event_default_font_color"
             android:textSize="13sp"
             android:textStyle="normal" />
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/forthPreviewItemTime"
             android:layout_margin="3dp"
             android:layout_weight="0"
             android:maxLines="1"
             android:text="@string/widget_forth_item_preview_time"
             android:textColor="@color/widget_simple_event_default_font_color"
+            android:textSize="13sp"
+            android:textStyle="normal" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/forthPreviewItemTitle"
+            android:layout_margin="3dp"
+            android:layout_weight="1"
+            android:maxLines="1"
+            android:text="@string/widget_forth_item_preview_title"
+            android:textColor="@color/widget_simple_event_default_font_color"
+            android:textSize="13sp"
+            android:textStyle="normal" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/fifthItemPreviewLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/widget_first_line_default_color"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/fifthPreviewItemDate"
+            android:layout_margin="3dp"
+            android:layout_weight="0"
+            android:maxLines="1"
+            android:text="@string/fifth_widget_preview_item_date"
+            android:textColor="@color/purple_700"
+            android:textSize="13sp"
+            android:textStyle="normal" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/fifthPreviewItemTitle"
+            android:layout_margin="3dp"
+            android:layout_weight="1"
+            android:maxLines="1"
+            android:text="@string/widget_item_preview_first_title"
+            android:textColor="@color/purple_700"
             android:textSize="13sp"
             android:textStyle="normal" />
     </LinearLayout>

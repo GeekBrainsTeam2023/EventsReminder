@@ -70,6 +70,7 @@ abstract class AbsDaggerDialogFragment: DaggerDialogFragment() {
                 context,R.style.date_picker, timeSetListener, cal.get(Calendar.HOUR_OF_DAY),
                 cal.get(Calendar.MINUTE), true
             )
+
             timePickerDialog.setOnCancelListener {
                 try{
                 if (textView.visibility == View.GONE) checkBox.isChecked = false

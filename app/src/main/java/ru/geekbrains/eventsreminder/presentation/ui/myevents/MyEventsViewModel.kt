@@ -24,7 +24,7 @@ import javax.inject.Inject
 class MyEventsViewModel @Inject constructor(
 	val repo: Repo,
 	val cache: CacheRepo,
-	val settingsData: SettingsData
+	private val settingsData: SettingsData
 ) : ViewModel(), LifecycleObserver {
 	val statesLiveData: MutableLiveData<AppState> = MutableLiveData()
 	val cachedLocalEvents = mutableListOf<EventData>()

@@ -34,9 +34,11 @@ constructor(
 ) :
     RemoteViewsService.RemoteViewsFactory {
     private var mCursor: Cursor? = null
+
     companion object {
         const val TAG = "ru.geekbrains.eventsreminder.widget.WidgetRemoteViewsFactory"
     }
+
     override fun onCreate() {}
     override fun onDataSetChanged() {
         try {
@@ -64,6 +66,7 @@ constructor(
             throw t
         }
     }
+
     override fun onDestroy() {
         try {
             mCursor?.close()
@@ -72,9 +75,11 @@ constructor(
             throw t
         }
     }
+
     override fun getCount(): Int {
         return mCursor?.count ?: 0
     }
+
     override fun getViewAt(position: Int): RemoteViews? {
         try {
             if (position == AdapterView.INVALID_POSITION ||
@@ -132,7 +137,9 @@ constructor(
                 rv.setInt(R.id.itemAppWidget, "setBackgroundColor", altBackColor)
             }
             mCursor?.let {
-                val eventSource = it.getString(it.getColumnIndexOrThrow(Contract.COL_EVENT_SOURCE_TYPE))
+                val eventSource =
+                    it.getString(it.getColumnIndexOrThrow(Contract.COL_EVENT_SOURCE_TYPE))
+                cleanupTextViews(rv)
                 when (it.getString(it.getColumnIndexOrThrow(Contract.COL_EVENT_TYPE))) {
                     EventType.SIMPLE.toString() -> {
                         setWidgetLineParameters(
@@ -142,22 +149,26 @@ constructor(
                         )
                         bindTimeWithEventTimeTextView(isShowingEventTime, rv, it)
                     }
+
                     EventType.HOLIDAY.toString() -> {
                         setWidgetLineParameters(
                             rv,
                             holidayTextColor,
                             sizeFontWidget
                         )
-                        bindTimeWithEventTimeTextView(isShowingEventTime &&
-                                eventSource==EventSourceType.LOCAL.toString(), rv, it)
+                        bindTimeWithEventTimeTextView(
+                            isShowingEventTime &&
+                                    eventSource == EventSourceType.LOCAL.toString(), rv, it
+                        )
                     }
+
                     EventType.BIRTHDAY.toString() -> {
                         setWidgetLineParameters(
                             rv,
                             birthdayTextColor,
                             sizeFontWidget
                         )
-                        bindAgeWithEventTimeTextView(isShowingAge, rv, it)
+                        bindAgeWithWidgetAgeTextView(isShowingAge, rv, it)
                     }
                 }
                 rv.setTextViewText(
@@ -166,9 +177,9 @@ constructor(
                 )
                 if (isShowingEventDate) {
                     with(it.getInt(it.getColumnIndexOrThrow(Contract.COL_EVENT_DATE))) {
-                        val date = String.format("%02d", this % 100) + "-" +
-                                String.format("%02d", this / 100 % 100) + "-" +
-                                (this / 10000).toString()
+                        val date = String.format("(%02d", this % 100) + "." +
+                                String.format("%02d", this / 100 % 100) + "." +
+                                (this / 10000) + ")"
                         rv.setTextViewText(R.id.widgetEventDateTextview, date)
                         rv.setViewVisibility(R.id.widgetEventDateTextview, View.VISIBLE)
                     }
@@ -182,33 +193,49 @@ constructor(
             throw t
         }
     }
-    private fun bindAgeWithEventTimeTextView(
+
+    private fun cleanupTextViews(rv: RemoteViews) {
+        rv.setViewVisibility(R.id.widgetAgeTextview, View.GONE)
+        rv.setTextViewText(R.id.widgetAgeTextview, "")
+        rv.setViewVisibility(R.id.widgetEventTimeTextview, View.GONE)
+        rv.setTextViewText(R.id.widgetEventTimeTextview, "")
+    }
+
+    private fun bindAgeWithWidgetAgeTextView(
         isShowingAge: Boolean,
         rv: RemoteViews,
         it: Cursor
     ) {
         try {
             if (isShowingAge) {
-                rv.setTextViewText(R.id.widgetEventTimeTextview, "")
                 it.getIntOrNull(it.getColumnIndexOrThrow(Contract.COL_BIRTHDAY))?.let { birthday ->
                     val date = it.getInt(it.getColumnIndexOrThrow(Contract.COL_EVENT_DATE))
                         .toLocalDate()
                     val birthdate = birthday.toLocalDate()
                     if (date >= birthdate) {
-                        val age = birthdate
-                            .toAgeInWordsByDate(date)
-                        rv.setTextViewText(R.id.widgetEventTimeTextview, age)
-                        rv.setViewVisibility(R.id.widgetEventTimeTextview, View.VISIBLE)
+                        val age = buildString {
+                            append("(")
+                            append(
+                                birthdate
+                                    .toAgeInWordsByDate(date)
+                            )
+                            append(")")
+                        }
+                        rv.setTextViewText(R.id.widgetAgeTextview, age)
+                        rv.setViewVisibility(R.id.widgetAgeTextview, View.VISIBLE)
                         return
                     }
                 }
+            } else {
+                rv.setViewVisibility(R.id.widgetAgeTextview, View.GONE)
+                rv.setTextViewText(R.id.widgetAgeTextview, "")
             }
-            rv.setViewVisibility(R.id.widgetEventTimeTextview, View.GONE)
         } catch (t: Throwable) {
             Log.e(TAG, null, t)
             throw t
         }
     }
+
     private fun bindTimeWithEventTimeTextView(
         isShowingEventTime: Boolean,
         rv: RemoteViews,
@@ -220,8 +247,8 @@ constructor(
                 rv.setTextViewText(
                     R.id.widgetEventTimeTextview,
                     time.toLocalTime().format(
-                            DateTimeFormatter.ofPattern("HH:mm")
-                        )
+                        DateTimeFormatter.ofPattern("HH:mm")
+                    )
                 )
                 rv.setViewVisibility(R.id.widgetEventTimeTextview, View.VISIBLE)
             } else rv.setViewVisibility(R.id.widgetEventTimeTextview, View.GONE)
@@ -230,12 +257,14 @@ constructor(
             throw t
         }
     }
+
     private fun setWidgetLineParameters(rv: RemoteViews, color: Int, sizeFontWidget: Float) {
         try {
             with(rv) {
                 setTextColor(R.id.widgetEventTitleTextview, color)
                 setTextColor(R.id.widgetEventDateTextview, color)
                 setTextColor(R.id.widgetEventTimeTextview, color)
+                setTextColor(R.id.widgetAgeTextview, color)
                 setTextViewTextSize(
                     R.id.widgetEventTitleTextview, COMPLEX_UNIT_SP,
                     sizeFontWidget
@@ -248,18 +277,25 @@ constructor(
                     R.id.widgetEventTimeTextview, COMPLEX_UNIT_SP,
                     sizeFontWidget
                 )
+                setTextViewTextSize(
+                    R.id.widgetAgeTextview, COMPLEX_UNIT_SP,
+                    sizeFontWidget
+                )
             }
         } catch (t: Throwable) {
             Log.e(TAG, null, t)
             throw t
         }
     }
+
     override fun getLoadingView(): RemoteViews? {
         return null
     }
+
     override fun getViewTypeCount(): Int {
         return 1
     }
+
     override fun getItemId(position: Int): Long {
         try {
             mCursor?.let {
@@ -267,17 +303,18 @@ constructor(
             }
             return position.toLong()
         } catch (t: Throwable) {
-           logErr(t)
-           throw t
+            logErr(t)
+            throw t
         }
     }
+
     override fun hasStableIds(): Boolean {
         return true
     }
 
-    private fun logErr(t:Throwable) = logErr(t,this::class.java.toString())
+    private fun logErr(t: Throwable) = logErr(t, this::class.java.toString())
 
-    private fun logErr(t: Throwable, TAG:String) {
+    private fun logErr(t: Throwable, TAG: String) {
         try {
             Log.e(TAG, "", t)
         } catch (_: Throwable) {

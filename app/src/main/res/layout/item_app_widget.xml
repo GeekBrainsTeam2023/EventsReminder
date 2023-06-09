@@ -4,21 +4,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal">
-
-    <TextView
-        android:id="@+id/widgetEventTitleTextview"
-        android:maxLines="1"
-        android:layout_weight = "1"
-        style="@style/widget_event_title_textview" />
-
     <TextView
         android:id="@+id/widgetEventDateTextview"
         android:maxLines="1"
         android:layout_weight = "0"
         style="@style/widget_event_date_textview" />
-
     <TextView
         android:id="@+id/widgetEventTimeTextview"
+        android:maxLines="1"
+        android:layout_weight = "0"
+        style="@style/widget_event_time_textview" />
+    <TextView
+        android:id="@+id/widgetEventTitleTextview"
+        android:maxLines="1"
+        android:layout_weight = "1"
+        style="@style/widget_event_title_textview" />
+    <TextView
+        android:id="@+id/widgetAgeTextview"
         android:maxLines="1"
         android:layout_weight = "0"
         style="@style/widget_event_time_textview" />

@@ -24,7 +24,7 @@
     app:title="@string/title_show_event_interval_preference"
     app:summary="@string/summary_show_event_interval_preference"
     app:iconSpaceReserved="false"
-app:showSeekBarValue="true"
+    app:showSeekBarValue="true"
     app:min="1"
     android:max="365"
     app:useSimpleSummaryProvider="true"/>
@@ -91,7 +91,10 @@ app:showSeekBarValue="true"
         app:iconSpaceReserved="false"
         app:title="@string/widget_appearance_settings_preference_category"
         android:layout="@layout/title_for_preference_category">
-<PreferenceCategory
+        <ru.geekbrains.eventsreminder.presentation.ui.settings.WidgetPreviewPreference
+            android:key="widget_appearance_by_default"
+            android:layout="@layout/widget_preview"/>
+    <PreferenceCategory
     app:iconSpaceReserved="false"
     app:title="@string/font_preference_category_title"
     android:layout="@layout/title_for_inner_preference_category">
@@ -137,7 +140,6 @@ app:showSeekBarValue="true"
             android:defaultValue="#DCF3F3"/>
         </PreferenceCategory>
     </PreferenceCategory>
-
     <Preference
         app:iconSpaceReserved="false"
         app:key="@string/key_export_settings_preference"
@@ -146,5 +148,4 @@ app:showSeekBarValue="true"
         app:iconSpaceReserved="false"
         app:key="@string/key_import_settings_preference"
         app:title="@string/title_import_settings_preference" />
-
 </PreferenceScreen>

@@ -63,6 +63,7 @@ class SettingsFragment : PreferenceFragmentCompat(), HasAndroidInjector {
         SharedPreferences.OnSharedPreferenceChangeListener { preferences, key ->
             try {
                 (requireActivity() as MainActivity).setPreferences(preferences, key)
+                findPreference<WidgetPreviewPreference>("widget_appearance_by_default")?.renew()
             } catch (t: Throwable) {
                 outputError(t)
             }
@@ -93,6 +94,7 @@ class SettingsFragment : PreferenceFragmentCompat(), HasAndroidInjector {
             initDataSourcesPrefs()
             initNotificationPrefs()
             initWidgetDataPrefs()
+            initWidgetPreview()
             initWidgetLookFontPrefs()
             initWidgetLookBackgroundPrefs()
             initSettingsExportImportPrefs()
@@ -190,6 +192,16 @@ class SettingsFragment : PreferenceFragmentCompat(), HasAndroidInjector {
                     )
                 it.seekBarIncrement = 1
             }
+        } catch (t: Throwable) {
+            outputError(t)
+        }
+    }
+
+    private fun initWidgetPreview() {
+        try {
+            findPreference<WidgetPreviewPreference>("widget_appearance_by_default")?.applySettings(
+                settingsData
+            )
         } catch (t: Throwable) {
             outputError(t)
         }
