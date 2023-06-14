@@ -37,7 +37,7 @@ class CacheRepoImpl @Inject constructor(val context: Context) : CacheRepo {
                             EventData(
                                 EventType.valueOf(cur.getString(cur.getColumnIndexOrThrow(Contract.COL_EVENT_TYPE))),
                                 cur.getStringOrNull(cur.getColumnIndexOrThrow(Contract.COL_EVENT_PERIOD))
-                                    ?.let { PeriodType.valueOf(it) },
+                                    ?.let { PeriodType.fromString(it) },
                                 cur.getIntOrNull(cur.getColumnIndexOrThrow(Contract.COL_BIRTHDAY))
                                     ?.toLocalDate(),
                                 cur.getInt(cur.getColumnIndexOrThrow(Contract.COL_EVENT_DATE))

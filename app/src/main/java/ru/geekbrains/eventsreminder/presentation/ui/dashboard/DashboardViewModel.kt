@@ -9,7 +9,10 @@ import ru.geekbrains.eventsreminder.domain.EventData
 import ru.geekbrains.eventsreminder.domain.EventType
 import ru.geekbrains.eventsreminder.domain.ResourceState
 import ru.geekbrains.eventsreminder.domain.SettingsData
+import ru.geekbrains.eventsreminder.presentation.ui.MAX_YEAR
 import ru.geekbrains.eventsreminder.presentation.ui.safeWithYear
+import ru.geekbrains.eventsreminder.presentation.ui.toInt
+import ru.geekbrains.eventsreminder.presentation.ui.toLocalDate
 import ru.geekbrains.eventsreminder.repo.Repo
 import ru.geekbrains.eventsreminder.repo.cache.CacheRepo
 import java.lang.Integer.max
@@ -84,7 +87,22 @@ class DashboardViewModel @Inject constructor(
 				)
 				when (result) {
 					is ResourceState.SuccessState -> {
-						allEventsFromRepo = result.data
+						val dataWithBrededEvents = mutableListOf<EventData>()
+						val startDate =
+							Math.min(result.data.firstOrNull()?.date?.toInt() ?: (MAX_YEAR * 10000),
+								LocalDate.now().toInt())
+						result.data.forEach { event ->
+							if (event.period != null)
+								dataWithBrededEvents.addAll(
+									event.breedPeriodicEvents(
+										startDate.toLocalDate(),
+										LocalDate.now()
+											.plusDays(settingsData.daysForShowEvents.toLong())
+									)
+								)
+							else dataWithBrededEvents.add(event)
+						}
+						allEventsFromRepo = dataWithBrededEvents
 						applyFilterToAllEventsFromRepo(daysToPutInCache)
 						cacheRepo.renew(cachedEventsList)
 						statesLiveData.postValue(

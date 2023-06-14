@@ -11,10 +11,12 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import ru.geekbrains.eventsreminder.R
 import ru.geekbrains.eventsreminder.databinding.EditSimpleEventDialogFragmentBinding
 import ru.geekbrains.eventsreminder.domain.EventData
+import ru.geekbrains.eventsreminder.domain.PeriodType
 import ru.geekbrains.eventsreminder.usecases.addSimpleEventFromLocalEdit
 
 class EditSimpleEventDialogFragment : AbsDaggerDialogFragment() {
 	private val binding: EditSimpleEventDialogFragmentBinding by viewBinding()
+
 	override fun onCreateView(
 		inflater: LayoutInflater,
 		container: ViewGroup?,
@@ -35,11 +37,18 @@ class EditSimpleEventDialogFragment : AbsDaggerDialogFragment() {
 			processBundleArguments()
 			var sourceId = 0L
 			with(binding) {
+
+				initSpinnerValues(simpleEventPeriodValueSpinner)
+
 				eventData?.let {
 					applyExistingEventData(it)
 					sourceId = it.sourceId
 				}
+
 				setTimePickerListeners(inputSimpleEventTime,requireContext(),simpleDialogIsTimePickerEnabled)
+
+				setPeriodPickerListeners(isSimpleEventPeriodEnabled,simpleEventPeriodValueSpinner)
+
 				negativeBtnCreateSimpleEvent.setOnClickListener {
 					try {
 						findNavController().navigateUp()
@@ -92,6 +101,8 @@ class EditSimpleEventDialogFragment : AbsDaggerDialogFragment() {
 				}
 			dashboardViewModel.addLocalEvent(
 				addSimpleEventFromLocalEdit(
+					if (isSimpleEventPeriodEnabled.isChecked) selectedPeriod
+					else null,
 					inputSimpleEventNameEditText.text.toString(),
 					inputSimpleEventDatePicker.dayOfMonth,
 					inputSimpleEventDatePicker.month + 1,
@@ -123,6 +134,12 @@ class EditSimpleEventDialogFragment : AbsDaggerDialogFragment() {
 					append(":%02d".format(minutes))
 				}
 				inputSimpleEventTime.visibility = View.VISIBLE
+			}
+
+			eventData.period?.let {
+				isSimpleEventPeriodEnabled.isChecked = true
+				simpleEventPeriodValueSpinner.visibility = View.VISIBLE
+				simpleEventPeriodValueSpinner.setSelection(PeriodType.values().indexOf(it))
 			}
 		} catch (t: Throwable) {
 			logAndToast(t)

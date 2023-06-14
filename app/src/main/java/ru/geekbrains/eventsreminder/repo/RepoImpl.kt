@@ -22,6 +22,16 @@ class RepoImpl @Inject constructor(
 		isDataCalendar: Boolean
 	): ResourceState<List<EventData>> {
 		val listEvents = mutableListOf<EventData>()
+		try {
+			listEvents.addAll(localRepo.getList())
+		} catch (t: Throwable) {
+			return ResourceState.ErrorState(
+				Throwable(
+					"Ошибка заргрузки событий из списка пользователя",
+					t
+				)
+			)
+		}
 		if (isDataContact) {
 			try {
 				listEvents.addAll(contactsRepo.loadBirthDayEvents(daysForShowEvents))
@@ -55,16 +65,7 @@ class RepoImpl @Inject constructor(
 				)
 			}
 		}
-		try {
-			listEvents.addAll(localRepo.getList())
-		} catch (t: Throwable) {
-			return ResourceState.ErrorState(
-				Throwable(
-					"Ошибка заргрузки событий из списка пользователя",
-					t
-				)
-			)
-		}
+
 		return ResourceState.SuccessState(listEvents.toList())
 	}
 

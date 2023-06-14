@@ -19,6 +19,7 @@ import ru.geekbrains.eventsreminder.R
 import ru.geekbrains.eventsreminder.domain.EventSourceType
 import ru.geekbrains.eventsreminder.domain.EventType
 import ru.geekbrains.eventsreminder.presentation.ui.toAgeInWordsByDate
+import ru.geekbrains.eventsreminder.presentation.ui.toInt
 import ru.geekbrains.eventsreminder.presentation.ui.toLocalDate
 import ru.geekbrains.eventsreminder.presentation.ui.toLocalTime
 import ru.geekbrains.eventsreminder.repo.cache.Contract
@@ -51,14 +52,15 @@ constructor(
             mCursor?.close()
             val identityToken = Binder.clearCallingIdentity()
             val uri: Uri = Contract.PATH_EVENTS_URI
-            val toDate = with(LocalDate.now().plusDays(interval.toLong()))
-            { year * 10000 + month.value * 100 + dayOfMonth }
+            val fromDate = LocalDate.now().toInt()
+            val toDate = LocalDate.now().plusDays(interval.toLong()).toInt()
+
             mCursor = applicationContext.contentResolver.query(
                 uri,
                 null,
-                Contract.COL_EVENT_DATE + " < ?",
-                arrayOf(toDate.toString()),
-                Contract._ID + " ASC"
+                Contract.COL_EVENT_DATE + " BETWEEN ? AND ?",
+                arrayOf(fromDate.toString(),toDate.toString()),
+                Contract.COL_EVENT_DATE + " ASC"
             )
             Binder.restoreCallingIdentity(identityToken)
         } catch (t: Throwable) {
