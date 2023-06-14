@@ -10,6 +10,7 @@
         android:id="@+id/firstItemPreviewLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="@dimen/appwidget_relative_layout_padding"
         android:background="@color/widget_first_line_default_color"
         android:orientation="horizontal">
         <TextView
@@ -21,12 +22,16 @@
             android:maxLines="1"
             android:text="@string/widget_item_preview_first_date"
             android:textColor="@color/purple_700"
+            android:paddingStart="@dimen/widget_textview_padding_end"
+            android:paddingEnd="@dimen/widget_textview_padding_end"
             android:textSize="13sp"
             android:textStyle="normal" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/firstPreviewItemTitle"
+            android:paddingStart="@dimen/widget_textview_padding_end"
+            android:paddingEnd="@dimen/widget_textview_padding_end"
             android:layout_margin="3dp"
             android:layout_weight="1"
             android:maxLines="1"
@@ -40,11 +45,14 @@
         android:id="@+id/secondItemPreviewLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="@dimen/appwidget_relative_layout_padding"
         android:background="@color/widget_second_line_default_color"
         android:orientation="horizontal">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingStart="@dimen/widget_textview_padding_end"
+            android:paddingEnd="@dimen/widget_textview_padding_end"
             android:id="@+id/secondPreviewItemDate"
             android:layout_margin="3dp"
             android:layout_weight="0"
@@ -56,6 +64,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingStart="@dimen/widget_textview_padding_end"
+            android:paddingEnd="@dimen/widget_textview_padding_end"
             android:id="@+id/secondPreviewItemTitle"
             android:layout_margin="3dp"
             android:layout_weight="1"
@@ -69,6 +79,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/secondPreviewItemAge"
+            android:paddingStart="@dimen/widget_textview_padding_end"
+            android:paddingEnd="@dimen/widget_textview_padding_end"
             android:layout_margin="3dp"
             android:layout_weight="0"
             android:maxLines="1"
@@ -82,6 +94,7 @@
         android:id="@+id/thirdItemPreviewLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="@dimen/appwidget_relative_layout_padding"
         android:background="@color/widget_first_line_default_color"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
@@ -90,6 +103,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingStart="@dimen/widget_textview_padding_end"
+            android:paddingEnd="@dimen/widget_textview_padding_end"
             android:id="@+id/thirdPreviewItemDate"
             android:layout_margin="3dp"
             android:layout_weight="0"
@@ -101,6 +116,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingStart="@dimen/widget_textview_padding_end"
+            android:paddingEnd="@dimen/widget_textview_padding_end"
             android:id="@+id/thirdPreviewItemTitle"
             android:layout_margin="3dp"
             android:layout_weight="1"
@@ -114,6 +131,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/thirdPreviewItemAge"
+            android:paddingStart="@dimen/widget_textview_padding_end"
+            android:paddingEnd="@dimen/widget_textview_padding_end"
             android:layout_margin="3dp"
             android:layout_weight="0"
             android:maxLines="1"
@@ -127,6 +146,7 @@
         android:id="@+id/forthItemPreviewLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="@dimen/appwidget_relative_layout_padding"
         android:background="@color/widget_second_line_default_color"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
@@ -135,6 +155,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingStart="@dimen/widget_textview_padding_end"
+            android:paddingEnd="@dimen/widget_textview_padding_end"
             android:id="@+id/forthPreviewItemDate"
             android:layout_margin="3dp"
             android:layout_weight="0"
@@ -146,6 +168,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingStart="@dimen/widget_textview_padding_end"
+            android:paddingEnd="@dimen/widget_textview_padding_end"
             android:id="@+id/forthPreviewItemTime"
             android:layout_margin="3dp"
             android:layout_weight="0"
@@ -157,6 +181,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingStart="@dimen/widget_textview_padding_end"
+            android:paddingEnd="@dimen/widget_textview_padding_end"
             android:id="@+id/forthPreviewItemTitle"
             android:layout_margin="3dp"
             android:layout_weight="1"
@@ -170,11 +196,14 @@
         android:id="@+id/fifthItemPreviewLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="@dimen/appwidget_relative_layout_padding"
         android:background="@color/widget_first_line_default_color"
         android:orientation="horizontal">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingStart="@dimen/widget_textview_padding_end"
+            android:paddingEnd="@dimen/widget_textview_padding_end"
             android:id="@+id/fifthPreviewItemDate"
             android:layout_margin="3dp"
             android:layout_weight="0"
@@ -186,6 +215,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingStart="@dimen/widget_textview_padding_end"
+            android:paddingEnd="@dimen/widget_textview_padding_end"
             android:id="@+id/fifthPreviewItemTitle"
             android:layout_margin="3dp"
             android:layout_weight="1"

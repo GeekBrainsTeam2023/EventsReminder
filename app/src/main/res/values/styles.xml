@@ -269,7 +269,7 @@
     <style name="input_event_time_textview">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:visibility">gone</item>
+        <item name="android:visibility">invisible</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">@dimen/input_event_time_textview_textsize</item>
         <item name="android:textColor">@color/light_blue_900</item>

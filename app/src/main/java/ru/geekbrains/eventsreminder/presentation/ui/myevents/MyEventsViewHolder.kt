@@ -1,10 +1,8 @@
 package ru.geekbrains.eventsreminder.presentation.ui.myevents
 
-import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import ru.geekbrains.eventsreminder.R
@@ -12,7 +10,6 @@ import ru.geekbrains.eventsreminder.databinding.MyEventsRecyclerviewItemBinding
 import ru.geekbrains.eventsreminder.domain.EventData
 import ru.geekbrains.eventsreminder.domain.EventSourceType
 import ru.geekbrains.eventsreminder.domain.EventType
-import ru.geekbrains.eventsreminder.presentation.ui.SOURCE_ID_TO_NAVIGATE
 import ru.geekbrains.eventsreminder.presentation.ui.findActivity
 import ru.geekbrains.eventsreminder.presentation.ui.toAgeInWordsByDate
 import ru.geekbrains.eventsreminder.presentation.ui.toDaysSinceNowInWords
@@ -22,62 +19,24 @@ import java.time.format.FormatStyle
 class MyEventsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 	private val binding: MyEventsRecyclerviewItemBinding by viewBinding()
 	private val activity = view.context.findActivity()
-	lateinit var mViewModel: MyEventsViewModel
-	lateinit var mItem : EventData
 	fun bind(
 		item: EventData,
 		isDataHeader: Boolean,
 		isSelected : Boolean,
-		viewModel: MyEventsViewModel,
+		editor: EventEditor
 	) {
 		try {
-			mItem = item
-			mViewModel = viewModel
 			with(binding) {
 				setEventSpecificMarkup(item)
 				setCommonEventVisualisation(item, isDataHeader)
 					itemView.setOnClickListener {
 					try {
-						openEditDialog(item)
+						editor.openEditEvent(item)
 					} catch (t: Throwable) {
 						outputError(t)
 					}
 				}
 				myEventsRecyclerViewCardview.isSelected=isSelected
-			}
-		} catch (t: Throwable) {
-			outputError(t)
-		}
-	}
-
-	private fun openEditDialog(item: EventData) {
-		try {
-			val bundle = Bundle()
-			bundle.putParcelable(EventData::class.toString(), item)
-			when (item.type) {
-				EventType.BIRTHDAY -> {
-					bundle.putInt(
-						SOURCE_ID_TO_NAVIGATE,
-						R.id.action_editBirthdayDialog_to_myEvents
-					)
-					activity.findNavController(R.id.nav_host_fragment_activity_main)
-						.navigate(R.id.editBirthdayDialog, bundle)
-				}
-
-				EventType.HOLIDAY -> {
-					bundle.putInt(SOURCE_ID_TO_NAVIGATE, R.id.action_editHolidayDialog_to_myEvents)
-					activity.findNavController(R.id.nav_host_fragment_activity_main)
-						.navigate(R.id.editHolidayDialog, bundle)
-				}
-
-				EventType.SIMPLE -> {
-					bundle.putInt(
-						SOURCE_ID_TO_NAVIGATE,
-						R.id.action_editSimpleEventDialog_to_myEvents
-					)
-					activity.findNavController(R.id.nav_host_fragment_activity_main)
-						.navigate(R.id.editSimpleEventDialog, bundle)
-				}
 			}
 		} catch (t: Throwable) {
 			outputError(t)

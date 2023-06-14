@@ -4,6 +4,7 @@ import ru.geekbrains.eventsreminder.domain.EventData
 import ru.geekbrains.eventsreminder.domain.EventNotificationData
 import ru.geekbrains.eventsreminder.domain.EventSourceType
 import ru.geekbrains.eventsreminder.domain.EventType
+import ru.geekbrains.eventsreminder.domain.PeriodType
 import ru.geekbrains.eventsreminder.presentation.ui.MAX_YEAR
 import ru.geekbrains.eventsreminder.presentation.ui.safeWithYear
 import java.time.*
@@ -55,7 +56,7 @@ fun addBirthDayEventFromLocalEdit(
 			this,
 			getCelebrationDateForBirthDay(this),
 			null,
-			minutesBeforeNotification?.let { LocalTime.of(0, minutesBeforeNotification) },
+			minutesBeforeNotification?.let { LocalTime.of(it / 60, it % 60) },
 			name,
 			sourceId,
 			EventSourceType.LOCAL
@@ -63,6 +64,7 @@ fun addBirthDayEventFromLocalEdit(
 	}
 
 fun addHolidayEventFromLocalEdit(
+	period: PeriodType?,
 	name: String, day: Int, month: Int,
 	year: Int, hour: Int?, minute: Int?,
 	minutesBeforeNotification: Int?,
@@ -70,17 +72,18 @@ fun addHolidayEventFromLocalEdit(
 ): EventData =
 	EventData(
 		EventType.HOLIDAY,
-		null,
+		period,
 		null,
 		LocalDate.of(year, month, day),
 		hour?.let { minute?.let { LocalTime.of(hour, minute) } },
-		minutesBeforeNotification?.let { LocalTime.of(0, minutesBeforeNotification) },
+		minutesBeforeNotification?.let { LocalTime.of(it / 60, it % 60) },
 		name,
 		sourceId,
 		EventSourceType.LOCAL
 	)
 
 fun addSimpleEventFromLocalEdit(
+	period: PeriodType?,
 	name: String, day: Int, month: Int,
 	year: Int, hour: Int?, minute: Int?,
 	minutesBeforeNotification: Int?,
@@ -88,11 +91,11 @@ fun addSimpleEventFromLocalEdit(
 ): EventData =
 	EventData(
 		EventType.SIMPLE,
-		null,
+		period,
 		null,
 		LocalDate.of(year, month, day),
 		hour?.let { minute?.let { LocalTime.of(hour, minute) } },
-		minutesBeforeNotification?.let { LocalTime.of(0, minutesBeforeNotification) },
+		minutesBeforeNotification?.let { LocalTime.of(it / 60, it % 60) },
 		name,
 		sourceId,
 		EventSourceType.LOCAL

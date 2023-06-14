@@ -25,8 +25,10 @@ import androidx.preference.PreferenceManager
 import dagger.android.support.DaggerAppCompatActivity
 import ru.geekbrains.eventsreminder.R
 import ru.geekbrains.eventsreminder.databinding.ActivityMainBinding
+import ru.geekbrains.eventsreminder.domain.EventData
 import ru.geekbrains.eventsreminder.domain.SettingsData
 import ru.geekbrains.eventsreminder.service.NotificationService
+import ru.geekbrains.eventsreminder.usecases.EVENTS_DATA
 import ru.geekbrains.eventsreminder.usecases.MINUTES_FOR_START_NOTIFICATION
 import ru.geekbrains.eventsreminder.widget.AppWidget
 import javax.inject.Inject
@@ -219,6 +221,32 @@ class MainActivity : DaggerAppCompatActivity() {
     ) {
         try {
             initReminderRights()
+        } catch (t: Throwable) {
+            logAndToast(t)
+        }
+    }
+
+
+    fun updateWidget() {
+        try {
+            runOnUiThread {
+                AppWidget.sendRefreshBroadcast(this)
+            }
+        } catch (t: Throwable) {
+            logAndToast(t)
+        }
+    }
+
+    fun updateNotificationService(eventsList: List<EventData>) {
+        try {
+            startService(Intent(applicationContext, NotificationService::class.java).apply {
+                putExtra(
+                    MINUTES_FOR_START_NOTIFICATION,
+                    settings.minutesForStartNotification
+                )
+                putParcelableArrayListExtra(EVENTS_DATA, ArrayList(eventsList))
+            }
+            )
         } catch (t: Throwable) {
             logAndToast(t)
         }
