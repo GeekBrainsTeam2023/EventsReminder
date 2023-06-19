@@ -114,4 +114,5 @@
     <string name="edit_holiday_dialog_edittext_hint">название праздника</string>
     <string name="birthday_dialog_checkbox_text">без года рождения</string>
     <string name="fifth_widget_preview_item_date">(01.05.2024)</string>
+    <string name="client_id">1036319382432-k74da1rcnkgu12jr8nq9csda8cb6nrb1.apps.googleusercontent.com</string>
 </resources>

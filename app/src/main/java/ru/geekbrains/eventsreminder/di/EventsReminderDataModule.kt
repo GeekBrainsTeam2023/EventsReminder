@@ -9,7 +9,7 @@ import ru.geekbrains.eventsreminder.repo.cache.CacheRepo
 import ru.geekbrains.eventsreminder.repo.cache.CacheRepoImpl
 import ru.geekbrains.eventsreminder.repo.local.LocalRepo
 import ru.geekbrains.eventsreminder.repo.local.LocalRepoImp
-import ru.geekbrains.eventsreminder.repo.remote.IPhoneCalendarRepo
+import ru.geekbrains.eventsreminder.repo.remote.PhoneCalendarRepo
 import ru.geekbrains.eventsreminder.repo.remote.PhoneCalendarRepoImpl
 import ru.geekbrains.eventsreminder.repo.remote.PhoneContactsRepo
 import ru.geekbrains.eventsreminder.repo.remote.PhoneContactsRepoImpl
@@ -28,13 +28,13 @@ interface EventsReminderDataModule {
 
     @Binds
     fun bindCacheRepo(
-        caheRepo : CacheRepoImpl
+        cacheRepo : CacheRepoImpl
     ): CacheRepo
 
     @Binds
-    fun bindIPhoneCalendarRepo(
+    fun bindPhoneCalendarRepo(
         iPhoneCalendarRepo: PhoneCalendarRepoImpl
-    ): IPhoneCalendarRepo
+    ): PhoneCalendarRepo
 
     @Binds
     fun bindPhoneContactsRepo(

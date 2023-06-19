@@ -6,14 +6,14 @@ import ru.geekbrains.eventsreminder.domain.EventType
 import ru.geekbrains.eventsreminder.domain.ResourceState
 import ru.geekbrains.eventsreminder.presentation.ui.safeWithYear
 import ru.geekbrains.eventsreminder.repo.local.LocalRepo
-import ru.geekbrains.eventsreminder.repo.remote.IPhoneCalendarRepo
+import ru.geekbrains.eventsreminder.repo.remote.PhoneCalendarRepo
 import ru.geekbrains.eventsreminder.repo.remote.PhoneContactsRepo
 import javax.inject.Inject
 
 class RepoImpl @Inject constructor(
 	private val localRepo: LocalRepo,
 	private val contactsRepo: PhoneContactsRepo,
-	private val calendarRepo: IPhoneCalendarRepo
+	private val calendarRepo: PhoneCalendarRepo
 ) : Repo {
 	@Throws(Throwable::class)
 	override suspend fun loadData(

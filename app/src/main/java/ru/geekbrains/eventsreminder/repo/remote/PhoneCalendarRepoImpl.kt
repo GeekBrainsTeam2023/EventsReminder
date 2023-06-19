@@ -4,7 +4,9 @@ import android.content.ContentUris
 import android.content.Context
 import android.icu.util.Calendar
 import android.icu.util.TimeZone
+import android.net.Uri
 import android.provider.CalendarContract
+import android.text.format.DateUtils
 import android.util.Log
 import android.widget.Toast
 import androidx.core.database.getLongOrNull
@@ -18,34 +20,30 @@ import javax.inject.Inject
 
 class PhoneCalendarRepoImpl @Inject constructor(
 	val context: Context
-) : IPhoneCalendarRepo {
-	override fun loadEventCalendar(endDay: Int): List<EventData> {
+) : PhoneCalendarRepo {
+	override fun loadEventCalendar(daysToSeek: Int): List<EventData> {
 		val listBirthDayEvents = arrayListOf<EventData>()
 		try {
 			val startDay = LocalDate.now()
-			val calDate = Calendar.getInstance()
-			calDate.timeZone = TimeZone.getDefault()
-			calDate.set(startDay.year, startDay.monthValue - 1, startDay.dayOfMonth, 0, 0, 0)
-			val start = calDate.timeInMillis
-			calDate.add(Calendar.DAY_OF_MONTH, endDay)
-			val end = calDate.timeInMillis
-			val order = CalendarContract.Instances.BEGIN + " ASC"
-			val eventsUriBuilder = CalendarContract.Instances.CONTENT_URI
-				.buildUpon()
-			ContentUris.appendId(eventsUriBuilder, start)
-			ContentUris.appendId(eventsUriBuilder, end)
-			val eventsUri = eventsUriBuilder.build()
+			val calendarTime = Calendar.getInstance().apply { timeZone = TimeZone.getDefault() }.timeInMillis
+			val startTick = calendarTime - DateUtils.DAY_IN_MILLIS
+			val endTick = calendarTime + DateUtils.DAY_IN_MILLIS * daysToSeek
+			val uriBuilder = CalendarContract.Instances.CONTENT_URI
+				.buildUpon().apply {
+					ContentUris.appendId(this, startTick)
+					ContentUris.appendId(this, endTick)
+				}
 
 			context.contentResolver.query(
-				eventsUri,
+				uriBuilder.build(),
 				null,
 				null,
 				null,
-				order
+				CalendarContract.Instances.BEGIN + " ASC"
 			)?.run {
 				while (moveToNext()) {
 					val title = getStringOrNull(getColumnIndex(CalendarContract.Instances.TITLE)).orEmpty()
-					val start = getLongOrNull(getColumnIndex(CalendarContract.Instances.DTSTART)) ?: 0
+					val startTime = getLongOrNull(getColumnIndex(CalendarContract.Instances.DTSTART)) ?: 0
 					val description = getStringOrNull(getColumnIndex(CalendarContract.Instances.DESCRIPTION)).orEmpty()
 					var eventType = EventType.SIMPLE
 					val id = getLongOrNull(getColumnIndex(CalendarContract.Instances.EVENT_ID)) ?: 0
@@ -57,7 +55,7 @@ class PhoneCalendarRepoImpl @Inject constructor(
 								EventType.BIRTHDAY
 							else EventType.HOLIDAY
 					}
-					listBirthDayEvents.add(addEventFromCalendar(title, start, eventType, id))
+					listBirthDayEvents.add(addEventFromCalendar(title, startTime, eventType, id))
 				}
 				close()
 			}
