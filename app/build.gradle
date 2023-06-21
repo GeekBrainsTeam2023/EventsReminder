@@ -16,7 +16,7 @@ android {
 
     defaultConfig {
         applicationId "ru.geekbrains.eventsreminder"
-        minSdk 24
+        minSdk 26
         targetSdk 33
         versionCode versionMajor * 10000 + versionMinor * 100 + versionPatch
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
