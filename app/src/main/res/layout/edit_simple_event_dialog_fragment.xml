@@ -16,13 +16,6 @@
         android:id="@+id/input_simple_event_date_picker"
         android:theme="@style/date_picker"
         style="@style/edit_event_dialog_date_picker" />
-<!--    <CheckBox-->
-<!--        android:id="@+id/simpleDialogIsTimePickerEnabled"-->
-<!--        android:text="@string/checkbox_for_time_picker_text"-->
-<!--        style="@style/dialog_checkbox_to_enable_time_picker" />-->
-<!--    <TextView-->
-<!--        android:id="@+id/inputSimpleEventTime"-->
-<!--        style="@style/input_event_time_textview" />-->
 
     <LinearLayout
         android:layout_width="match_parent"

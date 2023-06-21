@@ -127,6 +127,7 @@ class MyEventsFragment : EventEditor, DaggerFragment() {
                     showEvents(data)
                     with(requireActivity() as MainActivity) {
                         updateWidget()
+                        updateNotificationService(data)
                     }
                 }
                 is AppState.LoadingState -> {
@@ -236,7 +237,7 @@ class MyEventsFragment : EventEditor, DaggerFragment() {
             val builder = AlertDialog.Builder(context)
             builder.setTitle(getString(R.string.delete_all_local_events_dialog_title))
                 .setCancelable(true)
-                .setPositiveButton(getString(R.string.delete_local_events_dialog_positive_btn)) { dialog, id ->
+                .setPositiveButton(getString(R.string.delete_local_events_dialog_positive_btn)) { _, _ ->
                     try {
                         myEventsViewModel.clearAllLocalEvents()
                         hideButtonAndHeader()

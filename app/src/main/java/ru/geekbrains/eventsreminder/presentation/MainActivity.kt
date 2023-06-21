@@ -30,6 +30,7 @@ import ru.geekbrains.eventsreminder.domain.SettingsData
 import ru.geekbrains.eventsreminder.service.NotificationService
 import ru.geekbrains.eventsreminder.usecases.EVENTS_DATA
 import ru.geekbrains.eventsreminder.usecases.MINUTES_FOR_START_NOTIFICATION
+import ru.geekbrains.eventsreminder.usecases.TIME_TO_START_NOTIFICATION
 import ru.geekbrains.eventsreminder.widget.AppWidget
 import javax.inject.Inject
 
@@ -57,10 +58,7 @@ class MainActivity : DaggerAppCompatActivity() {
             initNavController()
             if (isParamsSetRequired)
                 navController.navigate(R.id.settings)
-            startService(Intent(this, NotificationService::class.java).apply {
-                putExtra(MINUTES_FOR_START_NOTIFICATION, settings.minutesForStartNotification)
-            }
-            )
+
         } catch (t: Throwable) {
             logAndToast(t)
         }
@@ -244,6 +242,8 @@ class MainActivity : DaggerAppCompatActivity() {
                     MINUTES_FOR_START_NOTIFICATION,
                     settings.minutesForStartNotification
                 )
+                putExtra(TIME_TO_START_NOTIFICATION,
+                settings.timeToStartNotification)
                 putParcelableArrayListExtra(EVENTS_DATA, ArrayList(eventsList))
             }
             )
@@ -414,6 +414,19 @@ class MainActivity : DaggerAppCompatActivity() {
                         putExtra(
                             MINUTES_FOR_START_NOTIFICATION,
                             settings.minutesForStartNotification
+                        )
+                    }
+                    )
+                    return ret
+                }
+            }
+            if(key.isNullOrBlank() || key == getString(R.string.key_notification_start_time_preference)){
+                settings.timeToStartNotification = preferences.getInt(getString(R.string.key_notification_start_time_preference),settings.timeToStartNotification)
+                if (!key.isNullOrBlank()) {
+                    startService(Intent(this, NotificationService::class.java).apply {
+                        putExtra(
+                            TIME_TO_START_NOTIFICATION,
+                            settings.timeToStartNotification
                         )
                     }
                     )

@@ -1,5 +1,6 @@
 package ru.geekbrains.eventsreminder.presentation.ui.settings
 
+import android.app.TimePickerDialog
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -17,6 +18,9 @@ import ru.geekbrains.eventsreminder.R
 import ru.geekbrains.eventsreminder.domain.SettingsData
 import ru.geekbrains.eventsreminder.presentation.MainActivity
 import ru.geekbrains.eventsreminder.presentation.ui.FontSizeSeekBarPreference
+import ru.geekbrains.eventsreminder.presentation.ui.toInt
+import ru.geekbrains.eventsreminder.presentation.ui.toLocalTime
+import java.time.LocalTime
 import javax.inject.Inject
 
 
@@ -199,7 +203,7 @@ class SettingsFragment : PreferenceFragmentCompat(), HasAndroidInjector {
 
     private fun initWidgetPreview() {
         try {
-            findPreference<WidgetPreviewPreference>("widget_appearance_by_default")?.applySettings(
+            findPreference<WidgetPreviewPreference>(getString(R.string.key_widget_appearance_by_default))?.applySettings(
                 settingsData
             )
         } catch (t: Throwable) {
@@ -211,9 +215,17 @@ class SettingsFragment : PreferenceFragmentCompat(), HasAndroidInjector {
         try {
             val chooseNotificationStartTimeButton: Preference? =
                 findPreference(getString(R.string.key_notification_start_time_preference))
-            chooseNotificationStartTimeButton?.setOnPreferenceClickListener {
-                Toast.makeText(context, "time picker will be here", Toast.LENGTH_SHORT).show()
+            val time = prefs.getInt(
+                getString(R.string.key_notification_start_time_preference),
+                settingsData.timeToStartNotification).toLocalTime()
+
+            chooseNotificationStartTimeButton?.let{
+                it.setSummary(time.toString())
+                it.setOnPreferenceClickListener {
+                initTimePicker(requireContext(),time,
+                 chooseNotificationStartTimeButton)
                 true
+            }
             }
             val chooseNotificationMelodyButton: Preference? =
                 findPreference(getString(R.string.key_notification_melody_preference))
@@ -263,6 +275,42 @@ class SettingsFragment : PreferenceFragmentCompat(), HasAndroidInjector {
         try {
             Toast.makeText(context, t.toString(), Toast.LENGTH_LONG).show()
             Log.e(this::class.java.toString(), "", t)
+        } catch (_: Throwable) {
+        }
+    }
+
+    protected fun initTimePicker(context: Context, curTime : LocalTime, preference: Preference) {
+        try {
+            val timeSetListener = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
+                try {
+                    val time = LocalTime.of(hour, minute)
+                    preference.summary = time.toString()
+                    prefs.edit().putInt(
+                        getString(R.string.key_notification_start_time_preference),
+                        time.toInt()
+                    ).apply()
+                } catch (t: Throwable) {
+                    logAndToast(t)
+                }
+            }
+            val timePickerDialog = TimePickerDialog(
+                context, R.style.date_picker, timeSetListener, curTime.hour,
+                curTime.minute, true
+            )
+            timePickerDialog.show()
+
+        } catch (t: Throwable) {
+            logAndToast(t)
+        }
+    }
+
+    private fun logAndToast(t: Throwable) = logAndToast(t, this::class.java.toString())
+
+    private fun logAndToast(t: Throwable, tag: String?) {
+        try {
+            Log.e(tag, "", t)
+            Toast.makeText(requireContext().applicationContext, t.toString(), Toast.LENGTH_LONG)
+                .show()
         } catch (_: Throwable) {
         }
     }

@@ -87,7 +87,7 @@
     <string name="toast_msg_failed_to_get_preferences">failed to get preferences</string>
     <string name="toast_msg_create_event_dialog">выберите тип события</string>
     <string name="toast_msg_events_list_renewed">Список событий обновлён</string>
-    <string name="create_event_dialog_choose_title">выберите тип события</string>
+    <string name="create_event_dialog_choose_title">Тип события?</string>
     <string name="create_simple_event_dialog_title">Другое событие</string>
     <string name="create_holiday_dialog_title">Праздник</string>
     <string name="create_simple_event_dialog_edittext_hint">описание события</string>
@@ -95,9 +95,9 @@
     <string name="dialog_forward_btn_text">ок</string>
     <string name="create_birthday_dialog_title">День Рождения</string>
     <string name="create_birthday_dialog_edittext_hint">кто именинник</string>
-    <string name="radio_btn_title_birthday">день рождения</string>
-    <string name="radio_btn_title_holiday">праздник</string>
-    <string name="radio_btn_title_simple_event">другое</string>
+    <string name="radio_btn_title_birthday">День рождения</string>
+    <string name="radio_btn_title_holiday">Праздник</string>
+    <string name="radio_btn_title_simple_event">Другое</string>
     <string name="choose_event_type_dialog_cancel_btn_text">отмена</string>
     <string name="choose_event_type_dialog_btn_next_text">далее</string>
     <string name="checkbox_for_time_picker_text">задать время</string>
@@ -115,4 +115,5 @@
     <string name="birthday_dialog_checkbox_text">без года рождения</string>
     <string name="fifth_widget_preview_item_date">(01.05.2024)</string>
     <string name="repeat_once_a">повторять раз в</string>
+    <string name="key_widget_appearance_by_default">widget_appearance_by_default</string>
 </resources>

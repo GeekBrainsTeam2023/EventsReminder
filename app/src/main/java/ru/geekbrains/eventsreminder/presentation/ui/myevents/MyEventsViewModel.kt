@@ -83,7 +83,7 @@ class MyEventsViewModel @Inject constructor(
                                 )
                             else dataWithBrededEvents.add(event)
                         }
-                        addToCache(dataWithBrededEvents)
+                        addToCachedLocalEvents(dataWithBrededEvents)
                         renewCache()
                         statesLiveData.postValue(AppState.SuccessState(cachedLocalEvents.toList()))
                     }
@@ -99,7 +99,7 @@ class MyEventsViewModel @Inject constructor(
         }
     }
 
-    private fun addToCache(events: List<EventData>) {
+    private fun addToCachedLocalEvents(events: List<EventData>) {
         try {
             cachedLocalEvents.clear()
             arrangeByDatesToSortedMap(events).forEach {
@@ -116,37 +116,8 @@ class MyEventsViewModel @Inject constructor(
     private fun arrangeByDatesToSortedMap(events: List<EventData>): Map<LocalDate, MutableList<EventData>> {
         val mapToSort = mutableMapOf<LocalDate, MutableList<EventData>>()
         try {
-            val startDate = LocalDate.now()
-            val endDate = startDate.plusDays(365L)
             events.forEach { event ->
-                if (event.type == EventType.BIRTHDAY)
-                    event.birthday?.let {
-                        for (curYear in startDate.year..endDate.year) {
-
-                            if (it.safeWithYear(curYear).isAfter(startDate)
-                                && it.safeWithYear(curYear).isBefore(endDate)
-                                || it.safeWithYear(curYear).isEqual(startDate)
-                            ) {
-                                mapToSort.getOrPut(
-                                    it.safeWithYear(curYear)
-                                ) { mutableListOf() }.add(
-                                    EventData(
-                                        EventType.BIRTHDAY,
-                                        event.period,
-                                        event.birthday,
-                                        it.safeWithYear(curYear),
-                                        event.time,
-                                        event.timeNotifications,
-                                        event.name,
-                                        event.sourceId,
-                                        event.sourceType
-                                    )
-                                )
-                                break
-                            }
-                        }
-                    }
-                else mapToSort.getOrPut(event.date) { mutableListOf() }.add(event)
+                    mapToSort.getOrPut(event.date) { mutableListOf() }.add(event)
             }
         } catch (t: Throwable) {
             handleError(t)
@@ -221,55 +192,16 @@ class MyEventsViewModel @Inject constructor(
         mapToSort: MutableMap<LocalDate, MutableList<EventData>>
     ) {
         try {
-            if (event.type == EventType.BIRTHDAY)
-                fixBirthdayDate(event, startDate, endDate, mapToSort)
-            else if (event.date.isAfter(startDate)
-                && event.date.isBefore(endDate)
-                || event.date.isEqual(startDate)
-            )
                 if (event.period != null)
                     event.breedPeriodicEvents(startDate,endDate).forEach{
+                        if (event.date.isAfter(startDate)
+                            && event.date.isBefore(endDate)
+                            || event.date.isEqual(startDate)
+                        )
                     mapToSort.getOrPut(it.date) { mutableListOf() }.add(it)
                     }
                 else
                 mapToSort.getOrPut(event.date) { mutableListOf() }.add(event)
-        } catch (t: Throwable) {
-            handleError(t)
-        }
-    }
-
-    private fun fixBirthdayDate(
-        event: EventData,
-        startDate: LocalDate,
-        endDate: LocalDate,
-        mapToSort: MutableMap<LocalDate, MutableList<EventData>>
-    ) {
-        try {
-            event.birthday?.let {
-                for (curYear in startDate.year..endDate.year) {
-                    if (it.safeWithYear(curYear).isAfter(startDate)
-                        && it.safeWithYear(curYear).isBefore(endDate)
-                        || it.safeWithYear(curYear).isEqual(startDate)
-                    ) {
-                        mapToSort.getOrPut(
-                            it.safeWithYear(curYear)
-                        ) { mutableListOf() }.add(
-                            EventData(
-                                EventType.BIRTHDAY,
-                                event.period,
-                                event.birthday,
-                                it.safeWithYear(curYear),
-                                event.time,
-                                event.timeNotifications,
-                                event.name,
-                                event.sourceId,
-                                event.sourceType
-                            )
-                        )
-                        break
-                    }
-                }
-            }
         } catch (t: Throwable) {
             handleError(t)
         }
