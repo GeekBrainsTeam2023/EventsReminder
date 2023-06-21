@@ -1,11 +1,15 @@
 package ru.geekbrains.eventsreminder.domain
 
+import ru.geekbrains.eventsreminder.presentation.ui.toInt
+import java.time.LocalTime
+
 
 data class SettingsData(
     var isDataContact: Boolean = true,
     var isDataCalendar: Boolean = true,
     var daysForShowEvents: Int = 365,
     var minutesForStartNotification: Int = 15,
+    var timeToStartNotification: Int = LocalTime.of(10,10).toInt(),
     var showDateEvent: Boolean = true,
     var showTimeEvent: Boolean = true,
     var showAge: Boolean = true,

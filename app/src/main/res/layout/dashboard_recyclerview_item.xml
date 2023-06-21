@@ -55,23 +55,23 @@
                 <TextView
                     android:id="@+id/dashboardRecyclerViewItemTitleTextview"
                     style="@style/dashboard_recyclerview_item_title_textview"
-                    android:layout_weight="1.0"
+                    android:layout_weight="1.2"
                     tools:text="name" />
 
             <LinearLayout
                 android:id="@+id/ageTimeLinearLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.2"
+                android:layout_weight="0.3"
                 android:orientation="vertical">
                 <TextView
                     android:id="@+id/dashboardRecyclerViewItemAgeTextview"
                     style="@style/dashboard_recyclerview_item_age_textview"
-                    tools:text="birthday" />
+                    tools:text="100 let" />
                 <TextView
                     android:id="@+id/dashboardRecyclerViewItemEventTimeTextview"
                     style="@style/dashboard_recyclerview_item_event_time_textview"
-                    tools:text="time" />
+                    tools:text="10:10" />
 
             </LinearLayout>
         </LinearLayout>

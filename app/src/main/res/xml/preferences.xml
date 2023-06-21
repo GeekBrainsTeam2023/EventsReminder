@@ -34,7 +34,6 @@
         app:title="@string/title_notification_settings_preference_category"
         android:layout="@layout/title_for_preference_category">
         <Preference
-            app:defaultValue="12"
             app:iconSpaceReserved="false"
             app:key="@string/key_notification_start_time_preference"
             app:title="@string/title_notification_start_time_preference"

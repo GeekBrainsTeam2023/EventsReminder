@@ -14,10 +14,12 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import ru.geekbrains.eventsreminder.R
 import ru.geekbrains.eventsreminder.presentation.MainActivity
+import java.time.LocalDateTime
+import java.time.ZoneId
 
 const val EVENTS_DATA = "EVENT"
 const val MINUTES_FOR_START_NOTIFICATION = "MinutesForStartNotification"
-
+const val TIME_TO_START_NOTIFICATION = "TimeToStartNotification"
 object NotificationUtils {
 	private const val CHANNEL_ID = "EventsReminder"
 
@@ -37,18 +39,23 @@ object NotificationUtils {
 		}
 	}
 
-	fun sendNotification(context: Context, idNotification: Int, title: String, text: String) {
+	fun sendNotification(context: Context, idNotification: Int, title: String, text: String,dateTime: LocalDateTime?) {
 		val resultPendingIntent = PendingIntent.getActivity(
 			context, 0, Intent(context, MainActivity::class.java),
 			PendingIntent.FLAG_UPDATE_CURRENT or FLAG_IMMUTABLE
 		)
+		val zdt = dateTime?.atZone(ZoneId.systemDefault())
 		val builder = NotificationCompat.Builder(context, CHANNEL_ID)
 			.setSmallIcon(R.drawable.ic_notifications_24dp)
 			.setContentTitle(title)
+			.setStyle(NotificationCompat.BigTextStyle().bigText(text))
 			.setContentText(text)
-			.setPriority(NotificationCompat.PRIORITY_DEFAULT)
+			.setWhen(zdt?.toInstant()?.toEpochMilli()?:System.currentTimeMillis())
+			.setShowWhen(zdt != null)
+			.setPriority(NotificationCompat.PRIORITY_HIGH)
 			.setContentIntent(resultPendingIntent)
 			.setAutoCancel(true)
+			.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
 
 		if (ActivityCompat.checkSelfPermission(
 				context,

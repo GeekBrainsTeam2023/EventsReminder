@@ -6,9 +6,14 @@ import android.os.Handler
 import android.os.IBinder
 import ru.geekbrains.eventsreminder.domain.EventData
 import ru.geekbrains.eventsreminder.domain.EventNotificationData
+import ru.geekbrains.eventsreminder.domain.EventType
+import ru.geekbrains.eventsreminder.presentation.ui.MAX_YEAR
+import ru.geekbrains.eventsreminder.presentation.ui.toAgeInWordsByDate
+import ru.geekbrains.eventsreminder.presentation.ui.toLocalTime
 import ru.geekbrains.eventsreminder.usecases.EVENTS_DATA
 import ru.geekbrains.eventsreminder.usecases.MINUTES_FOR_START_NOTIFICATION
 import ru.geekbrains.eventsreminder.usecases.NotificationUtils
+import ru.geekbrains.eventsreminder.usecases.TIME_TO_START_NOTIFICATION
 import ru.geekbrains.eventsreminder.usecases.addEventsListToNotificationEventsList
 import java.time.Duration
 import java.time.LocalDateTime
@@ -22,6 +27,7 @@ class NotificationService
     private val handler = Handler()
     private lateinit var runnable: Runnable
     private var minutesForStartNotification = 10
+    private var timeToStartNotification = 101000
     private var idNotification = 1
 
     override fun onCreate() {
@@ -35,24 +41,36 @@ class NotificationService
     }
 
     private fun findEvents() {
-        val eventListCopy = eventList.toList()
-        for (event in eventListCopy) {
-            val eventTime = event.time ?: LocalTime.parse("00:00:00.000")
-
-            if ((abs(Duration.between(
-                    LocalDateTime.now(),
-                    LocalDateTime.parse(event.date.toString() + "T" + eventTime.toString())
-                ).toMinutes()) <= minutesForStartNotification
-                        ) && (event.idNotification == null)
-            ) {
-                NotificationUtils.sendNotification(
-                    this,
-                    idNotification,
-                    event.type.getString(),
-                    event.name
-                )
-                event.idNotification = idNotification
-                idNotification += 1
+        //val eventListCopy = .toList()
+        for (event in eventList) {
+            val eventTime = event.time ?: timeToStartNotification.toLocalTime()
+                .plusMinutes(minutesForStartNotification.toLong())
+            val eventDayTime =
+                LocalDateTime.parse(event.date.toString() + "T" + eventTime.toString())
+            val dur = Duration.between(
+                LocalDateTime.now(),
+                eventDayTime
+            ).toMinutes()
+            if (dur > 0) {
+                if (dur <= minutesForStartNotification && event.idNotification == null) {
+                    val notificationAgeOrTime =
+                        if (event.type == EventType.BIRTHDAY) {
+                            if (event.birthday?.year != MAX_YEAR)
+                                event.birthday?.toAgeInWordsByDate(event.date)
+                            else ""
+                        } else
+                            (event.time?.toString() ?: "")
+                    NotificationUtils.sendNotification(
+                        this,
+                        idNotification,
+                        event.type.getString() + "         " +
+                                notificationAgeOrTime,
+                        event.name,
+                        event.time?.let { eventDayTime }
+                    )
+                    event.idNotification = idNotification
+                    idNotification += 1
+                }
             }
         }
     }
@@ -60,8 +78,10 @@ class NotificationService
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         intent?.getIntExtra(MINUTES_FOR_START_NOTIFICATION, 15)
             ?.apply { minutesForStartNotification = this }
+        intent?.getIntExtra(TIME_TO_START_NOTIFICATION, 101000)
+            ?.apply { timeToStartNotification = this }
         intent?.getParcelableArrayListExtra<EventData>(EVENTS_DATA)?.apply {
-            eventList = addEventsListToNotificationEventsList(eventList, this.toMutableList())
+            addEventsListToNotificationEventsList(eventList, this.toMutableList())
         }
         return START_NOT_STICKY
     }

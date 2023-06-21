@@ -33,7 +33,7 @@ fun extractBirthday(text: String): LocalDate {
 fun addBirthDayEventFromContactPhone(name: String, birthDay: LocalDate, id: Long): EventData {
 	return EventData(
 		EventType.BIRTHDAY,
-		null,
+		PeriodType.YEAR,
 		birthDay,
 		getCelebrationDateForBirthDay(birthDay),
 		null,
@@ -52,7 +52,7 @@ fun addBirthDayEventFromLocalEdit(
 	with(LocalDate.of(year ?: MAX_YEAR, month, day)) {
 		EventData(
 			EventType.BIRTHDAY,
-			null,
+			PeriodType.YEAR,
 			this,
 			getCelebrationDateForBirthDay(this),
 			null,
@@ -101,12 +101,12 @@ fun addSimpleEventFromLocalEdit(
 		EventSourceType.LOCAL
 	)
 
-fun addEventFromCalendar(name: String, startDate: Long, eventType: EventType, id: Long): EventData {
+fun addEventFromCalendar(name: String, startDate: Long, eventType: EventType, id: Long,period: PeriodType?): EventData {
 	val date =
 		LocalDateTime.ofInstant(Instant.ofEpochSecond(startDate / 1000), ZoneId.systemDefault())
 	return EventData(
 		eventType,
-		null,
+		period,
 		null,
 		date.toLocalDate(),
 		date.toLocalTime(),
@@ -160,11 +160,11 @@ fun addNotificationEventFromEvent(event: EventData): EventNotificationData =
 fun addEventsListToNotificationEventsList(
 	eventNotificationList: MutableList<EventNotificationData>,
 	eventList: MutableList<EventData>
-): MutableList<EventNotificationData> {
+) {
 	for (event in eventList) {
 		if (isNewEvent(eventNotificationList, event)) {
 			eventNotificationList.add(addNotificationEventFromEvent(event))
 		}
 	}
-	return eventNotificationList.toMutableList()
+
 }
