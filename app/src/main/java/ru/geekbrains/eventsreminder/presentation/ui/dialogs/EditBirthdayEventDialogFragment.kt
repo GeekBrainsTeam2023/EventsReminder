@@ -1,14 +1,12 @@
 package ru.geekbrains.eventsreminder.presentation.ui.dialogs
 
 import android.content.res.Resources
-import android.opengl.Visibility
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.widget.DatePicker
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding

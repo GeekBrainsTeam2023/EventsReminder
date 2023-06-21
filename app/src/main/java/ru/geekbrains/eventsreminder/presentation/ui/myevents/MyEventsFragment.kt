@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -19,17 +20,17 @@ import ru.geekbrains.eventsreminder.databinding.FragmentMyEventsBinding
 import ru.geekbrains.eventsreminder.di.ViewModelFactory
 import ru.geekbrains.eventsreminder.domain.AppState
 import ru.geekbrains.eventsreminder.domain.EventData
+import ru.geekbrains.eventsreminder.domain.EventType
 import ru.geekbrains.eventsreminder.presentation.MainActivity
 import ru.geekbrains.eventsreminder.presentation.ui.EVENT_ID
 import ru.geekbrains.eventsreminder.presentation.ui.RusIntPlural
 import ru.geekbrains.eventsreminder.presentation.ui.SOURCE_ID_TO_NAVIGATE
 import ru.geekbrains.eventsreminder.presentation.ui.callAfterRedrawViewTree
 import ru.geekbrains.eventsreminder.presentation.ui.dashboard.EventsDiffUtil
-import ru.geekbrains.eventsreminder.widget.AppWidget
 import javax.inject.Inject
 
 
-class MyEventsFragment : DaggerFragment() {
+class MyEventsFragment : EventEditor, DaggerFragment() {
     private val binding: FragmentMyEventsBinding by viewBinding()
     private var myEventsAdapter: MyEventsRecyclerViewAdapter? = null
     private var itemTouchHelper: ItemTouchHelper? = null
@@ -104,7 +105,7 @@ class MyEventsFragment : DaggerFragment() {
             myEventsAdapter =
                 MyEventsRecyclerViewAdapter(
                     myEventsViewModel.storedEvents,
-                    myEventsViewModel, requireContext()
+                    this@MyEventsFragment
                 )
             itemTouchHelper = ItemTouchHelper(ItemTouchHelperCallback(myEventsAdapter!!))
             itemTouchHelper!!.attachToRecyclerView(RvListOfMyEvents)
@@ -124,26 +125,16 @@ class MyEventsFragment : DaggerFragment() {
                 is AppState.SuccessState<*> -> {
                     val data = appState.data as List<EventData>
                     showEvents(data)
-                    updateWidget()
+                    with(requireActivity() as MainActivity) {
+                        updateWidget()
+                        updateNotificationService(data)
+                    }
                 }
-
                 is AppState.LoadingState -> {
-
                 }
-
                 is AppState.ErrorState -> {
                     logAndToast(appState.error)
                 }
-            }
-        } catch (t: Throwable) {
-            myEventsViewModel.handleError(t)
-        }
-    }
-
-    private fun updateWidget() {
-        try {
-            requireActivity().runOnUiThread {
-                AppWidget.sendRefreshBroadcast(requireActivity() as MainActivity)
             }
         } catch (t: Throwable) {
             myEventsViewModel.handleError(t)
@@ -246,10 +237,9 @@ class MyEventsFragment : DaggerFragment() {
             val builder = AlertDialog.Builder(context)
             builder.setTitle(getString(R.string.delete_all_local_events_dialog_title))
                 .setCancelable(true)
-                .setPositiveButton(getString(R.string.delete_local_events_dialog_positive_btn)) { dialog, id ->
+                .setPositiveButton(getString(R.string.delete_local_events_dialog_positive_btn)) { _, _ ->
                     try {
                         myEventsViewModel.clearAllLocalEvents()
-                        updateWidget()
                         hideButtonAndHeader()
                     } catch (t: Throwable) {
                         myEventsViewModel.handleError(t)
@@ -266,5 +256,78 @@ class MyEventsFragment : DaggerFragment() {
     override fun onDestroy() {
         myEventsAdapter = null
         super.onDestroy()
+    }
+
+    override fun openEditEvent(event: EventData) {
+        try {
+            val item = myEventsViewModel.storedEvents.find { e -> e.sourceId == event.sourceId }
+            item?.let {
+                val bundle = Bundle()
+                bundle.putParcelable(EventData::class.toString(), item)
+                when (item.type) {
+                    EventType.BIRTHDAY -> {
+                        bundle.putInt(
+                            SOURCE_ID_TO_NAVIGATE,
+                            R.id.action_editBirthdayDialog_to_myEvents
+                        )
+                        requireActivity().findNavController(R.id.nav_host_fragment_activity_main)
+                            .navigate(R.id.editBirthdayDialog, bundle)
+                    }
+
+                    EventType.HOLIDAY -> {
+                        bundle.putInt(
+                            SOURCE_ID_TO_NAVIGATE,
+                            R.id.action_editHolidayDialog_to_myEvents
+                        )
+                        requireActivity().findNavController(R.id.nav_host_fragment_activity_main)
+                            .navigate(R.id.editHolidayDialog, bundle)
+                    }
+
+                    EventType.SIMPLE -> {
+                        bundle.putInt(
+                            SOURCE_ID_TO_NAVIGATE,
+                            R.id.action_editSimpleEventDialog_to_myEvents
+                        )
+                        requireActivity().findNavController(R.id.nav_host_fragment_activity_main)
+                            .navigate(R.id.editSimpleEventDialog, bundle)
+                    }
+                }
+            }
+        } catch (t: Throwable) {
+            myEventsViewModel.handleError(t)
+        }
+    }
+
+    override fun openRemoveEvent(event: EventData) {
+        try {
+            val item = myEventsViewModel.storedEvents.find { e -> e.sourceId == event.sourceId }
+            item?.let {
+                val builder = AlertDialog.Builder(requireActivity())
+                builder.setTitle(getString(R.string.delete_local_event_dialog_title) + " " + "\"${item.name}\"" + "?")
+                    .setCancelable(true)
+                    .setPositiveButton(getString(R.string.delete_local_events_dialog_positive_btn)) { _, _ ->
+                        try {
+
+                            myEventsViewModel.deleteMyEvent(item)
+                            Toast.makeText(
+                                requireContext().applicationContext,
+                                getString(R.string.toast_delete_local_event_dialod),
+                                Toast.LENGTH_SHORT
+                            ).show()
+
+                        } catch (t: Throwable) {
+                            Log.e(this::class.java.toString(), "", t)
+                        }
+                    }
+                    .setNegativeButton(getString(R.string.delete_local_events_dialog_negative_btn)) { _, _ ->
+
+                        myEventsAdapter?.notifyItemChanged(event)
+                    }
+                val dlg = builder.create()
+                dlg.show()
+            }
+        } catch (t: Throwable) {
+            Log.e(this::class.java.toString(), "", t)
+        }
     }
 }

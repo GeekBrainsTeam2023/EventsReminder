@@ -40,15 +40,12 @@ http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
     <dimen name="dashboard_events_list_titles_linearlayout_margin">2dp</dimen>
     <dimen name="event_dialogs_inner_padding">4dp</dimen>
     <dimen name="create_events_dialog_title_textsize">17sp</dimen>
-    <dimen name="dialog_btns_textsize">15sp</dimen>
-    <dimen name="create_event_dialog_radio_btn_textsize">13sp</dimen>
+    <dimen name="dialog_btns_textsize">13sp</dimen>
+    <dimen name="create_event_dialog_radio_btn_textsize">16sp</dimen>
     <dimen name="my_events_buttons_elevation">7dp</dimen>
     <dimen name="rv_list_of_my_events_padding_bottom">100dp</dimen>
     <dimen name="empty_local_events_textview_text_size">30sp</dimen>
     <dimen name="empty_local_events_textview_margin">8dp</dimen>
-<!--    <dimen name="my_events_image_btns_layout_margin">2dp</dimen>-->
-<!--    <dimen name="my_events_image_btns_elevation">7dp</dimen>-->
-<!--    <dimen name="my_events_buttons_linear_layout_margin_bottom">5dp</dimen>-->
     <dimen name="title_for_preference_textview_padding">8dp</dimen>
     <dimen name="title_for_preference_textview_textsize">16sp</dimen>
     <dimen name="shimmer_linear_layout_padding">5dp</dimen>

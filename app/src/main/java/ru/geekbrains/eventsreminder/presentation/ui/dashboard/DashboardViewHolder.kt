@@ -44,11 +44,9 @@ class DashboardViewHolder(view: View) : RecyclerView.ViewHolder(view) {
                     EventType.BIRTHDAY -> {
                         setBirthdayEventSpecifics(item)
                     }
-
                     EventType.HOLIDAY -> {
                         setHolidayEventSpecifics(item)
                     }
-
                     EventType.SIMPLE -> {
                         setSimpleEventSpecifics(item)
                     }
@@ -229,7 +227,6 @@ class DashboardViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             logAndToast(t)
         }
     }
-
 
     private fun logAndToast(t: Throwable) = logAndToast(t, this::class.java.toString())
 

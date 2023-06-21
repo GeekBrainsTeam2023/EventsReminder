@@ -46,9 +46,12 @@ import kotlinx.coroutines.launch
 import ru.geekbrains.eventsreminder.App
 import ru.geekbrains.eventsreminder.R
 import ru.geekbrains.eventsreminder.databinding.ActivityMainBinding
+import ru.geekbrains.eventsreminder.domain.EventData
 import ru.geekbrains.eventsreminder.domain.SettingsData
 import ru.geekbrains.eventsreminder.service.NotificationService
+import ru.geekbrains.eventsreminder.usecases.EVENTS_DATA
 import ru.geekbrains.eventsreminder.usecases.MINUTES_FOR_START_NOTIFICATION
+import ru.geekbrains.eventsreminder.usecases.TIME_TO_START_NOTIFICATION
 import ru.geekbrains.eventsreminder.widget.AppWidget
 import java.io.File
 import java.io.InputStreamReader
@@ -346,206 +349,206 @@ class MainActivity : DaggerAppCompatActivity() {
 		}
 	}
 
-	private val getPermissionManually = registerForActivityResult(
-		ActivityResultContracts.StartActivityForResult()
-	) {
-		try {
-			initReminderRights()
-		} catch (t: Throwable) {
-			logAndToast(t)
-		}
-	}
+    private val getPermissionManually = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        try {
+            initReminderRights()
+        } catch (t: Throwable) {
+            logAndToast(t)
+        }
+    }
 
-	/**
-	 * Применить параметры из настроек
-	 * @param preferences набор настроек для применения в приложении
-	 * @param key ключ с названием конкретной настройки
-	 * @return true в случае успешного применения всех параметров
-	 *         false если требуется установка параметров
-	 * (в случае [null] - будут применены все настройки)
-	 * */
-	fun setPreferences(preferences: SharedPreferences, key: String? = null): Boolean {
-		var ret = false
-		try {
-			if (preferences.contains(getString(R.string.key_phonebook_datasource_checkbox_preference)))
-				ret =
-					true // Если хотябы один параметр инициализирован то взводим флаг применения параметров
-			if (key.isNullOrBlank() || key == getString(R.string.key_phonebook_datasource_checkbox_preference)) {
-				settings.isDataContact = preferences.getBoolean(
-					getString(R.string.key_phonebook_datasource_checkbox_preference),
-					settings.isDataContact
-				)
-			}
-			if (key.isNullOrBlank() || key == getString(R.string.key_calendar_datasource_checkbox_preference)) {
-				settings.isDataCalendar = preferences.getBoolean(
-					getString(R.string.key_calendar_datasource_checkbox_preference),
-					settings.isDataCalendar
-				)
-			}
-			if (key.isNullOrBlank() || key == (getString(R.string.key_show_events_interval_preference))) {
-				settings.daysForShowEvents = preferences.getInt(
-					getString(R.string.key_show_events_interval_preference),
-					settings.daysForShowEvents
-				)
-			}
-			if (key.isNullOrBlank() || key == getString(R.string.key_event_date_checkbox_preference)) {
-				settings.showDateEvent = preferences.getBoolean(
-					getString(R.string.key_event_date_checkbox_preference),
-					settings.showDateEvent
-				)
-				if (!key.isNullOrBlank()) {
-					runOnUiThread {
-						AppWidget.sendRefreshBroadcast(this)
-					}
-					return ret
-				}
-			}
-			if (key.isNullOrBlank() || key == getString(R.string.key_event_time_checkbox_preference)) {
-				settings.showTimeEvent = preferences.getBoolean(
-					getString(R.string.key_event_time_checkbox_preference),
-					settings.showTimeEvent
-				)
-				if (!key.isNullOrBlank()) {
-					runOnUiThread {
-						AppWidget.sendRefreshBroadcast(this)
-					}
-					return ret
-				}
-			}
-			if (key.isNullOrBlank() || key == getString(R.string.key_widget_font_size_preference)) {
-				settings.sizeFontWidget = preferences.getInt(
-					getString(R.string.key_widget_font_size_preference),
-					settings.sizeFontWidget
-				)
-				if (!key.isNullOrBlank()) {
-					runOnUiThread {
-						AppWidget.sendRefreshBroadcast(this)
-					}
-					return ret
-				}
-			}
-			if (key.isNullOrBlank() || key == getString(R.string.key_widget_birthday_font_color_preference)) {
-				settings.colorBirthdayFontWidget = preferences.getInt(
-					getString(R.string.key_widget_birthday_font_color_preference),
-					settings.colorBirthdayFontWidget
-				)
-				if (!key.isNullOrBlank()) {
-					runOnUiThread {
-						AppWidget.sendRefreshBroadcast(this)
-					}
-					return ret
-				}
-			}
-			if (key.isNullOrBlank() || key == getString(R.string.key_widget_holiday_font_color_preference)) {
-				settings.colorHolidayFontWidget = preferences.getInt(
-					getString(R.string.key_widget_holiday_font_color_preference),
-					settings.colorHolidayFontWidget
-				)
-				if (!key.isNullOrBlank()) {
-					runOnUiThread {
-						AppWidget.sendRefreshBroadcast(this)
-					}
-					return ret
-				}
-			}
-			if (key.isNullOrBlank() || key == getString(R.string.key_widget_simple_event_font_color_preference)) {
-				settings.colorSimpleEventFontWidget = preferences.getInt(
-					getString(R.string.key_widget_simple_event_font_color_preference),
-					settings.colorSimpleEventFontWidget
-				)
-				if (!key.isNullOrBlank()) {
-					runOnUiThread {
-						AppWidget.sendRefreshBroadcast(this)
-					}
-					return ret
-				}
-			}
-			if (key.isNullOrBlank() || key == getString(R.string.key_background_color_preference)) {
-				settings.colorWidget = preferences.getInt(
-					getString(R.string.key_background_color_preference),
-					settings.colorWidget
-				)
-				if (!key.isNullOrBlank()) {
-					runOnUiThread {
-						AppWidget.sendRefreshBroadcast(this)
-					}
-					return ret
-				}
-			}
-			if (key.isNullOrBlank() || key == getString(R.string.key_background_alternating_color_preference)) {
-				settings.alternatingColorWidget = preferences.getInt(
-					getString(R.string.key_background_alternating_color_preference),
-					settings.alternatingColorWidget
-				)
-				if (!key.isNullOrBlank()) {
-					runOnUiThread {
-						AppWidget.sendRefreshBroadcast(this)
-					}
-					return ret
-				}
-			}
-			if (key.isNullOrBlank() || key == getString(R.string.key_widget_interval_of_events_preference)) {
-				settings.daysForShowEventsWidget = preferences.getInt(
-					getString(R.string.key_widget_interval_of_events_preference),
-					settings.daysForShowEventsWidget
-				)
-				if (!key.isNullOrBlank()) {
-					runOnUiThread {
-						AppWidget.sendRefreshBroadcast(this)
-					}
-					return ret
-				}
-			}
-			if (key.isNullOrBlank() || key == getString(R.string.key_age_checkbox_preference)) {
-				settings.showAge = preferences.getBoolean(
-					getString(R.string.key_age_checkbox_preference),
-					settings.showAge
-				)
-				if (!key.isNullOrBlank()) {
-					runOnUiThread {
-						AppWidget.sendRefreshBroadcast(this)
-					}
-					return ret
-				}
-			}
-			if (key.isNullOrBlank() || key == getString(R.string.key_minutes_before_notification_preference)) {
-				settings.minutesForStartNotification = preferences.getInt(
-					getString(R.string.key_minutes_before_notification_preference),
-					settings.minutesForStartNotification
-				)
-				if (!key.isNullOrBlank()) {
-					startService(Intent(this, NotificationService::class.java).apply {
-						putExtra(
-							MINUTES_FOR_START_NOTIFICATION,
-							settings.minutesForStartNotification
-						)
-					}
-					)
-					return ret
-				}
-			}
-			if (key.isNullOrBlank() || key == getString(R.string.key_export_settings_preference)) {
-				//TODO: записать текущие настройки в файл
-				if (!key.isNullOrBlank()) return ret
-			}
-			if (key.isNullOrBlank() || key == getString(R.string.key_import_settings_preference)) {
-				//TODO: загрузить настройки из файла
-				if (key.isNullOrBlank()) return ret
-			}
-		} catch (t: Throwable) {
-			logAndToast(t)
-			return false
-		}
-		return ret
-	}
+    /**
+     * Применить параметры из настроек
+     * @param preferences набор настроек для применения в приложении
+     * @param key ключ с названием конкретной настройки
+     * @return true в случае успешного применения всех параметров
+     *         false если требуется установка параметров
+     * (в случае [null] - будут применены все настройки)
+     * */
+    fun setPreferences(preferences: SharedPreferences, key: String? = null): Boolean {
+        var ret = false
+        try {
+            if (preferences.contains(getString(R.string.key_phonebook_datasource_checkbox_preference)))
+                ret =
+                    true // Если хотябы один параметр инициализирован то взводим флаг применения параметров
+            if (key.isNullOrBlank() || key == getString(R.string.key_phonebook_datasource_checkbox_preference)) {
+                settings.isDataContact = preferences.getBoolean(
+                    getString(R.string.key_phonebook_datasource_checkbox_preference),
+                    settings.isDataContact
+                )
+            }
+            if (key.isNullOrBlank() || key == getString(R.string.key_calendar_datasource_checkbox_preference)) {
+                settings.isDataCalendar = preferences.getBoolean(
+                    getString(R.string.key_calendar_datasource_checkbox_preference),
+                    settings.isDataCalendar
+                )
+            }
+            if (key.isNullOrBlank() || key == (getString(R.string.key_show_events_interval_preference))) {
+                settings.daysForShowEvents = preferences.getInt(
+                    getString(R.string.key_show_events_interval_preference),
+                    settings.daysForShowEvents
+                )
+            }
+            if (key.isNullOrBlank() || key == getString(R.string.key_event_date_checkbox_preference)) {
+                settings.showDateEvent = preferences.getBoolean(
+                    getString(R.string.key_event_date_checkbox_preference),
+                    settings.showDateEvent
+                )
+                if (!key.isNullOrBlank()) {
+                    runOnUiThread {
+                        AppWidget.sendRefreshBroadcast(this)
+                    }
+                    return ret
+                }
+            }
+            if (key.isNullOrBlank() || key == getString(R.string.key_event_time_checkbox_preference)) {
+                settings.showTimeEvent = preferences.getBoolean(
+                    getString(R.string.key_event_time_checkbox_preference),
+                    settings.showTimeEvent
+                )
+                if (!key.isNullOrBlank()) {
+                    runOnUiThread {
+                        AppWidget.sendRefreshBroadcast(this)
+                    }
+                    return ret
+                }
+            }
+            if (key.isNullOrBlank() || key == getString(R.string.key_widget_font_size_preference)) {
+                settings.sizeFontWidget = preferences.getInt(
+                    getString(R.string.key_widget_font_size_preference),
+                    settings.sizeFontWidget
+                )
+                if (!key.isNullOrBlank()) {
+                    runOnUiThread {
+                        AppWidget.sendRefreshBroadcast(this)
+                    }
+                    return ret
+                }
+            }
+            if (key.isNullOrBlank() || key == getString(R.string.key_widget_birthday_font_color_preference)) {
+                settings.colorBirthdayFontWidget = preferences.getInt(
+                    getString(R.string.key_widget_birthday_font_color_preference),
+                    settings.colorBirthdayFontWidget
+                )
+                if (!key.isNullOrBlank()) {
+                    runOnUiThread {
+                        AppWidget.sendRefreshBroadcast(this)
+                    }
+                    return ret
+                }
+            }
+            if (key.isNullOrBlank() || key == getString(R.string.key_widget_holiday_font_color_preference)) {
+                settings.colorHolidayFontWidget = preferences.getInt(
+                    getString(R.string.key_widget_holiday_font_color_preference),
+                    settings.colorHolidayFontWidget
+                )
+                if (!key.isNullOrBlank()) {
+                    runOnUiThread {
+                        AppWidget.sendRefreshBroadcast(this)
+                    }
+                    return ret
+                }
+            }
+            if (key.isNullOrBlank() || key == getString(R.string.key_widget_simple_event_font_color_preference)) {
+                settings.colorSimpleEventFontWidget = preferences.getInt(
+                    getString(R.string.key_widget_simple_event_font_color_preference),
+                    settings.colorSimpleEventFontWidget
+                )
+                if (!key.isNullOrBlank()) {
+                    runOnUiThread {
+                        AppWidget.sendRefreshBroadcast(this)
+                    }
+                    return ret
+                }
+            }
+            if (key.isNullOrBlank() || key == getString(R.string.key_background_color_preference)) {
+                settings.colorWidget = preferences.getInt(
+                    getString(R.string.key_background_color_preference),
+                    settings.colorWidget
+                )
+                if (!key.isNullOrBlank()) {
+                    runOnUiThread {
+                        AppWidget.sendRefreshBroadcast(this)
+                    }
+                    return ret
+                }
+            }
+            if (key.isNullOrBlank() || key == getString(R.string.key_background_alternating_color_preference)) {
+                settings.alternatingColorWidget = preferences.getInt(
+                    getString(R.string.key_background_alternating_color_preference),
+                    settings.alternatingColorWidget
+                )
+                if (!key.isNullOrBlank()) {
+                    runOnUiThread {
+                        AppWidget.sendRefreshBroadcast(this)
+                    }
+                    return ret
+                }
+            }
+            if (key.isNullOrBlank() || key == getString(R.string.key_widget_interval_of_events_preference)) {
+                settings.daysForShowEventsWidget = preferences.getInt(
+                    getString(R.string.key_widget_interval_of_events_preference),
+                    settings.daysForShowEventsWidget
+                )
+                if (!key.isNullOrBlank()) {
+                    runOnUiThread {
+                        AppWidget.sendRefreshBroadcast(this)
+                    }
+                    return ret
+                }
+            }
+            if (key.isNullOrBlank() || key == getString(R.string.key_age_checkbox_preference)) {
+                settings.showAge = preferences.getBoolean(
+                    getString(R.string.key_age_checkbox_preference),
+                    settings.showAge
+                )
+                if (!key.isNullOrBlank()) {
+                    runOnUiThread {
+                        AppWidget.sendRefreshBroadcast(this)
+                    }
+                    return ret
+                }
+            }
+            if (key.isNullOrBlank() || key == getString(R.string.key_minutes_before_notification_preference)) {
+                settings.minutesForStartNotification = preferences.getInt(
+                    getString(R.string.key_minutes_before_notification_preference),
+                    settings.minutesForStartNotification
+                )
+                if (!key.isNullOrBlank()) {
+                    startService(Intent(this, NotificationService::class.java).apply {
+                        putExtra(
+                            MINUTES_FOR_START_NOTIFICATION,
+                            settings.minutesForStartNotification
+                        )
+                    }
+                    )
+                    return ret
+                }
+            }
+            if (key.isNullOrBlank() || key == getString(R.string.key_export_settings_preference)) {
+                //TODO: записать текущие настройки в файл
+                if (!key.isNullOrBlank()) return ret
+            }
+            if (key.isNullOrBlank() || key == getString(R.string.key_import_settings_preference)) {
+                //TODO: загрузить настройки из файла
+                if (key.isNullOrBlank()) return ret
+            }
+        } catch (t: Throwable) {
+            logAndToast(t)
+            return false
+        }
+        return ret
+    }
 
-	private fun logAndToast(t: Throwable) = logAndToast(t, this::class.java.toString())
+    private fun logAndToast(t:Throwable) = logAndToast(t,this::class.java.toString())
 
-	private fun logAndToast(t: Throwable, TAG: String) {
-		try {
-			Log.e(TAG, "", t)
-			Toast.makeText(applicationContext, t.toString(), Toast.LENGTH_LONG).show()
-		} catch (_: Throwable) {
-		}
-	}
+    private fun logAndToast(t: Throwable, TAG:String) {
+        try {
+            Log.e(TAG, "", t)
+            Toast.makeText(applicationContext, t.toString(), Toast.LENGTH_LONG).show()
+        } catch (_: Throwable) {
+        }
+    }
 }
