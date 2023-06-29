@@ -25,7 +25,13 @@
         android:id="@+id/settings"
         android:name="ru.geekbrains.eventsreminder.presentation.ui.settings.SettingsFragment"
         android:label="@string/settings_fragment_title"
-         />
+         >
+        <action
+            android:id="@+id/action_settings_self"
+            app:popUpTo="@+id/settings"
+            app:popUpToInclusive="true"
+            app:destination="@id/settings" />
+    </fragment>
 
     <fragment
         android:id="@+id/myEvents"

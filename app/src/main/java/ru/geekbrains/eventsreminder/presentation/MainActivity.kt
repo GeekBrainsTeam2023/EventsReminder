@@ -237,15 +237,18 @@ class MainActivity : DaggerAppCompatActivity() {
 
     fun updateNotificationService(eventsList: List<EventData>) {
         try {
-            startService(Intent(applicationContext, NotificationService::class.java).apply {
-                putExtra(
-                    MINUTES_FOR_START_NOTIFICATION,
-                    settings.minutesForStartNotification
-                )
-                putExtra(TIME_TO_START_NOTIFICATION,
-                settings.timeToStartNotification)
-                putParcelableArrayListExtra(EVENTS_DATA, ArrayList(eventsList))
-            }
+            startService(
+                Intent(applicationContext, NotificationService::class.java).apply {
+                    putExtra(
+                        MINUTES_FOR_START_NOTIFICATION,
+                        settings.minutesForStartNotification,
+                    )
+                    putExtra(
+                        TIME_TO_START_NOTIFICATION,
+                        settings.timeToStartNotification,
+                    )
+                    putParcelableArrayListExtra(EVENTS_DATA, ArrayList(eventsList))
+                },
             )
         } catch (t: Throwable) {
             logAndToast(t)
@@ -265,7 +268,7 @@ class MainActivity : DaggerAppCompatActivity() {
         try {
             if (preferences.contains(getString(R.string.key_phonebook_datasource_checkbox_preference)))
                 ret =
-                    true // Если хотябы один параметр инициализирован то взводим флаг применения параметров
+                    true // Если хотя бы один параметр инициализирован, то взводим флаг применения параметров
             if (key.isNullOrBlank() || key == getString(R.string.key_phonebook_datasource_checkbox_preference)) {
                 settings.isDataContact = preferences.getBoolean(
                     getString(R.string.key_phonebook_datasource_checkbox_preference),
@@ -433,14 +436,7 @@ class MainActivity : DaggerAppCompatActivity() {
                     return ret
                 }
             }
-            if (key.isNullOrBlank() || key == getString(R.string.key_export_settings_preference)) {
-                //TODO: записать текущие настройки в файл
-                if (!key.isNullOrBlank()) return ret
-            }
-            if (key.isNullOrBlank() || key == getString(R.string.key_import_settings_preference)) {
-                //TODO: загрузить настройки из файла
-                if (key.isNullOrBlank()) return ret
-            }
+
         } catch (t: Throwable) {
             logAndToast(t)
             return false
