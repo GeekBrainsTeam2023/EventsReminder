@@ -23,12 +23,10 @@
     <string name="widget_appearance_settings_preference_category">Настройки виджета: внешний вид</string>
     <string name="title_export_settings_preference">экспорт текущих настроек</string>
     <string name="key_import_settings_preference">import_settings</string>
-    <string name="title_import_settings_preference">импорт настроек</string>
+    <string name="title_import_settings_preference">импорт сохранённых настроек</string>
     <string name="key_notification_start_time_preference">time_to_start_notification</string>
     <string name="title_notification_start_time_preference">время срабатывания уведомления</string>
     <string name="key_export_settings_preference">export_settings</string>
-    <string name="key_notification_melody_preference">notification_melody</string>
-    <string name="title_notification_melody_preference">мелодия</string>
     <string name="key_minutes_before_notification_preference">minutes_before_notification</string>
     <string name="title_minutes_before_notification_preference">минут до события</string>
     <string name="summary_minutes_before_notification_preference">за сколько минут до события выводить уведомление</string>
@@ -117,4 +115,7 @@
     <string name="client_id">1036319382432-k74da1rcnkgu12jr8nq9csda8cb6nrb1.apps.googleusercontent.com</string>
     <string name="repeat_once_a">повторять раз в</string>
     <string name="key_widget_appearance_by_default">widget_appearance_by_default</string>
+    <string name="toast_msg_settings_load_successfully">Настройки загружены</string>
+    <string name="toast_msg_current_settings_saved">Настройки сохранены</string>
+    <string name="export_import_settings_preference_category_title">экспорт/импорт настроек</string>
 </resources>

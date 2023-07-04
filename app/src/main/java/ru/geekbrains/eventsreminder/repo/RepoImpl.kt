@@ -49,11 +49,10 @@ class RepoImpl @Inject constructor(
 				listEvents.addAll(
 					calendarRepo.loadEventCalendar(daysForShowEvents).filter { calendarEvent ->
 						!(calendarEvent.type == EventType.BIRTHDAY && listEvents.any { contactEvent ->
-							contactEvent.birthday?.safeWithYear(0) == calendarEvent.birthday?.safeWithYear(0) &&
+							contactEvent.date.safeWithYear(0) == calendarEvent.date.safeWithYear(0) &&
 									contactEvent.type == EventType.BIRTHDAY &&
 									calendarEvent.name.contains(
-										contactEvent.name + " – "
-									)
+										contactEvent.name )
 						})
 					})
 			} catch (exc: Throwable) {

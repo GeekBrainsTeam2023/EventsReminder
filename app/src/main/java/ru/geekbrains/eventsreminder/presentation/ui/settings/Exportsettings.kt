@@ -1,26 +1,23 @@
 package ru.geekbrains.eventsreminder.presentation.ui.settings
 
 import android.content.Context
-import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
+import android.net.Uri
 import android.util.Log
-import java.io.File
-import java.io.FileInputStream
 import java.io.FileNotFoundException
-import java.io.FileOutputStream
 import java.io.IOException
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
 
 class Exportsettings {
     companion object {
-        fun saveSharedPreferencesToFile(dst: File, context: Context, prefName: String): Boolean {
+        fun saveSharedPreferencesToFile(uri: Uri, context: Context, prefs: SharedPreferences): Boolean {
             var res = false
             var output: ObjectOutputStream? = null
             try {
-                output = ObjectOutputStream(FileOutputStream(dst))
-                val pref: SharedPreferences = context.getSharedPreferences(prefName, MODE_PRIVATE)
-                output.writeObject(pref.getAll())
+               output = ObjectOutputStream(
+                    context.contentResolver.openOutputStream(uri))
+                output.writeObject(prefs.getAll())
                 res = true
             } catch (e: FileNotFoundException) {
                 Log.e(this::class.java.toString(), "", e)
@@ -39,13 +36,13 @@ class Exportsettings {
             return res
         }
 
-        fun loadSharedPreferencesFromFile(src: File, context: Context, prefName: String): Boolean {
+        fun loadSharedPreferencesFromFile(uri: Uri, context: Context, prefs: SharedPreferences): Boolean {
             var res = false
             var input: ObjectInputStream? = null
             try {
-                input = ObjectInputStream(FileInputStream(src))
+                input = ObjectInputStream(context.contentResolver.openInputStream(uri))
                 val prefEdit: SharedPreferences.Editor =
-                    context.getSharedPreferences(prefName, MODE_PRIVATE).edit()
+                    prefs.edit()
                 prefEdit.clear()
                 val entries = input.readObject() as Map<String, *>
                 for (entry in entries) {

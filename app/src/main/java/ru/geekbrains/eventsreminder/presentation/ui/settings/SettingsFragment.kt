@@ -7,7 +7,9 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.preference.*
 import com.rarepebble.colorpicker.ColorPreference
 import dagger.android.AndroidInjector
@@ -67,7 +69,7 @@ class SettingsFragment : PreferenceFragmentCompat(), HasAndroidInjector {
         SharedPreferences.OnSharedPreferenceChangeListener { preferences, key ->
             try {
                 (requireActivity() as MainActivity).setPreferences(preferences, key)
-                findPreference<WidgetPreviewPreference>("widget_appearance_by_default")?.renew()
+                findPreference<WidgetPreviewPreference>(getString(R.string.key_widget_appearance_by_default))?.renew()
             } catch (t: Throwable) {
                 outputError(t)
             }
@@ -112,14 +114,50 @@ class SettingsFragment : PreferenceFragmentCompat(), HasAndroidInjector {
             val exportSettingsButton: Preference? =
                 findPreference(getString(R.string.key_export_settings_preference))
             exportSettingsButton?.setOnPreferenceClickListener {
-                Toast.makeText(context, "export current settings", Toast.LENGTH_SHORT).show()
+                savePrefs.launch("EventsReminder.settings")
                 true
             }
             val importSettingsButton: Preference? =
                 findPreference(getString(R.string.key_import_settings_preference))
             importSettingsButton?.setOnPreferenceClickListener {
-                Toast.makeText(context, "import settings", Toast.LENGTH_SHORT).show()
+                loadPrefs.launch(arrayOf("*/*"))
                 true
+            }
+        } catch (t: Throwable) {
+            outputError(t)
+        }
+    }
+
+    private val savePrefs = registerForActivityResult(
+        ActivityResultContracts.CreateDocument("*/*")
+    ) { uri ->
+        try {
+            uri?.let {
+                if (Exportsettings.saveSharedPreferencesToFile(
+                        uri,
+                        requireContext(),
+                        prefs
+                    )
+                ) Toast.makeText(context, getString(R.string.toast_msg_current_settings_saved), Toast.LENGTH_SHORT).show()
+            }
+        } catch (t: Throwable) {
+            outputError(t)
+        }
+    }
+
+    private val loadPrefs = registerForActivityResult(
+        ActivityResultContracts.OpenDocument()
+    ) { uri ->
+        try {
+            uri?.let {
+                if (Exportsettings.loadSharedPreferencesFromFile(
+                        uri,
+                        requireContext(),
+                        prefs
+                    )
+                ) findNavController().navigate(R.id.action_settings_self).also {
+                    Toast.makeText(context, getString(R.string.toast_msg_settings_load_successfully), Toast.LENGTH_SHORT).show()
+                }
             }
         } catch (t: Throwable) {
             outputError(t)
@@ -217,21 +255,18 @@ class SettingsFragment : PreferenceFragmentCompat(), HasAndroidInjector {
                 findPreference(getString(R.string.key_notification_start_time_preference))
             val time = prefs.getInt(
                 getString(R.string.key_notification_start_time_preference),
-                settingsData.timeToStartNotification).toLocalTime()
+                settingsData.timeToStartNotification
+            ).toLocalTime()
 
-            chooseNotificationStartTimeButton?.let{
-                it.setSummary(time.toString())
+            chooseNotificationStartTimeButton?.let {
+                it.summary = time.toString()
                 it.setOnPreferenceClickListener {
-                initTimePicker(requireContext(),time,
-                 chooseNotificationStartTimeButton)
-                true
-            }
-            }
-            val chooseNotificationMelodyButton: Preference? =
-                findPreference(getString(R.string.key_notification_melody_preference))
-            chooseNotificationMelodyButton?.setOnPreferenceClickListener {
-                Toast.makeText(context, "choose melody", Toast.LENGTH_SHORT).show()
-                true
+                    initTimePicker(
+                        requireContext(), time,
+                        chooseNotificationStartTimeButton
+                    )
+                    true
+                }
             }
             findPreference<SeekBarPreference>(getString(R.string.key_minutes_before_notification_preference))?.let {
                 it.value =
@@ -279,7 +314,7 @@ class SettingsFragment : PreferenceFragmentCompat(), HasAndroidInjector {
         }
     }
 
-    protected fun initTimePicker(context: Context, curTime : LocalTime, preference: Preference) {
+    private fun initTimePicker(context: Context, curTime: LocalTime, preference: Preference) {
         try {
             val timeSetListener = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
                 try {

@@ -38,11 +38,6 @@
             app:key="@string/key_notification_start_time_preference"
             app:title="@string/title_notification_start_time_preference"
             app:useSimpleSummaryProvider="true" />
-        <Preference
-            app:iconSpaceReserved="false"
-            app:key="@string/key_notification_melody_preference"
-            app:title="@string/title_notification_melody_preference"
-            app:useSimpleSummaryProvider="true" />
         <SeekBarPreference
             app:key="@string/key_minutes_before_notification_preference"
             app:title="@string/title_minutes_before_notification_preference"
@@ -139,6 +134,10 @@
             android:defaultValue="#DCF3F3"/>
         </PreferenceCategory>
     </PreferenceCategory>
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/export_import_settings_preference_category_title"
+        android:layout="@layout/title_for_inner_preference_category">
     <Preference
         app:iconSpaceReserved="false"
         app:key="@string/key_export_settings_preference"
@@ -147,4 +146,5 @@
         app:iconSpaceReserved="false"
         app:key="@string/key_import_settings_preference"
         app:title="@string/title_import_settings_preference" />
+    </PreferenceCategory>
 </PreferenceScreen>
