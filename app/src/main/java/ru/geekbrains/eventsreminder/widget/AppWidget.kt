@@ -8,10 +8,17 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.RectF
 import android.util.Log
 import android.widget.RemoteViews
+import androidx.annotation.ColorInt
 import ru.geekbrains.eventsreminder.R
 import ru.geekbrains.eventsreminder.presentation.MainActivity
+import kotlin.math.min
 
 
 class AppWidget : AppWidgetProvider() {
@@ -35,11 +42,29 @@ class AppWidget : AppWidgetProvider() {
 		appWidgetManager: AppWidgetManager
 	) {
 		try {
+
+			// Сюда вставить из настроек
+			val backgroundColor = context.resources.getColor(R.color.white, context.theme)
+			val strokeColor = context.resources.getColor(R.color.color_primary, context.theme)
+			val strokeWidth = 3
+			val cornerRadius = 16f
+
 			val widgetView = RemoteViews(
 				context.packageName,
 				R.layout.app_widget
 			)
 			val intent = Intent(context, MyWidgetRemoteViewsService::class.java)
+			widgetView.setImageViewBitmap(
+				R.id.background,
+				getWidgetBitmap(
+					context,
+					getWidgetSize(context, appWidgetId),
+					backgroundColor,
+					strokeColor,
+					strokeWidth,
+					cornerRadius
+				)
+			)
 			widgetView.setRemoteAdapter(R.id.widgetList, intent)
 			/**
 			 * Темплейт pendingIntent с вызовом MainActivity для элементов списка.
@@ -68,6 +93,71 @@ class AppWidget : AppWidgetProvider() {
 		} catch (t: Throwable) {
 			errLog(t)
 		}
+	}
+
+	private fun getWidgetSize(context: Context, widgetId: Int): Pair<Int, Int> {
+		val isPortrait = context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
+		val width = getWidgetWidth(context, isPortrait, widgetId)
+		val height = getWidgetHeight(context, isPortrait, widgetId)
+		val widthInPx = context.dip(width)
+		val heightInPx = context.dip(height)
+		return Pair(widthInPx, heightInPx)
+	}
+
+	private fun getWidgetWidth(context: Context, isPortrait: Boolean, widgetId: Int): Int =
+		if (isPortrait) {
+			getWidgetSizeInDp(context, widgetId, AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH)
+		} else {
+			getWidgetSizeInDp(context, widgetId, AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH)
+		}
+
+	private fun getWidgetHeight(context: Context, isPortrait: Boolean, widgetId: Int): Int =
+		if (isPortrait) {
+			getWidgetSizeInDp(context, widgetId, AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT)
+		} else {
+			getWidgetSizeInDp(context, widgetId, AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT)
+		}
+
+	private fun getWidgetSizeInDp(context: Context, widgetId: Int, key: String): Int =
+		AppWidgetManager.getInstance(context).getAppWidgetOptions(widgetId).getInt(key, 0)
+
+	private fun Context.dip(value: Int): Int = (value * resources.displayMetrics.density).toInt()
+	private fun getWidgetBitmap(
+		context: Context,
+		size: Pair<Int, Int>,
+		@ColorInt backgroundColor: Int,
+		@ColorInt strokeColor: Int,
+		strokeWidth: Int,
+		cornerRadius: Float
+	): Bitmap {
+		val paint = Paint(Paint.FILTER_BITMAP_FLAG and Paint.DITHER_FLAG and Paint.ANTI_ALIAS_FLAG).apply {
+			setStrokeWidth(strokeWidth.toFloat())
+			style = Paint.Style.STROKE
+			strokeCap = Paint.Cap.ROUND
+		}
+		val rect = RectF().apply {
+			set(0f, 0f, size.first.toFloat(), size.second.toFloat())
+		}
+
+		val bitmap = Bitmap.createBitmap(size.first, size.second, Bitmap.Config.ARGB_8888)
+		val canvas = Canvas(bitmap)
+		paint.apply {
+			style = Paint.Style.FILL
+			color = backgroundColor
+		}
+
+		canvas.drawRoundRect(rect, cornerRadius, cornerRadius, paint)
+		val stroke = RectF().apply {
+			set((strokeWidth / 2f), (strokeWidth / 2f), size.first - (strokeWidth / 2f), size.second - (strokeWidth / 2f))
+		}
+		paint.apply {
+			style = Paint.Style.STROKE
+			color = strokeColor
+		}
+		val strokeCornerRadius = cornerRadius - (strokeWidth / 2f)
+		canvas.drawRoundRect(stroke, strokeCornerRadius, strokeCornerRadius, paint)
+
+		return bitmap
 	}
 
 	override fun onReceive(context: Context?, intent: Intent) {

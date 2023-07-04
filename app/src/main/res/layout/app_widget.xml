@@ -3,13 +3,18 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:id="@+id/widgetLayout">
+    <ImageView
+        android:id="@+id/background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
     <ListView
         android:id="@+id/widgetList"
         android:padding="@dimen/appwidget_relative_layout_padding"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:divider="@color/light_blue_50"
         android:dividerHeight="0dp"
         tools:listitem="@layout/item_app_widget" />

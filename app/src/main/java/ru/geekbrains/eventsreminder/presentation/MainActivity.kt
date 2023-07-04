@@ -79,7 +79,7 @@ class MainActivity : DaggerAppCompatActivity() {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
-
+		firebaseAuth = FirebaseAuth.getInstance()
 		oneTapClient = Identity.getSignInClient(this)
 		signInRequest = BeginSignInRequest.builder()
 			.setPasswordRequestOptions(
@@ -131,7 +131,7 @@ class MainActivity : DaggerAppCompatActivity() {
 		}
 
 
-		firebaseAuth = FirebaseAuth.getInstance()
+
 
 	}
 
