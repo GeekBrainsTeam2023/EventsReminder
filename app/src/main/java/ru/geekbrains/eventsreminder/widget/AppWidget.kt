@@ -8,20 +8,27 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
+import android.os.Bundle
 import android.util.Log
 import android.widget.RemoteViews
 import androidx.annotation.ColorInt
+import androidx.preference.PreferenceManager
 import ru.geekbrains.eventsreminder.R
+import ru.geekbrains.eventsreminder.domain.SettingsData
 import ru.geekbrains.eventsreminder.presentation.MainActivity
-import kotlin.math.min
-
 
 class AppWidget : AppWidgetProvider() {
+
+	private val defaultSettingsData by lazy {
+		SettingsData()
+	}
+
 	override fun onUpdate(
 		context: Context,
 		appWidgetManager: AppWidgetManager,
@@ -36,6 +43,20 @@ class AppWidget : AppWidgetProvider() {
 		}
 	}
 
+	override fun onAppWidgetOptionsChanged(
+		context: Context?,
+		appWidgetManager: AppWidgetManager?,
+		appWidgetId: Int,
+		newOptions: Bundle?
+	) {
+		super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions)
+		context?.run {
+			appWidgetManager?.let { manager->
+				onUpdateWidget(this,appWidgetId,manager)
+			}
+		}
+	}
+
 	private fun onUpdateWidget(
 		context: Context,
 		appWidgetId: Int,
@@ -43,11 +64,24 @@ class AppWidget : AppWidgetProvider() {
 	) {
 		try {
 
+			val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 			// Сюда вставить из настроек
-			val backgroundColor = context.resources.getColor(R.color.white, context.theme)
-			val strokeColor = context.resources.getColor(R.color.color_primary, context.theme)
-			val strokeWidth = 3
-			val cornerRadius = 16f
+			val backgroundColor = prefs.getInt(
+				context.resources.getString(R.string.key_background_color_preference),
+				defaultSettingsData.widgetBackgroundColor
+			)
+			val strokeColor = prefs.getInt(
+				context.resources.getString(R.string.key_widget_border_color),
+				defaultSettingsData.widgetBorderColor
+			)
+			val strokeWidth = prefs.getInt(
+				context.resources.getString(R.string.key_widget_border_width),
+				defaultSettingsData.widgetBorderWidth
+			)
+			val cornerRadius = prefs.getInt(
+				context.resources.getString(R.string.key_widget_border_corners),
+				defaultSettingsData.widgetBorderCornerRadius
+			).toFloat()
 
 			val widgetView = RemoteViews(
 				context.packageName,
@@ -57,7 +91,6 @@ class AppWidget : AppWidgetProvider() {
 			widgetView.setImageViewBitmap(
 				R.id.background,
 				getWidgetBitmap(
-					context,
 					getWidgetSize(context, appWidgetId),
 					backgroundColor,
 					strokeColor,
@@ -123,7 +156,6 @@ class AppWidget : AppWidgetProvider() {
 
 	private fun Context.dip(value: Int): Int = (value * resources.displayMetrics.density).toInt()
 	private fun getWidgetBitmap(
-		context: Context,
 		size: Pair<Int, Int>,
 		@ColorInt backgroundColor: Int,
 		@ColorInt strokeColor: Int,
@@ -164,7 +196,8 @@ class AppWidget : AppWidgetProvider() {
 		try {
 			val action = intent.action
 			if (action == AppWidgetManager.ACTION_APPWIDGET_UPDATE ||
-				action == AppWidgetManager.ACTION_APPWIDGET_BIND
+				action == AppWidgetManager.ACTION_APPWIDGET_BIND ||
+				intent.action.contentEquals("com.sec.android.widgetapp.APPWIDGET_RESIZE")
 			) {
 				// refresh all widgets
 				val mgr = AppWidgetManager.getInstance(context)

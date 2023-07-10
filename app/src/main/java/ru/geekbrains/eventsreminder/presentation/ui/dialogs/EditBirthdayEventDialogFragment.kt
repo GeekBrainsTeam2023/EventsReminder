@@ -21,7 +21,6 @@ class EditBirthdayEventDialogFragment : AbsDaggerDialogFragment() {
 	private val binding: EditBirthdayEventDialogFragmentBinding by viewBinding()
 
 
-
 	override fun onCreateView(
 		inflater: LayoutInflater,
 		container: ViewGroup?,
@@ -42,13 +41,12 @@ class EditBirthdayEventDialogFragment : AbsDaggerDialogFragment() {
 			processBundleArguments()
 			var sourceId = 0L
 			with(binding) {
-				noYearCheckbox.setOnCheckedChangeListener{ _,isChecked->
+				noYearCheckbox.setOnCheckedChangeListener { _, isChecked ->
 					onNoYearCheckChanged(isChecked)
 				}
 				(inputBirthdaySpinnerPicker as ViewGroup).findViewById<View>(
 					Resources.getSystem().getIdentifier("year", "id", "android")
-				).visibility =
-					View.GONE
+				).visibility = GONE
 				eventData?.let { eventData ->
 					applyExistingEventData(eventData)
 					sourceId = eventData.sourceId
@@ -118,9 +116,9 @@ class EditBirthdayEventDialogFragment : AbsDaggerDialogFragment() {
 	}
 
 	override fun getSuccessIdToNavigate(sourceNavigationId: Int) =
-		when (sourceNavigationId){
-			R.id.myEvents -> R.id.action_editBirthdayDialog_to_myEvents
-			R.id.homeToDashboard -> R.id.action_editBirthdayDialog_to_homeToDashboard
+		when (sourceNavigationId) {
+			R.id.myEventsFragment -> R.id.action_editBirthdayDialog_to_myEvents
+			R.id.dashboardFragment -> R.id.action_editBirthdayDialog_to_homeToDashboard
 			else -> sourceNavigationId
 		}
 
@@ -137,7 +135,7 @@ class EditBirthdayEventDialogFragment : AbsDaggerDialogFragment() {
 					inputBirthdayDatePicker.dayOfMonth,
 					inputBirthdayDatePicker.month + 1,
 					if (noYearCheckbox.isChecked) null else
-					inputBirthdayDatePicker.year,
+						inputBirthdayDatePicker.year,
 					settings.minutesForStartNotification,
 					sourceId
 				)
@@ -161,11 +159,11 @@ class EditBirthdayEventDialogFragment : AbsDaggerDialogFragment() {
 					null
 				)
 			} else
-			inputBirthdayCalendarPicker.init(
-				eventData.birthday?.year ?: eventData.date.year,
-				eventData.date.monthValue - 1, eventData.date.dayOfMonth,
-				null
-			)
+				inputBirthdayCalendarPicker.init(
+					eventData.birthday?.year ?: eventData.date.year,
+					eventData.date.monthValue - 1, eventData.date.dayOfMonth,
+					null
+				)
 		} catch (t: Throwable) {
 			logAndToast(t)
 		}

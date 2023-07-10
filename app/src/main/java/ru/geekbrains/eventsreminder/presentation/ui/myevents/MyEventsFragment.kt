@@ -71,7 +71,7 @@ class MyEventsFragment : EventEditor, DaggerFragment() {
             addEventFab.setOnClickListener {
                 try {
                     val bundle = Bundle()
-                    bundle.putInt(SOURCE_ID_TO_NAVIGATE, R.id.myEvents)
+                    bundle.putInt(SOURCE_ID_TO_NAVIGATE, R.id.myEventsFragment)
                     findNavController().navigate(R.id.chooseNewEventTypeDialog, bundle)
                 } catch (t: Throwable) {
                     myEventsViewModel.handleError(t)
@@ -277,7 +277,7 @@ class MyEventsFragment : EventEditor, DaggerFragment() {
                     EventType.HOLIDAY -> {
                         bundle.putInt(
                             SOURCE_ID_TO_NAVIGATE,
-                            R.id.action_editHolidayDialog_to_myEvents
+                            R.id.action_editHolidayDialog_to_myEventsFragment
                         )
                         requireActivity().findNavController(R.id.nav_host_fragment_activity_main)
                             .navigate(R.id.editHolidayDialog, bundle)

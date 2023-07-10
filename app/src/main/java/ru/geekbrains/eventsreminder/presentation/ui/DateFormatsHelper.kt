@@ -1,6 +1,5 @@
 package ru.geekbrains.eventsreminder.presentation.ui
 
-import java.lang.Math.abs
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.temporal.ChronoUnit
@@ -21,6 +20,15 @@ fun LocalDate.toDaysSinceNowInWords() =
                 kotlin.math.abs(it),
                 "ень", "ня", "ней"
             ).toString()
+        }
+    }
+
+fun LocalDate.toShortDaysSinceNowInWords() =
+    ChronoUnit.DAYS.between(LocalDate.now(), this).toInt().let {
+        when (it) {
+            0 -> "Сегодня"
+            1 -> "Завтра"
+            else -> "+${it} дн."
         }
     }
 
