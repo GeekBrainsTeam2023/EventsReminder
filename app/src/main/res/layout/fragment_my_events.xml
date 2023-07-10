@@ -8,9 +8,14 @@
 
     <TextView
         android:id="@+id/textViewMyEventsHeader"
-        style="@style/textview_dashboard_and_myevents_header"
-        app:layout_constraintBottom_toTopOf="@id/clearAllLocalEventsBtn"
+        style="@style/dashboardAndMyEventsHeader"
+        android:layout_marginHorizontal="@dimen/global_padding"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textAlignment="viewStart"
+        app:layout_constraintBottom_toBottomOf="@id/clearAllLocalEventsBtn"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/clearAllLocalEventsBtn"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -22,11 +27,11 @@
         app:layout_constraintTop_toTopOf="parent"
         style="@style/empty_local_events_textview" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/clearAllLocalEventsBtn"
         android:text="@string/clear_local_events_btn_text"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textViewMyEventsHeader"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         style="@style/clear_all_local_events_button" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout

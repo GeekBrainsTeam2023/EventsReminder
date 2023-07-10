@@ -4,6 +4,7 @@ import ru.geekbrains.eventsreminder.domain.EventData
 import ru.geekbrains.eventsreminder.domain.EventNotificationData
 import ru.geekbrains.eventsreminder.domain.EventSourceType
 import ru.geekbrains.eventsreminder.domain.EventType
+import ru.geekbrains.eventsreminder.domain.PeriodType
 import ru.geekbrains.eventsreminder.presentation.ui.MAX_YEAR
 import ru.geekbrains.eventsreminder.presentation.ui.safeWithYear
 import java.time.*
@@ -32,7 +33,7 @@ fun extractBirthday(text: String): LocalDate {
 fun addBirthDayEventFromContactPhone(name: String, birthDay: LocalDate, id: Long): EventData {
 	return EventData(
 		EventType.BIRTHDAY,
-		null,
+		PeriodType.YEAR,
 		birthDay,
 		getCelebrationDateForBirthDay(birthDay),
 		null,
@@ -51,11 +52,11 @@ fun addBirthDayEventFromLocalEdit(
 	with(LocalDate.of(year ?: MAX_YEAR, month, day)) {
 		EventData(
 			EventType.BIRTHDAY,
-			null,
+			PeriodType.YEAR,
 			this,
 			getCelebrationDateForBirthDay(this),
 			null,
-			minutesBeforeNotification?.let { LocalTime.of(0, minutesBeforeNotification) },
+			minutesBeforeNotification?.let { LocalTime.of(it / 60, it % 60) },
 			name,
 			sourceId,
 			EventSourceType.LOCAL
@@ -63,6 +64,7 @@ fun addBirthDayEventFromLocalEdit(
 	}
 
 fun addHolidayEventFromLocalEdit(
+	period: PeriodType?,
 	name: String, day: Int, month: Int,
 	year: Int, hour: Int?, minute: Int?,
 	minutesBeforeNotification: Int?,
@@ -70,17 +72,18 @@ fun addHolidayEventFromLocalEdit(
 ): EventData =
 	EventData(
 		EventType.HOLIDAY,
-		null,
+		period,
 		null,
 		LocalDate.of(year, month, day),
 		hour?.let { minute?.let { LocalTime.of(hour, minute) } },
-		minutesBeforeNotification?.let { LocalTime.of(0, minutesBeforeNotification) },
+		minutesBeforeNotification?.let { LocalTime.of(it / 60, it % 60) },
 		name,
 		sourceId,
 		EventSourceType.LOCAL
 	)
 
 fun addSimpleEventFromLocalEdit(
+	period: PeriodType?,
 	name: String, day: Int, month: Int,
 	year: Int, hour: Int?, minute: Int?,
 	minutesBeforeNotification: Int?,
@@ -88,22 +91,22 @@ fun addSimpleEventFromLocalEdit(
 ): EventData =
 	EventData(
 		EventType.SIMPLE,
-		null,
+		period,
 		null,
 		LocalDate.of(year, month, day),
 		hour?.let { minute?.let { LocalTime.of(hour, minute) } },
-		minutesBeforeNotification?.let { LocalTime.of(0, minutesBeforeNotification) },
+		minutesBeforeNotification?.let { LocalTime.of(it / 60, it % 60) },
 		name,
 		sourceId,
 		EventSourceType.LOCAL
 	)
 
-fun addEventFromCalendar(name: String, startDate: Long, eventType: EventType, id: Long): EventData {
+fun addEventFromCalendar(name: String, startDate: Long, eventType: EventType, id: Long,period: PeriodType?): EventData {
 	val date =
 		LocalDateTime.ofInstant(Instant.ofEpochSecond(startDate / 1000), ZoneId.systemDefault())
 	return EventData(
 		eventType,
-		null,
+		period,
 		null,
 		date.toLocalDate(),
 		date.toLocalTime(),
@@ -157,11 +160,11 @@ fun addNotificationEventFromEvent(event: EventData): EventNotificationData =
 fun addEventsListToNotificationEventsList(
 	eventNotificationList: MutableList<EventNotificationData>,
 	eventList: MutableList<EventData>
-): MutableList<EventNotificationData> {
+) {
 	for (event in eventList) {
 		if (isNewEvent(eventNotificationList, event)) {
 			eventNotificationList.add(addNotificationEventFromEvent(event))
 		}
 	}
-	return eventNotificationList.toMutableList()
+
 }

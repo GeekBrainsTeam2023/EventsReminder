@@ -8,6 +8,7 @@ Refer to App Widget Documentation for margin information
 http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
     -->
     <dimen name="widget_margin">0dp</dimen>
+    <dimen name="global_padding">6dp</dimen>
     <dimen name="appwidget_listview_divider_height">1dp</dimen>
     <dimen name="textview_dashboard_interval_of_events_layout_margin_start">4dp</dimen>
     <dimen name="textview_dashboard_interval_of_events_textsize">16sp</dimen>
@@ -26,8 +27,7 @@ http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
     <dimen name="recyclerview_list_of_events_layout_margin">4dp</dimen>
     <dimen name="dashboard_fab_add_event_layout_margin">10dp</dimen>
     <dimen name="widget_event_textview_textsize">13sp</dimen>
-    <dimen name="widget_textview_padding_start">2dp</dimen>
-    <dimen name="widget_textview_padding_end">2dp</dimen>
+    <dimen name="widget_textview_margin">5dp</dimen>
     <dimen name="appwidget_relative_layout_padding">4dp</dimen>
     <dimen name="textview_dashboard_date_or_events_textsize">16sp</dimen>
     <dimen name="textview_dashboard_date_of_events_layout_margin">5dp</dimen>
@@ -40,15 +40,12 @@ http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
     <dimen name="dashboard_events_list_titles_linearlayout_margin">2dp</dimen>
     <dimen name="event_dialogs_inner_padding">4dp</dimen>
     <dimen name="create_events_dialog_title_textsize">17sp</dimen>
-    <dimen name="dialog_btns_textsize">15sp</dimen>
-    <dimen name="create_event_dialog_radio_btn_textsize">13sp</dimen>
+    <dimen name="dialog_btns_textsize">13sp</dimen>
+    <dimen name="create_event_dialog_radio_btn_textsize">16sp</dimen>
     <dimen name="my_events_buttons_elevation">7dp</dimen>
     <dimen name="rv_list_of_my_events_padding_bottom">100dp</dimen>
     <dimen name="empty_local_events_textview_text_size">30sp</dimen>
     <dimen name="empty_local_events_textview_margin">8dp</dimen>
-<!--    <dimen name="my_events_image_btns_layout_margin">2dp</dimen>-->
-<!--    <dimen name="my_events_image_btns_elevation">7dp</dimen>-->
-<!--    <dimen name="my_events_buttons_linear_layout_margin_bottom">5dp</dimen>-->
     <dimen name="title_for_preference_textview_padding">8dp</dimen>
     <dimen name="title_for_preference_textview_textsize">16sp</dimen>
     <dimen name="shimmer_linear_layout_padding">5dp</dimen>

@@ -9,6 +9,7 @@
         android:id="@+id/titleChooseNewEventType"
         style="@style/edit_events_dialogs_title"
         android:text="@string/create_event_dialog_choose_title"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

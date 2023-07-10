@@ -65,7 +65,7 @@ class PeriodTypeConverter {
     @TypeConverter
     fun periodTypeToString(period: PeriodType?) = period?.toString()
     @TypeConverter
-    fun stringToPeriodType(string: String?) = string?.let { PeriodType.valueOf(it) }
+    fun stringToPeriodType(string: String?) = string?.let { PeriodType.fromString(it) }
 }
 @Keep
 class LocalDateConverter {

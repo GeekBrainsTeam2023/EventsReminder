@@ -17,3 +17,8 @@ const val EVENT_ID = "EVENT_ID"
  * дне рождения
  * */
 const val MAX_YEAR = 2096
+/**
+ * Код запроса на результат выполнения активности по выбору пути и
+ * имени файла (используется при сохранении файла)
+ * */
+const val CHOOSE_FILEPATH_REQUEST_CODE = 987654321

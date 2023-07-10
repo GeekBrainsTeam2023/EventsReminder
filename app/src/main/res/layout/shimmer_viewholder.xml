@@ -1,53 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:id="@+id/eventsListTitlesLinearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_margin="@dimen/dashboard_events_list_titles_linearlayout_margin"
-        android:padding="@dimen/shimmer_linear_layout_padding"
-        app:layout_constraintBottom_toTopOf="@id/dashboardRecyclerViewCardview"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/textViewDashboardIntervalOfEvents"
-            style="@style/textview_dashboard_interval_of_events"
-            android:layout_gravity="start"
-            android:background="@drawable/shape_rectangle_for_shimmer"
-            tools:text="today 365 events" />
-
-        <TextView
-            android:id="@+id/textViewDashboardDateOfEvents"
-            style="@style/textview_dashboard_date_of_events"
-            android:background="@drawable/shape_rectangle_for_shimmer"
-            tools:text="22 may 2023" />
-    </LinearLayout>
-
-    <androidx.cardview.widget.CardView
+    <View
         android:id="@+id/dashboardRecyclerViewCardview"
+        android:layout_width="match_parent"
+        android:layout_height="21sp"
+        android:layout_marginTop="18sp"
         style="@style/dashboard_recyclerview_cardview"
-        app:cardCornerRadius="@dimen/dashboard_recyclerview_cardview_corner_radius"
-        app:cardElevation="@dimen/dashboard_recyclerview_cardview_card_elevation"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/eventsListTitlesLinearLayout">
+        android:background="@drawable/shape_rectangle_for_shimmer"/>
 
-                <TextView
-                    android:id="@+id/dashboardRecyclerViewItemTitleTextview"
-                    android:layout_width="match_parent"
-                    style="@style/dashboard_recyclerview_item_title_textview"
-                    android:background="@drawable/shape_rectangle_for_shimmer"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.cardview.widget.CardView>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

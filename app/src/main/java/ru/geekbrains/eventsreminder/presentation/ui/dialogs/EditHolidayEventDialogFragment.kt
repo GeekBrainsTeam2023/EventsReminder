@@ -1,5 +1,6 @@
 package ru.geekbrains.eventsreminder.presentation.ui.dialogs
 
+
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,10 +12,13 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import ru.geekbrains.eventsreminder.R
 import ru.geekbrains.eventsreminder.databinding.EditHolidayEventDialogFragmentBinding
 import ru.geekbrains.eventsreminder.domain.EventData
+import ru.geekbrains.eventsreminder.domain.PeriodType
 import ru.geekbrains.eventsreminder.usecases.addHolidayEventFromLocalEdit
+
 
 class EditHolidayEventDialogFragment : AbsDaggerDialogFragment() {
     private val binding: EditHolidayEventDialogFragmentBinding by viewBinding()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -35,11 +39,17 @@ class EditHolidayEventDialogFragment : AbsDaggerDialogFragment() {
             processBundleArguments()
             var sourceId = 0L
             with(binding) {
+
+                initSpinnerValues(holidayPeriodValueSpinner)
+
                 eventData?.let { eventData ->
                     applyExistingEventData(eventData)
                     sourceId = eventData.sourceId
                 }
+
                 setTimePickerListeners(inputHolidayTime, requireContext(), isTimePickerEnabled)
+
+                setPeriodPickerListeners(isHolidayPeriodEnabled,holidayPeriodValueSpinner)
 
                 negativeBtnCreateHolidayEvent.setOnClickListener {
                     try {
@@ -78,8 +88,8 @@ class EditHolidayEventDialogFragment : AbsDaggerDialogFragment() {
 
     override fun getSuccessIdToNavigate(sourceNavigationId: Int) =
         when (sourceNavigationId) {
-            R.id.myEvents -> R.id.action_editHolidayDialog_to_myEvents
-            R.id.homeToDashboard -> R.id.action_editHolidayDialog_to_homeToDashboard
+            R.id.myEventsFragment -> R.id.action_editHolidayDialog_to_myEventsFragment
+            R.id.dashboardFragment -> R.id.action_editHolidayDialog_to_dashboardFragment
             else -> sourceNavigationId
         }
 
@@ -93,6 +103,8 @@ class EditHolidayEventDialogFragment : AbsDaggerDialogFragment() {
             }
             dashboardViewModel.addLocalEvent(
                 addHolidayEventFromLocalEdit(
+                    if (isHolidayPeriodEnabled.isChecked) selectedPeriod
+                    else null,
                     inputEventNameEditText.text.toString(),
                     inputHolidayDatePicker.dayOfMonth,
                     inputHolidayDatePicker.month + 1,
@@ -123,10 +135,16 @@ class EditHolidayEventDialogFragment : AbsDaggerDialogFragment() {
                 hours = it.hour
                 minutes = it.minute
                 inputHolidayTime.text = buildString {
-        append("%02d".format(hours))
-        append(":%02d".format(minutes))
-    }
+                    append("%02d".format(hours))
+                    append(":%02d".format(minutes))
+                }
                 inputHolidayTime.visibility = VISIBLE
+            }
+
+            eventData.period?.let {
+                isHolidayPeriodEnabled.isChecked = true
+                holidayPeriodValueSpinner.visibility = VISIBLE
+                holidayPeriodValueSpinner.setSelection(PeriodType.values().indexOf(it))
             }
         } catch (t: Throwable) {
             logAndToast(t)

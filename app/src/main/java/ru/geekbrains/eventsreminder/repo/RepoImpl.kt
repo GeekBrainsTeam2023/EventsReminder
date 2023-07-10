@@ -6,14 +6,14 @@ import ru.geekbrains.eventsreminder.domain.EventType
 import ru.geekbrains.eventsreminder.domain.ResourceState
 import ru.geekbrains.eventsreminder.presentation.ui.safeWithYear
 import ru.geekbrains.eventsreminder.repo.local.LocalRepo
-import ru.geekbrains.eventsreminder.repo.remote.IPhoneCalendarRepo
+import ru.geekbrains.eventsreminder.repo.remote.PhoneCalendarRepo
 import ru.geekbrains.eventsreminder.repo.remote.PhoneContactsRepo
 import javax.inject.Inject
 
 class RepoImpl @Inject constructor(
 	private val localRepo: LocalRepo,
 	private val contactsRepo: PhoneContactsRepo,
-	private val calendarRepo: IPhoneCalendarRepo
+	private val calendarRepo: PhoneCalendarRepo
 ) : Repo {
 	@Throws(Throwable::class)
 	override suspend fun loadData(
@@ -22,6 +22,16 @@ class RepoImpl @Inject constructor(
 		isDataCalendar: Boolean
 	): ResourceState<List<EventData>> {
 		val listEvents = mutableListOf<EventData>()
+		try {
+			listEvents.addAll(localRepo.getList())
+		} catch (t: Throwable) {
+			return ResourceState.ErrorState(
+				Throwable(
+					"Ошибка заргрузки событий из списка пользователя",
+					t
+				)
+			)
+		}
 		if (isDataContact) {
 			try {
 				listEvents.addAll(contactsRepo.loadBirthDayEvents(daysForShowEvents))
@@ -39,11 +49,10 @@ class RepoImpl @Inject constructor(
 				listEvents.addAll(
 					calendarRepo.loadEventCalendar(daysForShowEvents).filter { calendarEvent ->
 						!(calendarEvent.type == EventType.BIRTHDAY && listEvents.any { contactEvent ->
-							contactEvent.birthday?.safeWithYear(0) == calendarEvent.birthday?.safeWithYear(0) &&
+							contactEvent.date.safeWithYear(0) == calendarEvent.date.safeWithYear(0) &&
 									contactEvent.type == EventType.BIRTHDAY &&
 									calendarEvent.name.contains(
-										contactEvent.name + " – "
-									)
+										contactEvent.name )
 						})
 					})
 			} catch (exc: Throwable) {
@@ -55,16 +64,7 @@ class RepoImpl @Inject constructor(
 				)
 			}
 		}
-		try {
-			listEvents.addAll(localRepo.getList())
-		} catch (t: Throwable) {
-			return ResourceState.ErrorState(
-				Throwable(
-					"Ошибка заргрузки событий из списка пользователя",
-					t
-				)
-			)
-		}
+
 		return ResourceState.SuccessState(listEvents.toList())
 	}
 

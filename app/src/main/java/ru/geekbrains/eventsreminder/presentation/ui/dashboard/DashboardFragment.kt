@@ -2,13 +2,11 @@ package ru.geekbrains.eventsreminder.presentation.ui.dashboard
 
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
@@ -22,10 +20,6 @@ import ru.geekbrains.eventsreminder.domain.*
 import ru.geekbrains.eventsreminder.presentation.MainActivity
 import ru.geekbrains.eventsreminder.presentation.ui.RusIntPlural
 import ru.geekbrains.eventsreminder.presentation.ui.SOURCE_ID_TO_NAVIGATE
-import ru.geekbrains.eventsreminder.service.NotificationService
-import ru.geekbrains.eventsreminder.usecases.EVENTS_DATA
-import ru.geekbrains.eventsreminder.usecases.MINUTES_FOR_START_NOTIFICATION
-import ru.geekbrains.eventsreminder.widget.AppWidget
 import javax.inject.Inject
 
 
@@ -80,7 +74,7 @@ class DashboardFragment : DaggerFragment() {
 	private fun onFabClicked() {
 		try {
 			val bundle = Bundle()
-			bundle.putInt(SOURCE_ID_TO_NAVIGATE, R.id.homeToDashboard)
+			bundle.putInt(SOURCE_ID_TO_NAVIGATE, R.id.dashboardFragment)
 			findNavController().navigate(R.id.chooseNewEventTypeDialog, bundle)
 		} catch (t: Throwable) {
 			dashboardViewModel.handleError(t)
@@ -106,26 +100,39 @@ class DashboardFragment : DaggerFragment() {
 			when (appState) {
 				is AppState.SuccessState<*> -> {
 					val data = appState.data as List<EventData>
-					if (binding.shimmerLayout.isShimmerVisible) {
-						binding.shimmerLayout.hideShimmer()
-						binding.shimmerLayout.visibility = GONE
-						binding.recyclerViewListOfEvents.visibility = VISIBLE
-					}
+					showShimmer(false)
+//					if (binding.shimmerLayout.isShimmerVisible) {
+//						binding.shimmerLayout.hideShimmer()
+//						binding.shimmerLayout.visibility = GONE
+//						binding.recyclerViewListOfEvents.visibility = VISIBLE
+//					}
 					showEvents(data)
-					updateWidget()
-					updateNotificationService(data)
+					with(requireActivity() as MainActivity) {
+						updateWidget()
+						updateNotificationService(data)
+					}
 				}
-
 				is AppState.LoadingState -> {
-					//shimmer animation is on fragment load
+					showShimmer(true)
 				}
-
 				is AppState.ErrorState -> {
 					logAndToast(appState.error)
 				}
 			}
 		} catch (t: Throwable) {
 			logAndToast(t)
+		}
+	}
+
+	private fun showShimmer(state:Boolean){
+		binding.shimmerLayout.isVisible = state
+		binding.swipeLayout.isVisible = !state
+		if (state){
+			if (!binding.shimmerLayout.isShimmerStarted)
+				binding.shimmerLayout.startShimmer()
+		} else {
+			if (binding.shimmerLayout.isShimmerStarted)
+				binding.shimmerLayout.stopShimmer()
 		}
 	}
 
@@ -159,13 +166,13 @@ class DashboardFragment : DaggerFragment() {
 			dashboardViewModel.storedFilteredEvents.clear()
 			dashboardViewModel.storedFilteredEvents.addAll(events)
 			dashboardAdapter?.let { diffResult.dispatchUpdatesTo(it) }
-			binding.textViewDashboardHeader.text = buildString {
+			binding.dashboardHeader.text = buildString {
 				append("всего ")
 				append(
 					RusIntPlural(
-						"событ",
+						"событи",
 						events.count(),
-						"ие", "ия", "ий"
+						"е", "я", "й"
 					)
 				)
 				append(" за ")
@@ -177,31 +184,6 @@ class DashboardFragment : DaggerFragment() {
 					)
 				)
 			}
-		} catch (t: Throwable) {
-			dashboardViewModel.handleError(t)
-		}
-	}
-
-	private fun updateWidget() {
-		try {
-			requireActivity().runOnUiThread {
-				AppWidget.sendRefreshBroadcast(requireActivity() as MainActivity)
-			}
-		} catch (t: Throwable) {
-			dashboardViewModel.handleError(t)
-		}
-	}
-
-	private fun updateNotificationService(eventsList: List<EventData>) {
-		try {
-			activity?.startService(Intent(context, NotificationService::class.java).apply {
-				putExtra(
-					MINUTES_FOR_START_NOTIFICATION,
-					dashboardViewModel.getMinutesForStartNotification()
-				)
-				putParcelableArrayListExtra(EVENTS_DATA, ArrayList(eventsList))
-			}
-			)
 		} catch (t: Throwable) {
 			dashboardViewModel.handleError(t)
 		}

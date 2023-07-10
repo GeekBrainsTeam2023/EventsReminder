@@ -3,32 +3,38 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/homeToDashboard">
+    app:startDestination="@+id/dashboardFragment">
 
     <fragment
-        android:id="@+id/homeToDashboard"
+        android:id="@+id/dashboardFragment"
         android:name="ru.geekbrains.eventsreminder.presentation.ui.dashboard.DashboardFragment"
         android:label="@string/dashboard_fragment_title"
         tools:layout="@layout/fragment_dashboard" >
         <action
-            android:id="@+id/action_homeToDashboard_to_settings"
-            app:destination="@id/settings" />
+            android:id="@+id/action_dashboardFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
         <action
-            android:id="@+id/action_homeToDashboard_to_myEvents"
-            app:destination="@id/myEvents"/>
+            android:id="@+id/action_dashboardFragment_to_myEventsFragment"
+            app:destination="@id/myEventsFragment"/>
         <action
-            android:id="@+id/action_homeToDashboard_to_chooseNewEventTypeDialog"
+            android:id="@+id/action_dashboardFragment_to_chooseNewEventTypeDialog"
             app:destination="@id/chooseNewEventTypeDialog" />
     </fragment>
 
     <fragment
-        android:id="@+id/settings"
+        android:id="@+id/settingsFragment"
         android:name="ru.geekbrains.eventsreminder.presentation.ui.settings.SettingsFragment"
         android:label="@string/settings_fragment_title"
-         />
+         >
+        <action
+            android:id="@+id/action_settings_self"
+            app:popUpTo="@+id/settingsFragment"
+            app:popUpToInclusive="true"
+            app:destination="@id/settingsFragment" />
+    </fragment>
 
     <fragment
-        android:id="@+id/myEvents"
+        android:id="@+id/myEventsFragment"
         android:name="ru.geekbrains.eventsreminder.presentation.ui.myevents.MyEventsFragment"
         android:label="@string/my_events_fragment_title"
         tools:layout="@layout/fragment_my_events" >
@@ -62,13 +68,13 @@
 
         <action
             android:id="@+id/action_editBirthdayDialog_to_myEvents"
-            app:destination="@id/myEvents"
-            app:popUpTo="@+id/myEvents"
+            app:destination="@id/myEventsFragment"
+            app:popUpTo="@+id/myEventsFragment"
             app:popUpToInclusive="true"/>
         <action
             android:id="@+id/action_editBirthdayDialog_to_homeToDashboard"
-            app:destination="@id/homeToDashboard"
-            app:popUpTo="@+id/homeToDashboard"
+            app:destination="@id/dashboardFragment"
+            app:popUpTo="@+id/dashboardFragment"
             app:popUpToInclusive="true"
             />
 
@@ -78,14 +84,14 @@
         android:name="ru.geekbrains.eventsreminder.presentation.ui.dialogs.EditHolidayEventDialogFragment"
         tools:layout="@layout/edit_holiday_event_dialog_fragment">
         <action
-            android:id="@+id/action_editHolidayDialog_to_homeToDashboard"
-            app:destination="@id/homeToDashboard"
-            app:popUpTo="@+id/homeToDashboard"
+            android:id="@+id/action_editHolidayDialog_to_dashboardFragment"
+            app:destination="@id/dashboardFragment"
+            app:popUpTo="@+id/dashboardFragment"
             app:popUpToInclusive="true"/>
         <action
-            android:id="@+id/action_editHolidayDialog_to_myEvents"
-            app:destination="@id/myEvents"
-            app:popUpTo="@+id/myEvents"
+            android:id="@+id/action_editHolidayDialog_to_myEventsFragment"
+            app:destination="@id/myEventsFragment"
+            app:popUpTo="@+id/myEventsFragment"
             app:popUpToInclusive="true"/>
 
     </dialog>
@@ -94,14 +100,14 @@
         android:name="ru.geekbrains.eventsreminder.presentation.ui.dialogs.EditSimpleEventDialogFragment"
         tools:layout="@layout/edit_simple_event_dialog_fragment">
         <action
-            android:id="@+id/action_editSimpleEventDialog_to_homeToDashboard"
-            app:destination="@id/homeToDashboard"
-            app:popUpTo="@+id/homeToDashboard"
+            android:id="@+id/action_editSimpleEventDialog_to_dashboardFragment"
+            app:destination="@id/dashboardFragment"
+            app:popUpTo="@+id/dashboardFragment"
             app:popUpToInclusive="true"/>
         <action
             android:id="@+id/action_editSimpleEventDialog_to_myEvents"
-            app:destination="@id/myEvents"
-            app:popUpTo="@+id/myEvents"
+            app:destination="@id/myEventsFragment"
+            app:popUpTo="@+id/myEventsFragment"
             app:popUpToInclusive="true"/>
     </dialog>
 </navigation>

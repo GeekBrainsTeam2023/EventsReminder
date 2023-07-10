@@ -4,7 +4,10 @@ import android.app.TimePickerDialog
 import android.content.Context
 import android.util.Log
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.CheckBox
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.viewModels
@@ -13,6 +16,7 @@ import dagger.android.support.DaggerDialogFragment
 import ru.geekbrains.eventsreminder.R
 import ru.geekbrains.eventsreminder.di.ViewModelFactory
 import ru.geekbrains.eventsreminder.domain.EventData
+import ru.geekbrains.eventsreminder.domain.PeriodType
 import ru.geekbrains.eventsreminder.domain.SettingsData
 import ru.geekbrains.eventsreminder.presentation.ui.SOURCE_ID_TO_NAVIGATE
 import ru.geekbrains.eventsreminder.presentation.ui.dashboard.DashboardViewModel
@@ -22,29 +26,78 @@ import java.util.Calendar
 import java.util.Locale
 import javax.inject.Inject
 
-abstract class AbsDaggerDialogFragment: DaggerDialogFragment() {
+abstract class AbsDaggerDialogFragment : DaggerDialogFragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     protected val dashboardViewModel by viewModels<DashboardViewModel>({ this }) { viewModelFactory }
+
     @Inject
     lateinit var settings: SettingsData
-    private var sourceIdToNavigate : Int? = null
+    private var sourceIdToNavigate: Int? = null
     var eventData: EventData? = null
     protected var hours: Int? = null
     protected var minutes: Int? = null
-    protected abstract fun getSuccessIdToNavigate(sourceNavigationId:Int) :Int
+    protected var selectedPeriod: PeriodType? = null
+
+    protected abstract fun getSuccessIdToNavigate(sourceNavigationId: Int): Int
 
     protected fun processBundleArguments() {
-        try{
-        arguments?.parcelable<EventData>(EventData::class.toString())?.let { eventData = it }
-        arguments?.getInt(SOURCE_ID_TO_NAVIGATE)?.let { sourceIdToNavigate = it }
+        try {
+            arguments?.parcelable<EventData>(EventData::class.toString())?.let { eventData = it }
+            arguments?.getInt(SOURCE_ID_TO_NAVIGATE)?.let { sourceIdToNavigate = it }
         } catch (t: Throwable) {
             logAndToast(t)
         }
     }
+
     protected fun navigateOnSuccess() {
-        try{
-            findNavController().navigate(getSuccessIdToNavigate(sourceIdToNavigate ?: R.id.homeToDashboard))
+        try {
+            findNavController().navigate(
+                getSuccessIdToNavigate(
+                    sourceIdToNavigate ?: R.id.dashboardFragment
+                )
+            )
+        } catch (t: Throwable) {
+            logAndToast(t)
+        }
+    }
+
+    protected fun initSpinnerValues(valueSpinner: Spinner) {
+        try {
+            val adapter = ArrayAdapter(
+                requireContext(),
+                R.layout.period_item,
+                R.id.period,
+                PeriodType.values().toList()
+            )
+            valueSpinner.adapter = adapter
+        } catch (t: Throwable) {
+            logAndToast(t)
+        }
+    }
+
+    protected fun setPeriodPickerListeners(enableSpinnerCheckBox: CheckBox, valueSpinner: Spinner) {
+        try {
+            valueSpinner.onItemSelectedListener =
+                object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(
+                        parent: AdapterView<*>,
+                        view: View,
+                        position: Int,
+                        id: Long
+                    ) {
+                        selectedPeriod = valueSpinner.adapter.getItem(position) as PeriodType?
+                    }
+
+                    override fun onNothingSelected(parent: AdapterView<*>?) {
+                        selectedPeriod = null
+                    }
+                }
+            enableSpinnerCheckBox.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) {
+                    valueSpinner.visibility = View.VISIBLE
+                } else valueSpinner.visibility = View.INVISIBLE
+            }
         } catch (t: Throwable) {
             logAndToast(t)
         }
@@ -53,7 +106,6 @@ abstract class AbsDaggerDialogFragment: DaggerDialogFragment() {
     protected fun setTimePickerListeners(textView: TextView, context: Context, checkBox: CheckBox) {
         try {
             val cal = Calendar.getInstance()
-
             val timeSetListener = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
                 try {
                     cal.set(Calendar.HOUR_OF_DAY, hour)
@@ -67,12 +119,13 @@ abstract class AbsDaggerDialogFragment: DaggerDialogFragment() {
                 }
             }
             val timePickerDialog = TimePickerDialog(
-                context,R.style.date_picker, timeSetListener, cal.get(Calendar.HOUR_OF_DAY),
+                context, R.style.date_picker, timeSetListener, cal.get(Calendar.HOUR_OF_DAY),
                 cal.get(Calendar.MINUTE), true
             )
+
             timePickerDialog.setOnCancelListener {
-                try{
-                if (textView.visibility == View.GONE) checkBox.isChecked = false
+                try {
+                    if (textView.visibility == View.INVISIBLE) checkBox.isChecked = false
                 } catch (t: Throwable) {
                     logAndToast(t)
                 }
@@ -93,7 +146,7 @@ abstract class AbsDaggerDialogFragment: DaggerDialogFragment() {
                             timePickerDialog.show()
                         else
                             textView.visibility = View.VISIBLE
-                    } else textView.visibility = View.GONE
+                    } else textView.visibility = View.INVISIBLE
                 } catch (t: Throwable) {
                     logAndToast(t)
                 }
@@ -102,12 +155,14 @@ abstract class AbsDaggerDialogFragment: DaggerDialogFragment() {
             logAndToast(t)
         }
     }
-    protected fun logAndToast(t:Throwable) = logAndToast(t,this::class.java.toString())
 
-    protected fun logAndToast(t: Throwable, tag:String?) {
+    protected fun logAndToast(t: Throwable) = logAndToast(t, this::class.java.toString())
+
+    protected fun logAndToast(t: Throwable, tag: String?) {
         try {
             Log.e(tag, "", t)
-            Toast.makeText(requireContext().applicationContext, t.toString(), Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext().applicationContext, t.toString(), Toast.LENGTH_LONG)
+                .show()
         } catch (_: Throwable) {
         }
     }

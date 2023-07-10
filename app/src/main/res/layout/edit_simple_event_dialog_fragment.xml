@@ -16,14 +16,50 @@
         android:id="@+id/input_simple_event_date_picker"
         android:theme="@style/date_picker"
         style="@style/edit_event_dialog_date_picker" />
-    <CheckBox
-        android:id="@+id/simpleDialogIsTimePickerEnabled"
-        android:text="@string/checkbox_for_time_picker_text"
-        style="@style/dialog_checkbox_to_enable_time_picker" />
-    <TextView
-        android:id="@+id/inputSimpleEventTime"
-        style="@style/input_event_time_textview" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="0.5">
+
+            <CheckBox
+                android:id="@+id/simpleDialogIsTimePickerEnabled"
+                style="@style/dialog_checkbox_to_enable_time_picker"
+                android:text="@string/checkbox_for_time_picker_text" />
+
+            <TextView
+                android:id="@+id/inputSimpleEventTime"
+                style="@style/input_event_time_textview"
+                android:layout_gravity="center"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="0.5">
+
+            <CheckBox
+                android:id="@+id/isSimpleEventPeriodEnabled"
+                style="@style/dialog_checkbox_to_enable_time_picker"
+                android:text="@string/repeat_once_a" />
+
+            <Spinner
+                android:id="@+id/simpleEventPeriodValueSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:spinnerMode="dropdown"
+                android:visibility="invisible"
+                android:layout_gravity="center"/>
+        </LinearLayout>
+
+    </LinearLayout>
     <LinearLayout style="@style/edit_events_dialogs_btn_linearlayout">
 
         <Button
