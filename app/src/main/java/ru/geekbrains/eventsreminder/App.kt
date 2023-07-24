@@ -14,6 +14,7 @@ class App : DaggerApplication() {
         eventsReminderComponent =
             ru.geekbrains.eventsreminder.di.DaggerEventsReminderComponent
                 .builder()
+                .withApp(this)
                 .withContext(applicationContext)
                 .widgetModule(WidgetModule(applicationContext))
                 .build()

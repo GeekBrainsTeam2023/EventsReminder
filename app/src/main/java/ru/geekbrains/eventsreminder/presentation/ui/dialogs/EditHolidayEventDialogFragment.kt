@@ -88,8 +88,8 @@ class EditHolidayEventDialogFragment : AbsDaggerDialogFragment() {
 
     override fun getSuccessIdToNavigate(sourceNavigationId: Int) =
         when (sourceNavigationId) {
-            R.id.myEventsFragment -> R.id.action_editHolidayDialog_to_myEventsFragment
-            R.id.dashboardFragment -> R.id.action_editHolidayDialog_to_dashboardFragment
+            R.id.menuMyEventsFragment -> R.id.action_editHolidayDialog_to_myEventsFragment
+            R.id.menuDashboardFragment -> R.id.action_editHolidayDialog_to_dashboardFragment
             else -> sourceNavigationId
         }
 

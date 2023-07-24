@@ -1,6 +1,4 @@
 package ru.geekbrains.eventsreminder.presentation.ui.dashboard
-
-
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -74,7 +72,7 @@ class DashboardFragment : DaggerFragment() {
 	private fun onFabClicked() {
 		try {
 			val bundle = Bundle()
-			bundle.putInt(SOURCE_ID_TO_NAVIGATE, R.id.dashboardFragment)
+			bundle.putInt(SOURCE_ID_TO_NAVIGATE, R.id.menuDashboardFragment)
 			findNavController().navigate(R.id.chooseNewEventTypeDialog, bundle)
 		} catch (t: Throwable) {
 			dashboardViewModel.handleError(t)
@@ -101,16 +99,7 @@ class DashboardFragment : DaggerFragment() {
 				is AppState.SuccessState<*> -> {
 					val data = appState.data as List<EventData>
 					showShimmer(false)
-//					if (binding.shimmerLayout.isShimmerVisible) {
-//						binding.shimmerLayout.hideShimmer()
-//						binding.shimmerLayout.visibility = GONE
-//						binding.recyclerViewListOfEvents.visibility = VISIBLE
-//					}
 					showEvents(data)
-					with(requireActivity() as MainActivity) {
-						updateWidget()
-						updateNotificationService(data)
-					}
 				}
 				is AppState.LoadingState -> {
 					showShimmer(true)
@@ -157,15 +146,7 @@ class DashboardFragment : DaggerFragment() {
 
 	private fun showEvents(events: List<EventData>) {
 		try {
-			val diffResult = DiffUtil.calculateDiff(
-				EventsDiffUtil(
-					dashboardViewModel.storedFilteredEvents,
-					events
-				)
-			)
-			dashboardViewModel.storedFilteredEvents.clear()
-			dashboardViewModel.storedFilteredEvents.addAll(events)
-			dashboardAdapter?.let { diffResult.dispatchUpdatesTo(it) }
+			dashboardAdapter?.applyDiffResult(events,dashboardViewModel.storedFilteredEvents)
 			binding.dashboardHeader.text = buildString {
 				append("всего ")
 				append(
@@ -187,6 +168,20 @@ class DashboardFragment : DaggerFragment() {
 		} catch (t: Throwable) {
 			dashboardViewModel.handleError(t)
 		}
+	}
+
+	private fun MutableList<EventData>.applyDiffResult(
+		events: List<EventData>
+	) {
+		val diffResult = DiffUtil.calculateDiff(
+			EventsDiffUtil(
+				this,
+				events
+			)
+		)
+		this.clear()
+		this.addAll(events)
+		dashboardAdapter?.let { diffResult.dispatchUpdatesTo(it) }
 	}
 
 	private fun logAndToast(t: Throwable) = logAndToast(t, this::class.java.toString())

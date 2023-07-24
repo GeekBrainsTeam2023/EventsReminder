@@ -21,7 +21,6 @@ import ru.geekbrains.eventsreminder.di.ViewModelFactory
 import ru.geekbrains.eventsreminder.domain.AppState
 import ru.geekbrains.eventsreminder.domain.EventData
 import ru.geekbrains.eventsreminder.domain.EventType
-import ru.geekbrains.eventsreminder.presentation.MainActivity
 import ru.geekbrains.eventsreminder.presentation.ui.EVENT_ID
 import ru.geekbrains.eventsreminder.presentation.ui.RusIntPlural
 import ru.geekbrains.eventsreminder.presentation.ui.SOURCE_ID_TO_NAVIGATE
@@ -71,7 +70,7 @@ class MyEventsFragment : EventEditor, DaggerFragment() {
             addEventFab.setOnClickListener {
                 try {
                     val bundle = Bundle()
-                    bundle.putInt(SOURCE_ID_TO_NAVIGATE, R.id.myEventsFragment)
+                    bundle.putInt(SOURCE_ID_TO_NAVIGATE, R.id.menuMyEventsFragment)
                     findNavController().navigate(R.id.chooseNewEventTypeDialog, bundle)
                 } catch (t: Throwable) {
                     myEventsViewModel.handleError(t)
@@ -125,10 +124,6 @@ class MyEventsFragment : EventEditor, DaggerFragment() {
                 is AppState.SuccessState<*> -> {
                     val data = appState.data as List<EventData>
                     showEvents(data)
-                    with(requireActivity() as MainActivity) {
-                        updateWidget()
-                        updateNotificationService(data)
-                    }
                 }
                 is AppState.LoadingState -> {
                 }

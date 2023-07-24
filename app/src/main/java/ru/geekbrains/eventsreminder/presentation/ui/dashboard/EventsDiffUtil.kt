@@ -28,13 +28,16 @@ class EventsDiffUtil(private val oldList: List<EventData>, private val newList: 
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
         try {
-            val oldItem: EventData = oldList[oldItemPosition]
-            val newItem: EventData = newList[newItemPosition]
-            oldItem.name == newItem.name &&
-                    oldItem.date == newItem.date &&
-                    oldItem.time == newItem.time &&
-                    oldItem.type == newItem.type
-
+            if (oldItemPosition == -1 || newItemPosition == -1)
+                false
+            else {
+                val oldItem: EventData = oldList[oldItemPosition]
+                val newItem: EventData = newList[newItemPosition]
+                oldItem.name == newItem.name &&
+                        oldItem.date == newItem.date &&
+                        oldItem.time == newItem.time &&
+                        oldItem.type == newItem.type
+            }
         } catch (t: Throwable) {
             logErr(t)
             false

@@ -7,6 +7,8 @@ import android.content.Intent
 class BootUpReceiver: BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
-        context?.startService(Intent(context, NotificationService::class.java))
+        context?.startService(Intent(context, NotificationService::class.java).apply {
+            intent?.let{this.putExtras(it)}
+        })
     }
 }

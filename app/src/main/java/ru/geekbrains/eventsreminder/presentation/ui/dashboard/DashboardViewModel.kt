@@ -1,9 +1,11 @@
 package ru.geekbrains.eventsreminder.presentation.ui.dashboard
 
+import android.content.Intent
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.*
+import ru.geekbrains.eventsreminder.App
 import ru.geekbrains.eventsreminder.domain.AppState
 import ru.geekbrains.eventsreminder.domain.EventData
 import ru.geekbrains.eventsreminder.domain.EventType
@@ -15,6 +17,11 @@ import ru.geekbrains.eventsreminder.presentation.ui.toInt
 import ru.geekbrains.eventsreminder.presentation.ui.toLocalDate
 import ru.geekbrains.eventsreminder.repo.Repo
 import ru.geekbrains.eventsreminder.repo.cache.CacheRepo
+import ru.geekbrains.eventsreminder.service.NotificationService
+import ru.geekbrains.eventsreminder.usecases.EVENTS_DATA
+import ru.geekbrains.eventsreminder.usecases.MINUTES_FOR_START_NOTIFICATION
+import ru.geekbrains.eventsreminder.usecases.TIME_TO_START_NOTIFICATION
+import ru.geekbrains.eventsreminder.widget.AppWidget
 import java.lang.Integer.max
 import java.time.LocalDate
 import javax.inject.Inject
@@ -23,7 +30,8 @@ import javax.inject.Inject
 class DashboardViewModel @Inject constructor(
     private val settingsData: SettingsData,
     private val repo: Repo,
-    private val cacheRepo: CacheRepo
+    private val cacheRepo: CacheRepo,
+    private val app: App
 ) : ViewModel(), LifecycleObserver {
     val statesLiveData: MutableLiveData<AppState> = MutableLiveData()
     private var allEventsFromRepo = listOf<EventData>()
@@ -107,6 +115,8 @@ class DashboardViewModel @Inject constructor(
                         allEventsFromRepo = dataWithBrededEvents
                         applyFilterToAllEventsFromRepo(daysToPutInCache)
                         cacheRepo.renew(cachedEventsList)
+                        updateNotifications(result.data)
+                        updateWidget()
                         statesLiveData.postValue(
                             AppState.SuccessState(
                                 cachedEventsList.filterToDashboard()
@@ -121,6 +131,35 @@ class DashboardViewModel @Inject constructor(
                 eventsListJob = null
             }
         } catch (t: Throwable) {
+            handleError(t)
+        }
+    }
+    private fun updateNotifications(events: List<EventData>) {
+        try{
+        app.startService(
+            Intent(app, NotificationService::class.java).apply {
+                putExtra(
+                    MINUTES_FOR_START_NOTIFICATION,
+                    settingsData.minutesForStartNotification,
+                )
+                putExtra(
+                    TIME_TO_START_NOTIFICATION,
+                    settingsData.timeToStartNotification,
+                )
+                putParcelableArrayListExtra(EVENTS_DATA, ArrayList(events))
+            },
+        )}
+        catch (t: Throwable) {
+            handleError(t)
+        }
+    }
+
+    private fun updateWidget() {
+        try {
+            Dispatchers.Main.run {
+                AppWidget.sendRefreshBroadcast(app)
+            }
+        }  catch (t: Throwable) {
             handleError(t)
         }
     }
@@ -143,7 +182,6 @@ class DashboardViewModel @Inject constructor(
     }
 
     fun getDaysToShowEventsCount() = settingsData.daysForShowEvents
-    fun getMinutesForStartNotification() = settingsData.minutesForStartNotification
     private fun applyFilterToAllEventsFromRepo(daysToPutInCache: Int) {
         try {
             cachedEventsList.clear()
@@ -163,7 +201,6 @@ class DashboardViewModel @Inject constructor(
             handleError(t)
         }
     }
-
     private fun processEvent(
         event: EventData,
         startDate: LocalDate,
@@ -171,51 +208,11 @@ class DashboardViewModel @Inject constructor(
         mapToSort: MutableMap<LocalDate, MutableList<EventData>>
     ) {
         try {
-//			if (event.type == EventType.BIRTHDAY)
-//				fixBirthdayDate(event, startDate, endDate, mapToSort)
-//			else
             if (event.date.isAfter(startDate)
                 && event.date.isBefore(endDate)
                 || event.date.isEqual(startDate)
             )
                 mapToSort.getOrPut(event.date) { mutableListOf() }.add(event)
-        } catch (t: Throwable) {
-            handleError(t)
-        }
-    }
-
-    private fun fixBirthdayDate(
-        event: EventData,
-        startDate: LocalDate,
-        endDate: LocalDate,
-        mapToSort: MutableMap<LocalDate, MutableList<EventData>>
-    ) {
-        try {
-            event.birthday?.let {
-                for (curYear in startDate.year..endDate.year) {
-                    if (it.safeWithYear(curYear).isAfter(startDate)
-                        && it.safeWithYear(curYear).isBefore(endDate)
-                        || it.safeWithYear(curYear).isEqual(startDate)
-                    ) {
-                        mapToSort.getOrPut(
-                            it.safeWithYear(curYear)
-                        ) { mutableListOf() }.add(
-                            EventData(
-                                EventType.BIRTHDAY,
-                                event.period,
-                                event.birthday,
-                                it.safeWithYear(curYear),
-                                event.time,
-                                event.timeNotifications,
-                                event.name,
-                                event.sourceId,
-                                event.sourceType
-                            )
-                        )
-                        break
-                    }
-                }
-            }
         } catch (t: Throwable) {
             handleError(t)
         }

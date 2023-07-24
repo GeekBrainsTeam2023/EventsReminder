@@ -27,7 +27,8 @@ interface EventsReminderComponent : AndroidInjector<App> {
         fun withContext(context: Context): Builder
 
         fun widgetModule(widgetModule: WidgetModule): Builder
-
+        @BindsInstance
+        fun withApp(app: App) : Builder
         fun build(): EventsReminderComponent
 
     }

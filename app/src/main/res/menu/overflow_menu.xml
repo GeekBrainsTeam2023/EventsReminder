@@ -2,17 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/dashboardFragment"
+        android:id="@+id/menuDashboardFragment"
         android:icon="@drawable/ic_home_24dp"
         android:title="@string/menu_item_home_to_dashboard_title"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/myEventsFragment"
+        android:id="@+id/menuMyEventsFragment"
         android:icon="@drawable/icon_edit_my_event_24"
         android:title="@string/menu_item_my_events_title"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/settingsFragment"
+        android:id="@+id/menuSettingsFragment"
         android:icon="@drawable/ic_settings_24dp"
         android:title="@string/menu_item_settings_title"
         app:showAsAction="ifRoom" />

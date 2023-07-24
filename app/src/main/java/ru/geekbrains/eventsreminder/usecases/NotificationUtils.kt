@@ -20,6 +20,8 @@ import java.time.ZoneId
 const val EVENTS_DATA = "EVENT"
 const val MINUTES_FOR_START_NOTIFICATION = "MinutesForStartNotification"
 const val TIME_TO_START_NOTIFICATION = "TimeToStartNotification"
+const val NOTIFY_ABOUT_EVENT = "NotifyAboutEvent"
+
 object NotificationUtils {
 	private const val CHANNEL_ID = "EventsReminder"
 

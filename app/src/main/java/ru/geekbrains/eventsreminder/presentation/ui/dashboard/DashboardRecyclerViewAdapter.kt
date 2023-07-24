@@ -3,6 +3,7 @@ package ru.geekbrains.eventsreminder.presentation.ui.dashboard
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import ru.geekbrains.eventsreminder.R.layout.dashboard_recyclerview_item
 import ru.geekbrains.eventsreminder.domain.EventData
@@ -25,5 +26,18 @@ class DashboardRecyclerViewAdapter(var events: List<EventData>) :
         } catch (t: Throwable) {
             Log.e(DashboardRecyclerViewAdapter::class.java.toString(), "", t)
         }
+    }
+    fun applyDiffResult(
+        newList: List<EventData>, oldList: MutableList<EventData>
+    ) {
+        val diffResult = DiffUtil.calculateDiff(
+            EventsDiffUtil(
+                oldList,
+                newList
+            )
+        )
+        oldList.clear()
+        oldList.addAll(newList)
+        diffResult.dispatchUpdatesTo(this)
     }
 }

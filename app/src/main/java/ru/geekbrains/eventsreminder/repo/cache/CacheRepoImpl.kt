@@ -1,5 +1,6 @@
 package ru.geekbrains.eventsreminder.repo.cache
 
+import android.app.AlarmManager
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
@@ -75,6 +76,7 @@ class CacheRepoImpl @Inject constructor(val context: Context) : CacheRepo {
                 null, null
             )
             events.forEach { addEventToCache(it) }
+
         } catch (t: Throwable) {
             logAndToast(t)
         }

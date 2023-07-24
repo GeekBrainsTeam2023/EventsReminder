@@ -3,7 +3,6 @@ package ru.geekbrains.eventsreminder.domain
 import android.os.Parcelable
 import android.util.Log
 import kotlinx.parcelize.Parcelize
-import ru.geekbrains.eventsreminder.presentation.ui.safeWithYear
 import java.time.LocalDate
 import java.time.LocalTime
 

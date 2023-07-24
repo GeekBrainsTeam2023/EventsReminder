@@ -1,5 +1,6 @@
 package ru.geekbrains.eventsreminder.presentation.ui.myevents
 
+import android.content.Intent
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,24 +11,29 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import ru.geekbrains.eventsreminder.App
 import ru.geekbrains.eventsreminder.domain.AppState
 import ru.geekbrains.eventsreminder.domain.EventData
-import ru.geekbrains.eventsreminder.domain.EventType
 import ru.geekbrains.eventsreminder.domain.ResourceState
 import ru.geekbrains.eventsreminder.domain.SettingsData
 import ru.geekbrains.eventsreminder.presentation.ui.MAX_YEAR
-import ru.geekbrains.eventsreminder.presentation.ui.safeWithYear
 import ru.geekbrains.eventsreminder.presentation.ui.toInt
 import ru.geekbrains.eventsreminder.presentation.ui.toLocalDate
 import ru.geekbrains.eventsreminder.repo.Repo
 import ru.geekbrains.eventsreminder.repo.cache.CacheRepo
+import ru.geekbrains.eventsreminder.service.NotificationService
+import ru.geekbrains.eventsreminder.usecases.EVENTS_DATA
+import ru.geekbrains.eventsreminder.usecases.MINUTES_FOR_START_NOTIFICATION
+import ru.geekbrains.eventsreminder.usecases.TIME_TO_START_NOTIFICATION
+import ru.geekbrains.eventsreminder.widget.AppWidget
 import java.lang.Math.min
 import java.time.LocalDate
 import javax.inject.Inject
 
 class MyEventsViewModel @Inject constructor(
-    val repo: Repo,
-    val cache: CacheRepo,
+    private val repo: Repo,
+    private val cache: CacheRepo,
+    private val app : App,
     private val settingsData: SettingsData
 ) : ViewModel(), LifecycleObserver {
     val statesLiveData: MutableLiveData<AppState> = MutableLiveData()
@@ -154,10 +160,39 @@ class MyEventsViewModel @Inject constructor(
             daysToPutInCache,
             settingsData.isDataContact, settingsData.isDataCalendar
         )
-        if (result is ResourceState.SuccessState)
+        if (result is ResourceState.SuccessState) {
             cache.renew(
                 applyFilterToAllEventsFromRepo(daysToPutInCache, result.data)
             )
+            updateNotifications(result.data)
+            updateWidget()
+        }
+    }
+
+    private fun updateNotifications(events:List<EventData>) {
+        app.startService(
+            Intent(app, NotificationService::class.java).apply {
+                putExtra(
+                    MINUTES_FOR_START_NOTIFICATION,
+                    settingsData.minutesForStartNotification,
+                )
+                putExtra(
+                    TIME_TO_START_NOTIFICATION,
+                    settingsData.timeToStartNotification,
+                )
+                putParcelableArrayListExtra(EVENTS_DATA, ArrayList(events))
+            },
+        )
+    }
+
+    private fun updateWidget() {
+        try {
+            Dispatchers.Main.run {
+                AppWidget.sendRefreshBroadcast(app)
+            }
+        }  catch (t: Throwable) {
+            handleError(t)
+        }
     }
 
     private fun applyFilterToAllEventsFromRepo(

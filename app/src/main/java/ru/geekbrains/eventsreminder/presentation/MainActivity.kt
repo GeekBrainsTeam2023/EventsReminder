@@ -1,12 +1,14 @@
 package ru.geekbrains.eventsreminder.presentation
 
 import android.Manifest
+import android.app.AlarmManager
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.IntentSender
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -30,12 +32,11 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.firebase.auth.FirebaseAuth
 import dagger.android.support.DaggerAppCompatActivity
+import ru.geekbrains.eventsreminder.App
 import ru.geekbrains.eventsreminder.R
 import ru.geekbrains.eventsreminder.databinding.ActivityMainBinding
-import ru.geekbrains.eventsreminder.domain.EventData
 import ru.geekbrains.eventsreminder.domain.SettingsData
 import ru.geekbrains.eventsreminder.service.NotificationService
-import ru.geekbrains.eventsreminder.usecases.EVENTS_DATA
 import ru.geekbrains.eventsreminder.usecases.MINUTES_FOR_START_NOTIFICATION
 import ru.geekbrains.eventsreminder.usecases.TIME_TO_START_NOTIFICATION
 import ru.geekbrains.eventsreminder.widget.AppWidget
@@ -109,7 +110,7 @@ class MainActivity : DaggerAppCompatActivity() {
 
 			initNavController()
 			if (isParamsSetRequired)
-				navController.navigate(R.id.settingsFragment)
+				navController.navigate(R.id.menuSettingsFragment)
 		} catch (t: Throwable) {
 			logAndToast(t)
 		}
@@ -175,7 +176,7 @@ class MainActivity : DaggerAppCompatActivity() {
 			navController = findNavController(R.id.nav_host_fragment_activity_main)
 			val appBarConfiguration = AppBarConfiguration(
 				setOf(
-					R.id.dashboardFragment, R.id.myEventsFragment, R.id.settingsFragment,
+					R.id.menuDashboardFragment, R.id.menuMyEventsFragment, R.id.menuSettingsFragment,
 					R.id.chooseNewEventTypeDialog, R.id.editBirthdayDialog,
 					R.id.editHolidayDialog, R.id.editSimpleEventDialog
 				)
@@ -215,19 +216,19 @@ class MainActivity : DaggerAppCompatActivity() {
 				Toast.LENGTH_SHORT
 			).show()
 
-			Handler(Looper.getMainLooper()).postDelayed(
-				{
-					try {
-						doubleBackToExitPressedOnce = false
-					} catch (_: Throwable) {
-					}
-				},
-				2000
-			)
-		} catch (t: Throwable) {
-			logAndToast(t)
-		}
-	}
+            Handler(Looper.getMainLooper()).postDelayed(
+                {
+                    try {
+                        doubleBackToExitPressedOnce = false
+                    } catch (_: Throwable) {
+                    }
+                },
+                2000
+            )
+        } catch (t: Throwable) {
+            logAndToast(t)
+        }
+    }
 
 	private val calendarContactsPermission = registerForActivityResult(
 		ActivityResultContracts.RequestMultiplePermissions()
@@ -247,125 +248,154 @@ class MainActivity : DaggerAppCompatActivity() {
 		}
 	}
 
-	fun initReminderRights() {
-		try {
-			val rightsToDemand = mutableListOf<String>()
-			rightsToDemand.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-			if (settings.isDataCalendar)
-				rightsToDemand.add(Manifest.permission.READ_CALENDAR)
-			if (settings.isDataContact)
-				rightsToDemand.add(Manifest.permission.READ_CONTACTS)
-			if (rightsToDemand.any() && !checkPermission()) {
-				calendarContactsPermission.launch(
-					rightsToDemand.toTypedArray()
-				)
-			} else {
-				Log.d(TAG, getString(R.string.log_msg_rights_check_succeeded))
-				navController.navigate(R.id.dashboardFragment)
-			}
-		} catch (t: Throwable) {
-			logAndToast(t)
-		}
-	}
+    fun initReminderRights() {
+        try {
+            val rightsToDemand = mutableListOf<String>()
+            rightsToDemand.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            if (settings.isDataCalendar)
+                rightsToDemand.add(Manifest.permission.READ_CALENDAR)
+            if (settings.isDataContact)
+                rightsToDemand.add(Manifest.permission.READ_CONTACTS)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                val alarmManager =
+                    ContextCompat.getSystemService(applicationContext, AlarmManager::class.java)
+                if (alarmManager?.canScheduleExactAlarms() == false) {
+                    when {
+                        Build.VERSION.SDK_INT >= 33 -> rightsToDemand.add(Manifest.permission.USE_EXACT_ALARM)
+                        else -> rightsToDemand.add(Manifest.permission.SCHEDULE_EXACT_ALARM)
+                    }
+                }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    rightsToDemand.add(Manifest.permission.POST_NOTIFICATIONS)
+                }
+            }
 
-	fun checkPermission(): Boolean {
-		return try {
-			(!settings.isDataCalendar ||
-					ContextCompat.checkSelfPermission(
-						applicationContext, Manifest.permission.READ_CALENDAR
-					) == PackageManager.PERMISSION_GRANTED) && (
-					!settings.isDataContact ||
-							ContextCompat.checkSelfPermission(
-								applicationContext, Manifest.permission.READ_CONTACTS
-							) == PackageManager.PERMISSION_GRANTED) &&
-					ContextCompat.checkSelfPermission(
-						applicationContext, Manifest.permission.WRITE_EXTERNAL_STORAGE
-					) == PackageManager.PERMISSION_GRANTED
-		} catch (t: Throwable) {
-			logAndToast(t)
-			false
-		}
-	}
+            if (rightsToDemand.any() && !checkPermission()) {
+                calendarContactsPermission.launch(
+                    rightsToDemand.toTypedArray()
+                )
+            } else {
+                Log.d(TAG, getString(R.string.log_msg_rights_check_succeeded))
+                navController.navigate(R.id.menuDashboardFragment)
+            }
+        } catch (t: Throwable) {
+            logAndToast(t)
+        }
+    }
 
-	private fun showAskWhyDialog() {
-		try {
-			val builder = AlertDialog.Builder(this)
-			val rightCalendarToDemand = if (settings.isDataCalendar) "календарю" else ""
-			val rightContactToDemand = if (settings.isDataContact) "контактам" else ""
-			val rightsToDemand = rightCalendarToDemand +
-					(if (settings.isDataCalendar && settings.isDataContact) " и " else "") +
-					rightContactToDemand
-			builder.setTitle(getString(R.string.demands_dialog_title_first))
-				.setMessage(buildString {
-					append(getString(R.string.demands_dialog_title_second))
-					append(rightsToDemand)
-					append(getString(R.string.demands_dialog_title_third))
-				})
-				.setCancelable(false)
-				.setPositiveButton("      права") { _, _ ->
-					try {
-						// открываем настройки приложения, чтобы пользователь дал разрешение вручную
-						val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-						val uri = Uri.fromParts("package", this.packageName, null)
-						intent.data = uri
-						getPermissionManually.launch(intent)
-					} catch (t: Throwable) {
-						logAndToast(t)
-					}
-				}
-				.setNegativeButton("настройки     ") { _, _ ->
-					try {
-						navController.navigate(R.id.settingsFragment)
-					} catch (t: Throwable) {
-						logAndToast(t)
-					}
-				}
-			val dlg = builder.create()
-			dlg.show()
-		} catch (t: Throwable) {
-			logAndToast(t)
-		}
-	}
+    fun checkPermission(): Boolean {
+        return try {
+            (!settings.isDataCalendar ||
+                    ContextCompat.checkSelfPermission(
+                        applicationContext, Manifest.permission.READ_CALENDAR
+                    ) == PackageManager.PERMISSION_GRANTED) && (
+                    !settings.isDataContact ||
+                            ContextCompat.checkSelfPermission(
+                                applicationContext, Manifest.permission.READ_CONTACTS
+                            ) == PackageManager.PERMISSION_GRANTED) &&
+					if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+                    ContextCompat.checkSelfPermission(
+                        applicationContext, Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    ) == PackageManager.PERMISSION_GRANTED } else true
+                    && if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                            val alarmManager =
+                                ContextCompat.getSystemService(applicationContext, AlarmManager::class.java)
+                            alarmManager?.canScheduleExactAlarms() == true
+                                    && if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                            ContextCompat.checkSelfPermission(applicationContext,
+                                Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
+                            else true
+                        } else true
+        } catch (t: Throwable) {
+            logAndToast(t)
+            false
+        }
+    }
 
-	private val getPermissionManually = registerForActivityResult(
-		ActivityResultContracts.StartActivityForResult()
-	) {
-		try {
-			initReminderRights()
-		} catch (t: Throwable) {
-			logAndToast(t)
-		}
-	}
+    private fun showAskWhyDialog() {
+        try {
+            val builder = AlertDialog.Builder(this)
+            val rightCalendarToDemand = if (settings.isDataCalendar) "календарю" else ""
+            val rightContactToDemand = if (settings.isDataContact) "контактам" else ""
+            val rightsToDemand = rightCalendarToDemand +
+                    (if (settings.isDataCalendar && settings.isDataContact) ", " else "") +
+                    rightContactToDemand + if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    ", уведомлениям, будильникам и напоминаниям"
+                } else ", будильникам и напоминаниям"
+            } else ""
+            builder.setTitle(getString(R.string.demands_dialog_title_first))
+                .setMessage(buildString {
+                    append(getString(R.string.demands_dialog_title_second))
+                    append(rightsToDemand)
+                    append(getString(R.string.demands_dialog_title_third))
+                })
+                .setCancelable(false)
+                .setPositiveButton("      права") { _, _ ->
+                    try {
+                        // открываем настройки приложения, чтобы пользователь дал разрешение вручную
+                        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                        val uri = Uri.fromParts("package", this.packageName, null)
+                        intent.data = uri
+                        getPermissionManually.launch(intent)
+                    } catch (t: Throwable) {
+                        logAndToast(t)
+                    }
+                }
+                .setNegativeButton("настройки     ") { _, _ ->
+                    try {
+                        navController.navigate(R.id.menuSettingsFragment)
+                    } catch (t: Throwable) {
+                        logAndToast(t)
+                    }
+                }
+            val dlg = builder.create()
+            dlg.show()
+        } catch (t: Throwable) {
+            logAndToast(t)
+        }
+    }
 
-	fun updateWidget() {
-		try {
-			runOnUiThread {
-				AppWidget.sendRefreshBroadcast(this)
-			}
-		} catch (t: Throwable) {
-			logAndToast(t)
-		}
-	}
+    private val getPermissionManually = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        try {
+            initReminderRights()
+        } catch (t: Throwable) {
+            logAndToast(t)
+        }
+    }
 
-	fun updateNotificationService(eventsList: List<EventData>) {
-		try {
-			startService(
-				Intent(applicationContext, NotificationService::class.java).apply {
-					putExtra(
-						MINUTES_FOR_START_NOTIFICATION,
-						settings.minutesForStartNotification,
-					)
-					putExtra(
-						TIME_TO_START_NOTIFICATION,
-						settings.timeToStartNotification,
-					)
-					putParcelableArrayListExtra(EVENTS_DATA, ArrayList(eventsList))
-				},
-			)
-		} catch (t: Throwable) {
-			logAndToast(t)
-		}
-	}
+
+//    fun updateWidget() {
+//        try {
+//            runOnUiThread {
+//                AppWidget.sendRefreshBroadcast(application as App)
+//            }
+//        } catch (t: Throwable) {
+//            logAndToast(t)
+//        }
+//    }
+//
+//    fun updateNotificationService(eventsList: List<EventData>) {
+//        try {
+//            startService(
+//                Intent(applicationContext, NotificationService::class.java).apply {
+//                    putExtra(
+//                        MINUTES_FOR_START_NOTIFICATION,
+//                        settings.minutesForStartNotification,
+//                    )
+//                    putExtra(
+//                        TIME_TO_START_NOTIFICATION,
+//                        settings.timeToStartNotification,
+//                    )
+//                    putParcelableArrayListExtra(EVENTS_DATA, ArrayList(eventsList))
+//                },
+//            )
+//        } catch (t: Throwable) {
+//            logAndToast(t)
+//        }
+//    }
 
 	/**
 	 * Применить параметры из настроек
@@ -488,7 +518,7 @@ class MainActivity : DaggerAppCompatActivity() {
 
 	private fun refresh() {
 		runOnUiThread {
-			AppWidget.sendRefreshBroadcast(this)
+			AppWidget.sendRefreshBroadcast(application as App)
 		}
 	}
 
@@ -542,13 +572,13 @@ class MainActivity : DaggerAppCompatActivity() {
 		return false
 	}
 
-	private fun logAndToast(t: Throwable) = logAndToast(t, this::class.java.toString())
+    private fun logAndToast(t:Throwable) = logAndToast(t,this::class.java.toString())
 
-	private fun logAndToast(t: Throwable, TAG: String) {
-		try {
-			Log.e(TAG, "", t)
-			Toast.makeText(applicationContext, t.toString(), Toast.LENGTH_LONG).show()
-		} catch (_: Throwable) {
-		}
-	}
+    private fun logAndToast(t: Throwable, TAG:String) {
+        try {
+            Log.e(TAG, "", t)
+            Toast.makeText(applicationContext, t.toString(), Toast.LENGTH_LONG).show()
+        } catch (_: Throwable) {
+        }
+    }
 }

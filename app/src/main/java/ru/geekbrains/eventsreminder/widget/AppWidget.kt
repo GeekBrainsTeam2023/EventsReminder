@@ -17,6 +17,7 @@ import android.graphics.RectF
 import android.os.Bundle
 import android.util.Log
 import android.widget.RemoteViews
+import ru.geekbrains.eventsreminder.App
 import androidx.annotation.ColorInt
 import androidx.preference.PreferenceManager
 import ru.geekbrains.eventsreminder.R
@@ -212,14 +213,14 @@ class AppWidget : AppWidgetProvider() {
 
 
 	companion object {
-		fun sendRefreshBroadcast(activity: MainActivity) {
+		fun sendRefreshBroadcast(app: App) {
 			try {
-				val ids: IntArray = AppWidgetManager.getInstance(activity.application)
-					.getAppWidgetIds(ComponentName(activity.application, AppWidget::class.java))
+				val ids: IntArray = AppWidgetManager.getInstance(app)
+					.getAppWidgetIds(ComponentName(app, AppWidget::class.java))
 				val intent = Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE)
 				intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
-				intent.component = ComponentName(activity, AppWidget::class.java)
-				activity.sendBroadcast(intent)
+				intent.component = ComponentName(app, AppWidget::class.java)
+				app.sendBroadcast(intent)
 			} catch (t: Throwable) {
 				errLog(t)
 			}

@@ -3,6 +3,7 @@ package ru.geekbrains.eventsreminder.presentation.ui
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
@@ -28,6 +29,13 @@ tailrec fun Context.findActivity(): Activity {
 inline fun <reified T : Parcelable> Bundle.parcelable(key: String): T? = when {
 	Build.VERSION.SDK_INT >= 33 -> getParcelable(key, T::class.java)
 	else -> @Suppress("DEPRECATION") getParcelable(key) as? T
+}
+/**
+ * Синтаксический сахар для извлечения parcelable из intent
+ * */
+inline fun <reified T : Parcelable> Intent.parcelable(key: String): T? = when {
+    Build.VERSION.SDK_INT >= 33 -> getParcelableExtra(key, T::class.java)
+    else -> @Suppress("DEPRECATION") getParcelableExtra(key) as? T
 }
 
 /**
