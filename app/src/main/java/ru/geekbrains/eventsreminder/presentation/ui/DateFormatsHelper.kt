@@ -15,7 +15,7 @@ fun LocalDate.toDaysSinceNowInWords() =
             0 -> "Сегодня"
             1 -> "Завтра"
             2 -> "Послезавтра"
-            else -> (if (it > 2) " + " else " - ") + RusIntPlural(
+            else -> (if (it > 2) " +" else " -") + RusIntPlural(
                 "д",
                 kotlin.math.abs(it),
                 "ень", "ня", "ней"
@@ -28,7 +28,7 @@ fun LocalDate.toShortDaysSinceNowInWords() =
         when (it) {
             0 -> "Сегодня"
             1 -> "Завтра"
-            else -> "+${it} дн."
+            else -> "${it} дн."
         }
     }
 

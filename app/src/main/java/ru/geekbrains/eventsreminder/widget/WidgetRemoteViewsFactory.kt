@@ -179,7 +179,7 @@ constructor(
 				}
 				rv.setTextViewText(
 					R.id.eventTitle,
-					it.getString(it.getColumnIndexOrThrow(Contract.COL_EVENT_TITLE))
+					it.getString(it.getColumnIndexOrThrow(Contract.COL_EVENT_TITLE)).replaceFirstChar { it->it.uppercase() }
 				)
 				if (isShowingEventDate) {
 					with(it.getInt(it.getColumnIndexOrThrow(Contract.COL_EVENT_DATE))) {

@@ -14,6 +14,7 @@ import ru.geekbrains.eventsreminder.domain.EventType
 import ru.geekbrains.eventsreminder.presentation.ui.findActivity
 import ru.geekbrains.eventsreminder.presentation.ui.toAgeInWordsByDate
 import ru.geekbrains.eventsreminder.presentation.ui.toDaysSinceNowInWords
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
@@ -71,20 +72,20 @@ class MyEventsViewHolder(private val view: View) : RecyclerView.ViewHolder(view)
 		try {
 			eventTitle.text = item.name.replaceFirstChar { it->it.uppercase() }
 			eventDaysTo.visibility =
-				if (isDataHeader) {
+				/*if (isDataHeader) {
 					View.VISIBLE.also {
 						eventDaysTo.text =
 							item.date.toDaysSinceNowInWords()
 					}
-				} else View.GONE
+				} else */View.GONE
 			eventDate.visibility =
-				if (isDataHeader) {
+				/*if (isDataHeader) {
 					View.VISIBLE.also {
 						eventDate.text = item.date.format(
 							DateTimeFormatter.ofPattern("dd.MM.yyyy, EEEE", Locale.getDefault())
 						)
 					}
-				} else View.GONE
+				} else */View.GONE
 		} catch (t: Throwable) {
 			outputError(t)
 		}
@@ -95,9 +96,15 @@ class MyEventsViewHolder(private val view: View) : RecyclerView.ViewHolder(view)
 			itemContainer.setBackgroundColor(view.context.getColor(R.color.light_violet))
 			eventImage.setImageResource(R.drawable.local_holiday_icon)
 			if (item.sourceType == EventSourceType.LOCAL){
-				item.time?.run {
+				eventAge.text = item.date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+				eventAge.isVisible = true
+
+				if (item.time != null){
 					eventTime.isVisible = true
-					eventTime.text = this.format(DateTimeFormatter.ofPattern("HH:mm"))
+					eventTime.text = item.time.format(DateTimeFormatter.ofPattern("HH:mm"))
+				} else {
+					eventTime.text = item.date.toAgeInWordsByDate(LocalDate.now())
+					eventTime.isVisible = true
 				}
 			}
 		} catch (t: Throwable) {
@@ -115,6 +122,10 @@ class MyEventsViewHolder(private val view: View) : RecyclerView.ViewHolder(view)
 				eventTime.isVisible = true
 				eventTime.text = this.format(DateTimeFormatter.ofPattern("HH:mm"))
 			}
+			item.date.run {
+				eventAge.isVisible = true
+				eventAge.text = this.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+			}
 		} catch (t: Throwable) {
 			outputError(t)
 		}
@@ -126,9 +137,11 @@ class MyEventsViewHolder(private val view: View) : RecyclerView.ViewHolder(view)
 		try {
 			itemContainer.setBackgroundColor(view.context.getColor(R.color.light_green))
 			eventImage.setImageResource(R.drawable.local_birthday_icon)
+			eventAge.isVisible = true
+			eventAge.text = item.birthday?.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
 			if (item.birthday != null && item.birthday.year != 0 && item.birthday <= item.date) {
-				eventAge.text = item.birthday.toAgeInWordsByDate(item.date)
-				eventAge.isVisible = true
+				eventTime.text = item.birthday.toAgeInWordsByDate(item.date)
+				eventTime.isVisible = true
 			}
 		} catch (t: Throwable) {
 			outputError(t)

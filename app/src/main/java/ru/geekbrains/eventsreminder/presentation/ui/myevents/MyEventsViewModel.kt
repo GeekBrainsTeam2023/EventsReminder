@@ -70,10 +70,12 @@ class MyEventsViewModel @Inject constructor(
                     is ResourceState.SuccessState -> {
                         val dataWithBrededEvents = mutableListOf<EventData>()
                         val startDate =
-                            min(result.data.firstOrNull()?.date?.toInt() ?: (MAX_YEAR * 10000),
-                                LocalDate.now().toInt())
+                            min(
+                                result.data.firstOrNull()?.date?.toInt() ?: (MAX_YEAR * 10000),
+                                LocalDate.now().toInt()
+                            )
                         result.data.forEach { event ->
-                            if (event.period != null)
+                            /*if (event.period != null)
                                 dataWithBrededEvents.addAll(
                                     event.breedPeriodicEvents(
                                         startDate.toLocalDate(),
@@ -81,7 +83,7 @@ class MyEventsViewModel @Inject constructor(
                                             .plusDays(365L)
                                     )
                                 )
-                            else dataWithBrededEvents.add(event)
+                            else */dataWithBrededEvents.add(event)
                         }
                         addToCachedLocalEvents(dataWithBrededEvents)
                         renewCache()
@@ -117,7 +119,7 @@ class MyEventsViewModel @Inject constructor(
         val mapToSort = mutableMapOf<LocalDate, MutableList<EventData>>()
         try {
             events.forEach { event ->
-                    mapToSort.getOrPut(event.date) { mutableListOf() }.add(event)
+                mapToSort.getOrPut(event.date) { mutableListOf() }.add(event)
             }
         } catch (t: Throwable) {
             handleError(t)
@@ -167,7 +169,8 @@ class MyEventsViewModel @Inject constructor(
             val mapToSort = mutableMapOf<LocalDate, MutableList<EventData>>()
             val startDate = min(
                 allEventsFromRepo.firstOrNull()?.date?.toInt() ?: (MAX_YEAR * 10000),
-                LocalDate.now().toInt())
+                LocalDate.now().toInt()
+            )
             val endDate = LocalDate.now().plusDays(daysToPutInCache.toLong())
             allEventsFromRepo.forEach { event ->
                 processOrBreedEvent(event, startDate.toLocalDate(), endDate, mapToSort)
@@ -192,15 +195,15 @@ class MyEventsViewModel @Inject constructor(
         mapToSort: MutableMap<LocalDate, MutableList<EventData>>
     ) {
         try {
-                if (event.period != null)
-                    event.breedPeriodicEvents(startDate,endDate).forEach{
-                        if (event.date.isAfter(startDate)
-                            && event.date.isBefore(endDate)
-                            || event.date.isEqual(startDate)
-                        )
-                    mapToSort.getOrPut(it.date) { mutableListOf() }.add(it)
-                    }
-                else
+            if (event.period != null)
+                event.breedPeriodicEvents(startDate, endDate).forEach {
+                    if (event.date.isAfter(startDate)
+                        && event.date.isBefore(endDate)
+                        || event.date.isEqual(startDate)
+                    )
+                        mapToSort.getOrPut(it.date) { mutableListOf() }.add(it)
+                }
+            else
                 mapToSort.getOrPut(event.date) { mutableListOf() }.add(event)
         } catch (t: Throwable) {
             handleError(t)
