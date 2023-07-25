@@ -54,7 +54,7 @@ abstract class AbsDaggerDialogFragment : DaggerDialogFragment() {
         try {
             findNavController().navigate(
                 getSuccessIdToNavigate(
-                    sourceIdToNavigate ?: R.id.menuDashboardFragment
+                    sourceIdToNavigate ?: R.id.dashboardFragment
                 )
             )
         } catch (t: Throwable) {

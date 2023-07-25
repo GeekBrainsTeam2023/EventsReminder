@@ -86,8 +86,8 @@ class EditSimpleEventDialogFragment : AbsDaggerDialogFragment() {
 
 	override fun getSuccessIdToNavigate(sourceNavigationId: Int) =
 		when (sourceNavigationId){
-			R.id.menuMyEventsFragment -> R.id.action_editSimpleEventDialog_to_myEvents
-			R.id.menuDashboardFragment -> R.id.action_editSimpleEventDialog_to_dashboardFragment
+			R.id.myEventsFragment -> R.id.action_editSimpleEventDialog_to_myEvents
+			R.id.dashboardFragment -> R.id.action_editSimpleEventDialog_to_dashboardFragment
 			else -> sourceNavigationId
 		}
 

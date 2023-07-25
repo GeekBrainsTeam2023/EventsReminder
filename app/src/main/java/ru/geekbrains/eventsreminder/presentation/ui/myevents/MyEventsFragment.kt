@@ -70,7 +70,7 @@ class MyEventsFragment : EventEditor, DaggerFragment() {
             addEventFab.setOnClickListener {
                 try {
                     val bundle = Bundle()
-                    bundle.putInt(SOURCE_ID_TO_NAVIGATE, R.id.menuMyEventsFragment)
+                    bundle.putInt(SOURCE_ID_TO_NAVIGATE, R.id.myEventsFragment)
                     findNavController().navigate(R.id.chooseNewEventTypeDialog, bundle)
                 } catch (t: Throwable) {
                     myEventsViewModel.handleError(t)

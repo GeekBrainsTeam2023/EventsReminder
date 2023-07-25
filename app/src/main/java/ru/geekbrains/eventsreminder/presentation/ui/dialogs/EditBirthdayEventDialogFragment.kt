@@ -117,8 +117,8 @@ class EditBirthdayEventDialogFragment : AbsDaggerDialogFragment() {
 
 	override fun getSuccessIdToNavigate(sourceNavigationId: Int) =
 		when (sourceNavigationId) {
-			R.id.menuMyEventsFragment -> R.id.action_editBirthdayDialog_to_myEvents
-			R.id.menuDashboardFragment -> R.id.action_editBirthdayDialog_to_homeToDashboard
+			R.id.myEventsFragment -> R.id.action_editBirthdayDialog_to_myEvents
+			R.id.dashboardFragment -> R.id.action_editBirthdayDialog_to_homeToDashboard
 			else -> sourceNavigationId
 		}
 

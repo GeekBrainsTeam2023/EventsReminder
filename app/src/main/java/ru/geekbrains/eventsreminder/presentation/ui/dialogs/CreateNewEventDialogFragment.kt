@@ -53,7 +53,7 @@ class CreateNewEventDialogFragment : DaggerDialogFragment() {
             val bundle = Bundle()
             bundle.putInt(
                 SOURCE_ID_TO_NAVIGATE,
-                arguments?.getInt(SOURCE_ID_TO_NAVIGATE) ?: R.id.menuDashboardFragment
+                arguments?.getInt(SOURCE_ID_TO_NAVIGATE) ?: R.id.dashboardFragment
             )
             when (binding.radioGroupChooseNewEventType.checkedRadioButtonId) {
                 R.id.radiobtnBirthday -> {

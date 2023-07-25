@@ -10,6 +10,7 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -119,8 +120,9 @@ class DashboardViewHolder(private val view: View) : RecyclerView.ViewHolder(view
 				EVENT_ID,
 				item.sourceId
 			)
+
 			activity.findNavController(R.id.nav_host_fragment_activity_main)
-				.navigate(R.id.menuMyEventsFragment, bundle)
+				.navigate(R.id.myEventsFragment, bundle)
 		} catch (t: Throwable) {
 			logAndToast(t)
 		}

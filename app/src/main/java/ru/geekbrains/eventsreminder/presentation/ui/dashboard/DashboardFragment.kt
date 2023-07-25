@@ -72,7 +72,7 @@ class DashboardFragment : DaggerFragment() {
 	private fun onFabClicked() {
 		try {
 			val bundle = Bundle()
-			bundle.putInt(SOURCE_ID_TO_NAVIGATE, R.id.menuDashboardFragment)
+			bundle.putInt(SOURCE_ID_TO_NAVIGATE, R.id.dashboardFragment)
 			findNavController().navigate(R.id.chooseNewEventTypeDialog, bundle)
 		} catch (t: Throwable) {
 			dashboardViewModel.handleError(t)

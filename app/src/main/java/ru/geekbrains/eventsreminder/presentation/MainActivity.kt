@@ -110,7 +110,7 @@ class MainActivity : DaggerAppCompatActivity() {
 
 			initNavController()
 			if (isParamsSetRequired)
-				navController.navigate(R.id.menuSettingsFragment)
+				navController.navigate(R.id.settingsFragment)
 		} catch (t: Throwable) {
 			logAndToast(t)
 		}
@@ -176,7 +176,7 @@ class MainActivity : DaggerAppCompatActivity() {
 			navController = findNavController(R.id.nav_host_fragment_activity_main)
 			val appBarConfiguration = AppBarConfiguration(
 				setOf(
-					R.id.menuDashboardFragment, R.id.menuMyEventsFragment, R.id.menuSettingsFragment,
+					R.id.dashboardFragment, R.id.myEventsFragment, R.id.settingsFragment,
 					R.id.chooseNewEventTypeDialog, R.id.editBirthdayDialog,
 					R.id.editHolidayDialog, R.id.editSimpleEventDialog
 				)
@@ -276,7 +276,7 @@ class MainActivity : DaggerAppCompatActivity() {
                 )
             } else {
                 Log.d(TAG, getString(R.string.log_msg_rights_check_succeeded))
-                navController.navigate(R.id.menuDashboardFragment)
+                navController.navigate(R.id.dashboardFragment)
             }
         } catch (t: Throwable) {
             logAndToast(t)
@@ -344,7 +344,7 @@ class MainActivity : DaggerAppCompatActivity() {
                 }
                 .setNegativeButton("настройки     ") { _, _ ->
                     try {
-                        navController.navigate(R.id.menuSettingsFragment)
+                        navController.navigate(R.id.settingsFragment)
                     } catch (t: Throwable) {
                         logAndToast(t)
                     }
