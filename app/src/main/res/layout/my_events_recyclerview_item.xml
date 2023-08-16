@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+
+
     <LinearLayout
         android:id="@+id/title"
         style="@style/my_events_and_dashboard_list_titles_linear_layout"
@@ -33,57 +35,64 @@
     </LinearLayout>
 
 
-        <LinearLayout
-            android:id="@+id/itemContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="@dimen/global_padding"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@id/title">
+    <LinearLayout
+        android:id="@+id/itemContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="@dimen/global_padding"
+        app:layout_constraintTop_toBottomOf="@id/title">
 
-            <ImageView
-                android:id="@+id/eventImage"
-                style="@style/my_events_and_dashboard_rv_item_image"
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start|center"
-                tools:src="@drawable/birthday_balloons"/>
+        <ImageView
+            android:id="@+id/eventImage"
+            style="@style/my_events_and_dashboard_rv_item_image"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center"
+            tools:src="@drawable/birthday_balloons" />
+
+        <TextView
+            android:id="@+id/eventTitle"
+            style="@style/dashboard_recyclerview_item_title_textview"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/global_padding"
+            android:layout_weight="1.2"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textAlignment="viewStart"
+            tools:text="name" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:orientation="vertical">
 
             <TextView
-                android:id="@+id/eventTitle"
-                style="@style/dashboard_recyclerview_item_title_textview"
-                android:layout_marginHorizontal="@dimen/global_padding"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:maxLines="2"
-                android:ellipsize="end"
-                android:textAlignment="viewStart"
-                android:layout_weight="1.2"
-                tools:text="name" />
+                android:id="@+id/eventAge"
+                style="@style/dashboard_recyclerview_item_age_textview"
+                android:visibility="gone"
+                tools:text="100 let"
+                tools:visibility="visible" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="end"
-                android:orientation="vertical">
+            <TextView
+                android:id="@+id/eventTime"
+                style="@style/dashboard_recyclerview_item_event_time_textview"
+                android:visibility="gone"
+                tools:text="10:10"
+                tools:visibility="visible" />
 
-                <TextView
-                    android:id="@+id/eventAge"
-                    style="@style/dashboard_recyclerview_item_age_textview"
-                    android:visibility="gone"
-                    tools:visibility = "visible"
-                    tools:text="100 let" />
-
-                <TextView
-                    android:id="@+id/eventTime"
-                    style="@style/dashboard_recyclerview_item_event_time_textview"
-                    android:visibility="gone"
-                    tools:visibility = "visible"
-                    tools:text="10:10" />
-
-            </LinearLayout>
         </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_primary_dark"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

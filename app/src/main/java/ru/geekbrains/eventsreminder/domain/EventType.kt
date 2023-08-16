@@ -1,6 +1,10 @@
 package ru.geekbrains.eventsreminder.domain
 
-enum class EventType {
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
+enum class EventType : Parcelable {
     SIMPLE,
     BIRTHDAY,
     HOLIDAY;
@@ -10,5 +14,11 @@ enum class EventType {
             BIRTHDAY -> "День Рождения"
             HOLIDAY -> "Праздник"
         }
-
 }
+
+fun Int.toEventType() =
+    when (this){
+        EventType.BIRTHDAY.ordinal -> EventType.BIRTHDAY
+        EventType.HOLIDAY.ordinal -> EventType.HOLIDAY
+        else -> EventType.SIMPLE
+    }

@@ -70,7 +70,7 @@
             app:title="@string/title_age_checkbox_preference"
             app:useSimpleSummaryProvider="true" />
         <SeekBarPreference
-            android:max="365"
+            android:max="90"
             app:iconSpaceReserved="false"
             app:key="@string/key_widget_interval_of_events_preference"
             app:min="1"
@@ -177,5 +177,18 @@
             app:iconSpaceReserved="false"
             app:key="@string/key_import_settings_preference"
             app:title="@string/title_import_settings_preference" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:layout="@layout/title_for_inner_preference_category"
+        app:iconSpaceReserved="false"
+        app:title="@string/export_import_events_category_title">
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="@string/key_events_export"
+            app:title="@string/events_export" />
+        <Preference
+            app:iconSpaceReserved="false"
+            app:key="@string/key_events_import"
+            app:title="@string/events_import" />
     </PreferenceCategory>
 </PreferenceScreen>

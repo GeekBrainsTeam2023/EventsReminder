@@ -9,26 +9,43 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.preference.*
+import com.google.gson.Gson
 import com.rarepebble.colorpicker.ColorPreference
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
 import dagger.android.support.AndroidSupportInjection
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ru.geekbrains.eventsreminder.R
+import ru.geekbrains.eventsreminder.di.ViewModelFactory
+import ru.geekbrains.eventsreminder.domain.ResourceState
 import ru.geekbrains.eventsreminder.domain.SettingsData
 import ru.geekbrains.eventsreminder.presentation.MainActivity
 import ru.geekbrains.eventsreminder.presentation.ui.FontSizeSeekBarPreference
+import ru.geekbrains.eventsreminder.presentation.ui.myevents.MyEventsViewModel
 import ru.geekbrains.eventsreminder.presentation.ui.toInt
 import ru.geekbrains.eventsreminder.presentation.ui.toLocalTime
+import ru.geekbrains.eventsreminder.repo.Repo
+import ru.geekbrains.eventsreminder.usecases.toEventDto
 import java.time.LocalTime
 import javax.inject.Inject
+import kotlin.coroutines.coroutineContext
 
 
 class SettingsFragment : PreferenceFragmentCompat(), HasAndroidInjector {
 	@Inject
 	lateinit var settingsData: SettingsData
+
+	@Inject
+	lateinit var repo: Repo
 	private val prefs by lazy {
 		PreferenceManager.getDefaultSharedPreferences(requireActivity().applicationContext)
 	}
@@ -123,6 +140,18 @@ class SettingsFragment : PreferenceFragmentCompat(), HasAndroidInjector {
 				loadPrefs.launch(arrayOf("*/*"))
 				true
 			}
+			val exportEventsButton: Preference? =
+				findPreference(getString(R.string.key_events_export))
+			exportEventsButton?.setOnPreferenceClickListener {
+				saveEvents.launch("EventsReminder.data")
+				true
+			}
+			val importEventsButton: Preference? =
+				findPreference(getString(R.string.key_events_import))
+			importEventsButton?.setOnPreferenceClickListener {
+				loadEvents.launch(arrayOf("*/*"))
+				true
+			}
 		} catch (t: Throwable) {
 			outputError(t)
 		}
@@ -133,8 +162,8 @@ class SettingsFragment : PreferenceFragmentCompat(), HasAndroidInjector {
 	) { uri ->
 		try {
 			uri?.let {
-				if (Exportsettings.saveSharedPreferencesToFile(
-						uri,
+				if (ExportSettings.saveSharedPreferencesToFile(
+						it,
 						requireContext(),
 						prefs
 					)
@@ -150,8 +179,8 @@ class SettingsFragment : PreferenceFragmentCompat(), HasAndroidInjector {
 	) { uri ->
 		try {
 			uri?.let {
-				if (Exportsettings.loadSharedPreferencesFromFile(
-						uri,
+				if (ExportSettings.loadSharedPreferencesFromFile(
+						it,
 						requireContext(),
 						prefs
 					)
@@ -161,6 +190,51 @@ class SettingsFragment : PreferenceFragmentCompat(), HasAndroidInjector {
 			}
 		} catch (t: Throwable) {
 			outputError(t)
+		}
+	}
+
+	private val saveEvents = registerForActivityResult(
+		ActivityResultContracts.CreateDocument("*/*")
+	) { uri ->
+		try {
+			uri?.let {
+				CoroutineScope(Dispatchers.IO).launch {
+					val data = repo.loadLocalData()
+
+					if (data is ResourceState.SuccessState) {
+						if (ExportEvents.saveEventsToFile(
+								it,
+								requireContext(),
+								data.data.map { it.toEventDto() }
+							)
+						)
+							withContext(Dispatchers.Main){
+								Toast.makeText(context, getString(R.string.toast_msg_events_saved), Toast.LENGTH_SHORT).show()
+							}
+
+					}
+				}
+			}
+		} catch (t: Throwable) {
+			outputError(t)
+		}
+	}
+
+	private val loadEvents = registerForActivityResult(
+		ActivityResultContracts.OpenDocument()
+	) { uri ->
+		try {
+			uri?.let {
+
+				if (ExportEvents.loadEventsFromFile(
+					it,
+					requireContext(),
+					repo
+				))
+					Toast.makeText(context, getString(R.string.toast_msg_events_loaded), Toast.LENGTH_SHORT).show()
+			}
+		} catch (e: Throwable) {
+			outputError(e)
 		}
 	}
 
@@ -258,7 +332,7 @@ class SettingsFragment : PreferenceFragmentCompat(), HasAndroidInjector {
 		}
 	}
 
-	private fun initSeekBarPreference(itemId:Int, value:Int){
+	private fun initSeekBarPreference(itemId: Int, value: Int) {
 		findPreference<SeekBarPreference>(getString(itemId))?.let {
 			it.value =
 				prefs.getInt(
@@ -268,14 +342,17 @@ class SettingsFragment : PreferenceFragmentCompat(), HasAndroidInjector {
 			it.seekBarIncrement = 1
 		}
 	}
+
 	private fun initCheckBoxPreference(itemId: Int, value: Boolean) {
 		findPreference<CheckBoxPreference>(getString(itemId))?.isChecked =
 			prefs.getBoolean(getString(itemId), value)
 	}
+
 	private fun initColorPreference(itemId: Int, value: Int) {
 		(findPreference(getString(itemId)) as ColorPreference?)
 			?.setDefaultValue(value)
 	}
+
 	private fun outputError(t: Throwable) {
 		try {
 			Toast.makeText(context, t.toString(), Toast.LENGTH_LONG).show()

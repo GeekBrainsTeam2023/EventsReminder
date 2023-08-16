@@ -1,6 +1,10 @@
 package ru.geekbrains.eventsreminder.domain
 
-enum class PeriodType(val nameRus: String) {
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
+enum class PeriodType(val nameRus: String) : Parcelable {
 	YEAR("год"),
 	MONTH("месяц"),
 	WEEK("неделю"),
@@ -15,6 +19,8 @@ enum class PeriodType(val nameRus: String) {
 				else -> null
 			}
 	}
+
+
 	override fun toString() : String {
 		return nameRus
 	}
@@ -27,3 +33,10 @@ enum class PeriodType(val nameRus: String) {
 			DAY -> 1
 		}
 }
+fun Int.toPeriodType() =
+	when (this){
+		PeriodType.YEAR.ordinal -> PeriodType.YEAR
+		PeriodType.MONTH.ordinal -> PeriodType.MONTH
+		PeriodType.WEEK.ordinal -> PeriodType.WEEK
+		else -> PeriodType.DAY
+	}

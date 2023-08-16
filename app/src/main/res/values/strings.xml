@@ -21,12 +21,16 @@
     <string name="key_age_checkbox_preference">age</string>
     <string name="title_age_checkbox_preference">Показывать возраст именинника</string>
     <string name="widget_appearance_settings_preference_category">Виджет: внешний вид</string>
-    <string name="title_export_settings_preference">Экспорт текущих настроек</string>
+    <string name="title_export_settings_preference">Экспорт текущих настроек в файл</string>
+    <string name="key_export_settings_preference">export_settings</string>
+    <string name="title_import_settings_preference">Импорт сохранённых настроек из файла</string>
     <string name="key_import_settings_preference">import_settings</string>
-    <string name="title_import_settings_preference">Импорт сохранённых настроек</string>
+    <string name="events_export">Экспорт локальных событий в файл</string>
+    <string name="key_events_export">events_export</string>
+    <string name="events_import">Импорт сохранённых событий из файла</string>
+    <string name="key_events_import">events_settings</string>
     <string name="key_notification_start_time_preference">time_to_start_notification</string>
     <string name="title_notification_start_time_preference">Время срабатывания уведомления</string>
-    <string name="key_export_settings_preference">export_settings</string>
     <string name="key_minutes_before_notification_preference">minutes_before_notification</string>
     <string name="title_minutes_before_notification_preference">Минут до события</string>
     <string name="summary_minutes_before_notification_preference">За сколько минут до события выводить уведомление</string>
@@ -132,5 +136,8 @@
     <string name="key_widget_appearance_by_default">widget_appearance_by_default</string>
     <string name="toast_msg_settings_load_successfully">Настройки загружены</string>
     <string name="toast_msg_current_settings_saved">Настройки сохранены</string>
-    <string name="export_import_settings_preference_category_title">Экспорт/импорт настроек</string>
+    <string name="toast_msg_events_saved">События сохранены</string>
+    <string name="toast_msg_events_loaded">События загружены</string>
+    <string name="export_import_settings_preference_category_title">Сохранение настроек</string>
+    <string name="export_import_events_category_title">Сохранение локальных событий</string>
 </resources>
