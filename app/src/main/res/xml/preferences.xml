@@ -39,10 +39,10 @@
             app:title="@string/title_notification_start_time_preference"
             app:useSimpleSummaryProvider="true" />
         <SeekBarPreference
-            android:max="59"
+            android:max="60"
             app:iconSpaceReserved="false"
             app:key="@string/key_minutes_before_notification_preference"
-            app:min="1"
+            app:min="0"
             app:showSeekBarValue="true"
             app:summary="@string/summary_minutes_before_notification_preference"
             app:title="@string/title_minutes_before_notification_preference"

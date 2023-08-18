@@ -167,6 +167,7 @@ class DashboardViewHolder(private val view: View) : RecyclerView.ViewHolder(view
 					eventTime.isVisible = true
 				}
 			}
+			eventDate.isVisible = false
 		} catch (t: Throwable) {
 			logAndToast(t)
 		}
@@ -187,6 +188,7 @@ class DashboardViewHolder(private val view: View) : RecyclerView.ViewHolder(view
 				eventTime.text = this.format(DateTimeFormatter.ofPattern("HH:mm"))
 				eventTime.isVisible = true
 			}
+			eventAge.isVisible = false
 		} catch (t: Throwable) {
 			logAndToast(t)
 		}
@@ -203,9 +205,14 @@ class DashboardViewHolder(private val view: View) : RecyclerView.ViewHolder(view
 				else
 					R.drawable.birthday_balloons
 			)
-			if (item.birthday != null && item.birthday.year != 0 && item.birthday <= item.date) {
-				eventAge.text = view.context.getString(R.string.age_pattern, item.birthday.toAgeInWordsByDate(item.date), item.birthday.year)
+			if (item.birthday != null && item.birthday.year != Int.MAX_VALUE && item.birthday <= item.date) {
+					eventAge.text = view.context.getString(R.string.birthday_pattern, item.birthday.year)
 				eventAge.isVisible = true
+				eventTime.text = item.birthday.toAgeInWordsByDate(item.date)
+				eventTime.isVisible = true
+			} else {
+				eventAge.isVisible = false
+				eventTime.isVisible = false
 			}
 		} catch (t: Throwable) {
 			logAndToast(t)

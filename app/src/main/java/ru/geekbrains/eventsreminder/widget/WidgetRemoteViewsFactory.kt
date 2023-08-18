@@ -19,6 +19,7 @@ import androidx.preference.PreferenceManager
 import ru.geekbrains.eventsreminder.R
 import ru.geekbrains.eventsreminder.domain.EventSourceType
 import ru.geekbrains.eventsreminder.domain.EventType
+import ru.geekbrains.eventsreminder.presentation.ui.MAX_YEAR
 import ru.geekbrains.eventsreminder.presentation.ui.toAgeInWordsByDate
 import ru.geekbrains.eventsreminder.presentation.ui.toInt
 import ru.geekbrains.eventsreminder.presentation.ui.toLocalDate
@@ -217,11 +218,13 @@ constructor(
 				it.getIntOrNull(it.getColumnIndexOrThrow(Contract.COL_BIRTHDAY))?.let { birthday ->
 					val date = it.getInt(it.getColumnIndexOrThrow(Contract.COL_EVENT_DATE)).toLocalDate()
 					val birthdate = birthday.toLocalDate()
-					if (date >= birthdate) {
+					if (date >= birthdate && date.year != MAX_YEAR) {
 						val age = "(${birthdate.toAgeInWordsByDate(date)}, ${birthdate.year})"
 						rv.setTextViewText(R.id.eventAge, age)
 						rv.setViewVisibility(R.id.eventAge, View.VISIBLE)
-						return
+//						return
+					} else {
+						rv.setViewVisibility(R.id.eventAge, View.GONE)
 					}
 				}
 			} else {

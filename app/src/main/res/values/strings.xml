@@ -6,8 +6,10 @@
     <string name="menu_item_my_events_title">Мои события</string>
     <string name="settings_fragment_title">Настройки</string>
     <string name="my_events_fragment_title">Мои события</string>
-    <string name="notifications_channel_name">EventsReminder Channel</string>
-    <string name="notifications_channel_description">EventsReminder Уведомления</string>
+    <string name="notifications_simple_channel_name">Общие уведомления</string>
+    <string name="notifications_alarm_channel_name">Наступление событий</string>
+    <string name="notifications_simple_channel_description">В этом канале выводятся уведомления общего характера</string>
+    <string name="notifications_alarm_channel_description">В этом канале выводятся уведомления о наступлении событий</string>
 
     <!-- Preference Titles,Keys-->
     <string name="title_datasource_preference_category">Источники данных</string>
@@ -83,7 +85,7 @@
     <string name="widget_forth_item_preview_time">03:00</string>
     <string name="widget_fontsize_toast">\"размер шрифта виджета \"</string>
     <string name="widget_border">Рамка</string>
-    <string name="age_pattern">(%s, %d)</string>
+    <string name="birthday_pattern">%d г.р.</string>
     <string name="key_widget_border_color">border_color</string>
     <string name="widget_border_color">Цвет рамки</string>
     <string name="key_widget_border_width">border_width</string>
@@ -140,4 +142,5 @@
     <string name="toast_msg_events_loaded">События загружены</string>
     <string name="export_import_settings_preference_category_title">Сохранение настроек</string>
     <string name="export_import_events_category_title">Сохранение локальных событий</string>
+    <string name="notification_title">Events Reminder работает</string>
 </resources>
